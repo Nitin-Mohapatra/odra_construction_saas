@@ -1,0 +1,22 @@
+const express = require('express');
+const router = express.Router();
+const projectController = require("../controllers/projectController");
+const {validateRoles} = require("../middleware/roles");
+const {authen} = require("../middleware/tokenValidatorsMiddleware");
+
+// create Project
+router.post('/',authen,validateRoles("manager"),projectController.createProject);
+
+// get all project
+router.get('/',authen,validateRoles("manager"),projectController.getProject);
+
+// get all project for the siteEn
+router.get('/my-projects',authen,validateRoles("site engineer"),projectController.getProjectSE);
+
+// single project for contractor or site engineer
+router.get('/:id',authen,validateRoles(["manager","site engineer"]),projectController.getProjectById);
+
+// complete project
+router.post('/:projectId/complete',authen,validateRoles("manager"),projectController.completeProject);
+
+module.exports = router;

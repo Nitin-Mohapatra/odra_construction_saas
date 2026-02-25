@@ -1,0 +1,156 @@
+// import React from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Footer from '../../Components/Footer';
+import SiteEngineerNavbar from '../../Components/SiteEngineerNavbar';
+import { useParams, useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { io } from "socket.io-client";
+import { useRef } from "react";
+import { toast } from "react-toastify";
+import ChatModal from '../../Components/ChatModal';
+import Attendance from "../../Screen/SiteEngineer/Attendance"
+
+export default function ProjectWork() {
+    const { id } = useParams();
+    const [project, setProjects] = useState({ reports: [] });
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const socketRef = useRef(null);
+
+
+    useEffect(() => {
+        socketRef.current = io("http://localhost:8080", {
+            transports: ["websocket"]
+        })
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        fetchProject();
+    }, [id]);
+
+    useEffect(() => {
+        // Check if socket is initialized before using it
+        if (!socketRef.current || !id) return;
+
+        // join the room 
+        socketRef.current.emit("join", { projectId: id })
+
+        const handler = (data) => {
+            setProjects((prev) => ({
+                ...prev,
+                reports: prev.reports.map((r) => {
+                    // Convert both IDs to strings for comparison
+                    const reportId = r._id?.toString();
+                    const dataReportId = data.reportId?.toString();
+
+                    if (reportId === dataReportId) {
+                        return {
+                            ...r,
+                            contractorStatus: data.contractorStatus,
+                            contractorComment: data.contractorComment
+                        };
+                    }
+                    return r;
+                })
+            }));
+            toast.info("Report has Been Reviewed");
+        };
+
+        socketRef.current.on("report:reviewed", handler);
+
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.off("report:reviewed", handler);
+                socketRef.current.disconnect();
+            }
+        };
+    }, [id])
+
+    const fetchProject = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8080/projects/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    }
+                }
+            )
+            setProjects(res.data.project);
+            setLoading(false);
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    if (loading) return <CircularProgress />
+
+    return (
+        <div>
+            <SiteEngineerNavbar />
+            <Divider sx={{ mt: 3, mb: 3 }} />
+
+            <Box sx={{ minHeight: "60vh", padding: 2, display: "flex", flexDirection: 'column' }}>
+                <Typography variant='h1' component="h1">{project.title}</Typography>
+                <Typography variant='h2' component="h3">{project.description}</Typography>
+
+                <Paper elevation={3} sx={{ mt: 3, mb: 3 }}>
+                    <Box>
+                        <Typography variant='h3' component="h3">Previous Report</Typography>
+                        {project.reports.length !== 0 && project.reports.map((rept, idx) => {
+                            return (
+                                <Card key={rept._id || idx}>
+                                    <CardContent>
+                                        <Typography variant='h3' component="h3">{rept.workDone}</Typography>
+                                        <Typography variant='body1' component="p">
+                                            Status: {rept.contractorStatus || 'pending'}
+                                        </Typography>
+                                        {rept.contractorComment && (
+                                            <Typography variant='body2' component="p" sx={{ mt: 1, fontStyle: 'italic' }}>
+                                                Comment: {rept.contractorComment}
+                                            </Typography>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            )
+                        })}
+
+                        {project.reports.length === 0 && <span>No Reports Has yet been submitted</span>}
+                    </Box>
+                </Paper>
+
+                <button className='btn btn-sm btn-success mb-3' onClick={() => {
+                    navigate(`/site-engineer/projects/${id}/report`)
+                }}>
+                    + Submit Report
+                </button>
+                <button className='btn btn-sm btn-success mb-3' onClick={()=>{
+                    navigate(`/site-engineer/projects/${id}/attendance`)
+                }}>
+                    Mark Attendance
+                </button>
+
+                <Box sx={{ display: 'flex', position: "sticky", bottom: 0, justifyContent: 'flex-end' }} mt={2} zIndex={1000}>
+                    <ChatModal projectId={id} />
+                </Box>
+            </Box>
+
+            <Footer />
+        </div>
+    );
+}

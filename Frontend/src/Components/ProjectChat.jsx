@@ -1,0 +1,179 @@
+import React, { useEffect, useRef, useState } from "react";
+// import axios from "axios";
+import axiosInstance from "../utils/axiosInstance"
+import { io } from "socket.io-client";
+import { jwtDecode } from "jwt-decode";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+// import { useRef } from "react";
+
+export default function ProjectChat({ projectId, onMessageSent }) {
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const socketRef = useRef(null);
+    const messagesEndRef = useRef(null);
+
+    // 🔐 get current user id from JWT
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    const decoded = jwtDecode(token);
+    const currentUserId = decoded.User_id;
+
+    /* -------------------------
+       1️⃣ Load old chat messages
+    -------------------------- */
+    useEffect(() => {
+        const fetchChats = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    `/chat/${projectId}`
+                );
+                setMessages(res.data.chats);
+                console.log("Show prev mesg", res.data.chats);
+            } catch (err) {
+                console.error("Failed to load chats:", err);
+            }
+        };
+        fetchChats();
+    }, [projectId, token]);
+
+    /* -------------------------
+       2️⃣ Setup socket connection
+    -------------------------- */
+    useEffect(() => {
+        const socket = io("http://localhost:8080", {
+            transports: ["websocket"],
+        });
+
+        socketRef.current = socket;
+
+        socket.on("connect", () => {
+            console.log("Chat socket connected:", socket.id);
+
+            socket.emit("join", {
+                projectId,
+            });
+        });
+
+        socket.on("chat:new", (data) => {
+            setMessages((prev) => [...prev, data]);
+        });
+
+        return () => {
+            socket.emit("leave", { projectId });
+            socket.off("chat:new");
+            socket.disconnect();
+            socketRef.current = null;
+        };
+    }, [projectId]);
+
+    /* -------------------------
+       3️⃣ Send message
+    -------------------------- */
+    const sendMessage = () => {
+        if (!newMessage.trim()) return;
+
+        socketRef.current.emit("chat:new", {
+            projectId,
+            senderId: currentUserId,
+            message: newMessage,
+        });
+
+        setNewMessage("");
+        
+        // Notify parent that a message was sent (mark as read)
+        if (onMessageSent) {
+            onMessageSent();
+        }
+    };
+
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages])
+
+
+    return (
+        <Box sx={{ mt: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Project Chat
+            </Typography>
+
+            <Box
+                sx={{
+                    border: "1px solid #ddd",
+                    borderRadius: 2,
+                    p: 2,
+                    height: 300,
+                    overflowY: "auto",
+                    mb: 2,
+                    backgroundColor: "#ece5dd"
+                }}
+            >
+                {messages.length === 0 && (
+                    <Typography color="text.secondary">
+                        No messages yet.
+                    </Typography>
+                )}
+
+                {messages.map((msg) => {
+                    const senderId =
+                        typeof msg.senderId === "string"
+                            ? msg.senderId
+                            : msg.senderId?._id;
+
+                    const isMine = senderId === currentUserId;
+
+                    return (
+                        <Box
+                            key={msg._id}
+                            sx={{
+                                display: "flex",
+                                justifyContent: isMine ? "flex-end" : "flex-start",
+                                mb: 1.5,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    maxWidth: "70%",
+                                    px: 2,
+                                    py: 1,
+                                    borderRadius: isMine
+                                        ? "16px 16px 4px 16px"   // right bubble
+                                        : "16px 16px 16px 4px",  // left bubble
+                                    backgroundColor: isMine ? "#dcf8c6" : "#ffffff",
+                                    color: "#111",
+                                    boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                                    wordBreak: "break-word",
+                                }}
+                            >
+                                <Typography sx={{ fontSize: 14, lineHeight: 1.4 }}>
+                                    {msg.message}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    );
+                })}
+
+
+                <div ref={messagesEndRef}></div>
+            </Box>
+
+            <Box sx={{ display: "flex", gap: 1 }}>
+                <TextField
+                    fullWidth
+                    size="small"
+                    placeholder="Type a message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                />
+                <Button variant="contained" onClick={sendMessage}>
+                    Send
+                </Button>
+            </Box>
+        </Box>
+    );
+}

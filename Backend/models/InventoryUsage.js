@@ -1,0 +1,39 @@
+const mongoose = require("mongoose");
+
+const inventoryUsageSchema = new mongoose.Schema(
+  {
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true
+    },
+    inventoryItemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "InventoryItem",
+      required: true
+    },
+    usedQty: {
+      type: Number,
+      required: true
+    },
+
+    // 🆕 COST SNAPSHOT
+    costAtThatTime: {
+      type: Number,
+      required: true
+    },
+
+    usedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    date: {
+      type: String,
+      required: true
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("InventoryUsage", inventoryUsageSchema);
