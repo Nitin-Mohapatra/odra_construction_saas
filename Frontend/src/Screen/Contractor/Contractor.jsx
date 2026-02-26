@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from '../../utils/axiosInstance';
 import { Box, Typography, Button } from "@mui/material";
-
+import { useTranslation } from "react-i18next";
 
 export default function ContractorDashboard() {
   const [projects, setProjects] = useState([]);
@@ -18,7 +18,7 @@ export default function ContractorDashboard() {
   if (!token) return;
   const decoded = jwtDecode(token);
   const contractorId = decoded.User_id;
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchProjects();
@@ -73,10 +73,10 @@ export default function ContractorDashboard() {
           {/* HEADER */}
           <div className="mb-5">
             <h2 style={{ fontWeight: 700, color: "#1e1e1e" }}>
-              Contractor Dashboard
+              {t("dashboard.contractor.title")}
             </h2>
             <p className="text-muted">
-              Overview of your projects, progress, and quick actions
+              {t("dashboard.contractor.subtitle")}
             </p>
           </div>
   
@@ -91,7 +91,7 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">Total Projects</h6>
+                  <h6 className="text-muted mb-2">{t("dashboard.contractor.total_projects")}</h6>
                   <h2 style={{ fontWeight: 700 }}>{total}</h2>
                 </div>
               </div>
@@ -106,7 +106,7 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">Ongoing Projects</h6>
+                  <h6 className="text-muted mb-2">{t("dashboard.contractor.ongoing_projects")}</h6>
                   <h2 style={{ fontWeight: 700, color: "#f5a623" }}>
                     {ongoing}
                   </h2>
@@ -123,7 +123,7 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">Completed Projects</h6>
+                  <h6 className="text-muted mb-2">{t("dashboard.contractor.completed_projects")}</h6>
                   <h2 style={{ fontWeight: 700, color: "#16a34a" }}>
                     {completed}
                   </h2>
@@ -144,7 +144,7 @@ export default function ContractorDashboard() {
                 fontWeight: 600,
               }}
             >
-              + Add New Project
+              {t("dashboard.contractor.add_project")}
             </Button>
   
             <Button
@@ -159,18 +159,18 @@ export default function ContractorDashboard() {
                
               }}
             >
-              View All Projects
+              {t("dashboard.contractor.view_projects")}
             </Button>
           </div>
   
           {/* RECENT PROJECTS */}
           <div>
             <h5 style={{ fontWeight: 600 }} className="mb-3">
-              Recent Projects
+              {t("dashboard.contractor.view_projects")}
             </h5>
   
             {projects.slice(0, 5).length === 0 && (
-              <p className="text-muted">No projects available.</p>
+              <p className="text-muted">{t("dashboard.contractor.no_projects")}</p>
             )}
   
             {projects.slice(0, 5).map((project) => (

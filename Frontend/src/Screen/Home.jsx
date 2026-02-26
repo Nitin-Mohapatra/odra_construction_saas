@@ -7,8 +7,10 @@ import secImg from "../assets/sec-img.jpg"
 import secBg from "../assets/sec-4bg.jpg"
 import ImgSlider from '../Components/ImgSlider';
 import vd from '../assets/homepage-hero-animation.mp4'
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Navbar />
@@ -45,7 +47,7 @@ export default function Home() {
                   marginRight: "10px",
                   clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)"
                 }} />
-                Construction Management Software
+                  {t("dashboard.home.tagline")}
               </Typography>
 
               <Typography
@@ -56,7 +58,8 @@ export default function Home() {
                   color: "#000",
                 }}
               >
-                Together, we can <br /> build it all
+                {t("dashboard.home.hero_line_1")} <br />
+                {t("dashboard.home.hero_line_2")}
               </Typography>
             </Grid>
 
@@ -138,7 +141,7 @@ export default function Home() {
               fontWeight: "bold",
             }}
           >
-            We are on an Unstoppable Mission to Digitise The <br /> Indian Construction Industry
+            {t("dashboard.home.mission_short")}
           </Typography>
 
           <Typography

@@ -8,9 +8,10 @@ import { toast } from 'react-toastify'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import axiosInstance from '../../utils/axiosInstance';
 import workerImage from '../../assets/pic.png';
-
+import { useTranslation } from "react-i18next";
 
 export default function ContractorWorkers() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [workers, setWorkers] = useState([])
     const [loading, setLoading] = useState(true)
@@ -88,7 +89,7 @@ export default function ContractorWorkers() {
                   gutterBottom
                   sx={{ color: "#1e1e1e" }}
                 >
-                  Workers
+                  {t("workers.workers")}
                 </Typography>
       
                 <Typography
@@ -96,7 +97,7 @@ export default function ContractorWorkers() {
                   color="text.secondary"
                   sx={{ mb: 3 }}
                 >
-                  View and manage all workers associated with your projects.
+                  {t("workers.workers_desc")}
                 </Typography>
       
                 {loading ? (
@@ -108,11 +109,11 @@ export default function ContractorWorkers() {
                     <Table>
                       <TableHead>
                         <TableRow sx={{ backgroundColor: "#f1f5f9" }}>
-                          <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Phone</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>{t("workers.worker_name")}</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>{t("workers.phone")}</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>{t("workers.status")}</TableCell>
                           <TableCell sx={{ fontWeight: 600 }}>
-                            Assigned Project
+                          {t("workers.assigned_project")}
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -135,7 +136,7 @@ export default function ContractorWorkers() {
                             <TableCell>
                               {worker.currentProjectId
                                 ? worker.currentProjectId.title
-                                : "Not Assigned"}
+                                : t("workers.not_assigned")}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -154,7 +155,7 @@ export default function ContractorWorkers() {
                     fontWeight: 600,
                   }}
                 >
-                  Add Worker
+                 {t("workers.add_worker_btn")}
                 </Button>
               </Paper>
             </Box>

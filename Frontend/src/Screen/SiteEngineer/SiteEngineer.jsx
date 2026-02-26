@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 import heroImg from "../../assets/pic.png";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function SiteEngineer() {
   const socketRef = useRef(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   useEffect(() => {
     // decode token to get REAL MongoDB user id
     const token = localStorage.getItem("token");
@@ -97,19 +99,17 @@ export default function SiteEngineer() {
                     color: "#1e1e1e",
                   }}
                 >
-                  Built for Site Engineers
+                  {t("dashboard.engineer.hero_title")}
                 </h1>
 
                 <p className="text-muted">
-                  A dedicated platform designed to help site engineers manage
-                  projects efficiently with real-time updates, reporting tools,
-                  and seamless communication.
+                  {t("dashboard.engineer.hero_desc")}
                 </p>
 
                 <ul className="text-muted mt-4">
-                  <li className="mb-2">✔ Live project assignment updates</li>
-                  <li className="mb-2">✔ Centralized project management</li>
-                  <li className="mb-2">✔ Simple and intuitive interface</li>
+                  <li className="mb-2">{t("dashboard.engineer.feature_1")}</li>
+                  <li className="mb-2">{t("dashboard.engineer.feature_2")}</li>
+                  <li className="mb-2">{t("dashboard.engineer.feature_3")}</li>
                 </ul>
 
                 <Button
@@ -125,7 +125,7 @@ export default function SiteEngineer() {
                    
                   }}
                 >
-                  View Projects
+                  {t("dashboard.engineer.view_projects")}
                 </Button>
 
               </div>
@@ -137,10 +137,10 @@ export default function SiteEngineer() {
         <div className="container py-5">
           <div className="text-center mb-5">
             <h2 style={{ fontWeight: 700, color: "#1e1e1e" }}>
-              Features Available for Site Engineers
+              {t("dashboard.engineer.features_title")}
             </h2>
             <p className="text-muted mt-2">
-              Everything you need to manage site-level operations effectively
+              {t("dashboard.engineer.features_desc")}
             </p>
           </div>
 
@@ -156,11 +156,10 @@ export default function SiteEngineer() {
               >
                 <div className="card-body p-4">
                   <h5 className="fw-semibold mb-3">
-                    Real-Time Project Updates
+                    {t("dashboard.engineer.real_time_title")}
                   </h5>
                   <p className="text-muted small">
-                    Instantly receive notifications when projects are assigned or
-                    updated by the contractor—no delays, no manual refresh.
+                    {t("dashboard.engineer.real_time_desc")}
                   </p>
                 </div>
               </div>
@@ -176,11 +175,11 @@ export default function SiteEngineer() {
                 }}
               >
                 <div className="card-body p-4">
-                  <h5 className="fw-semibold mb-3">Project Management</h5>
+                  <h5 className="fw-semibold mb-3">{t("dashboard.engineer.project_mgmt_title")}</h5>
                   <ul className="text-muted small ps-3">
-                    <li className="mb-2">Submit daily & progress reports</li>
-                    <li className="mb-2">Chat with contractor in real time</li>
-                    <li className="mb-2">Mark and manage attendance</li>
+                    <li className="mb-2">{t("dashboard.engineer.pm_1")}Submit daily & progress reports</li>
+                    <li className="mb-2">{t("dashboard.engineer.pm_2")}</li>
+                    <li className="mb-2">{t("dashboard.engineer.pm_3")}</li>
                   </ul>
                 </div>
               </div>
@@ -197,11 +196,10 @@ export default function SiteEngineer() {
               >
                 <div className="card-body p-4">
                   <h5 className="fw-semibold mb-3">
-                    Clean & User-Friendly UI
+                    {t("dashboard.engineer.ui_title")}
                   </h5>
                   <p className="text-muted small">
-                    Designed to be simple, fast, and mobile-friendly so site
-                    engineers can focus on work—not learning software.
+                    {t("dashboard.engineer.ui_desc")}
                   </p>
                 </div>
               </div>

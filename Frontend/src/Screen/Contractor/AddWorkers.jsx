@@ -6,12 +6,15 @@ import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mu
 import { toast } from 'react-toastify';
 import axiosInstance from '../../utils/axiosInstance';
 import workerImage from '../../assets/pic.png';
+import { useTranslation } from "react-i18next";
+
 export default function AddWorkers() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const { t } = useTranslation();
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         
@@ -102,7 +105,7 @@ export default function AddWorkers() {
                   gutterBottom
                   sx={{ color: "#1e1e1e" }}
                 >
-                  Add Worker
+                  {t("workers.add_worker")}
                 </Typography>
       
                 <Typography
@@ -110,14 +113,13 @@ export default function AddWorkers() {
                   color="text.secondary"
                   sx={{ mb: 3 }}
                 >
-                  Register a new worker and make them available for project
-                  assignment.
+                  {t("workers.add_worker_desc")}
                 </Typography>
       
                 <form onSubmit={handleSubmit}>
                   <TextField
                     fullWidth
-                    label="Worker Name"
+                    label={t("workers.worker_name")}
                     variant="outlined"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -128,7 +130,7 @@ export default function AddWorkers() {
       
                   <TextField
                     fullWidth
-                    label="Phone (Optional)"
+                    label={t("workers.phone_optional")}
                     variant="outlined"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -151,7 +153,7 @@ export default function AddWorkers() {
                         },
                       }}
                     >
-                      {loading ? <CircularProgress size={24} /> : "Add Worker"}
+                      {loading ? <CircularProgress size={24} /> : t("workers.add_worker_btn")}
                     </Button>
       
                     <Button
@@ -164,7 +166,7 @@ export default function AddWorkers() {
                         fontWeight: 600,
                       }}
                     >
-                      Cancel
+                      {t("workers.cancel")}
                     </Button>
                   </Box>
                 </form>

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-
+import { useTranslation } from "react-i18next";
 
 export default function ViewReport() {
     const { id } = useParams();
@@ -20,6 +20,7 @@ export default function ViewReport() {
     const [reviewed, setReviewed] = useState(false);
     const socketRef = useRef(null);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     useEffect(() => {
         socketRef.current = io("http://localhost:8080", {
@@ -92,10 +93,10 @@ export default function ViewReport() {
           {/* HEADER */}
           <Box className="container py-5">
             <Typography variant="h4" fontWeight={700} gutterBottom>
-              View Report
+              {t("reports.view_report")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Review site engineer submission and take action
+              {t("reports.review_desc")}
             </Typography>
           </Box>
       
@@ -110,17 +111,17 @@ export default function ViewReport() {
               }}
             >
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Project Information
+                {t("reports.project_information")}
               </Typography>
       
               <Typography variant="body2">
-                <strong>Project:</strong> {report.projectId?.title}
+              <strong>{t("reports.project")}:</strong> {report.projectId?.title}
               </Typography>
               <Typography variant="body2">
-                <strong>Project ID:</strong> {report.projectId?._id}
+              <strong>{t("reports.project_id")}:</strong> {report.projectId?._id}
               </Typography>
               <Typography variant="body2">
-                <strong>Created At:</strong>{" "}
+              <strong>{t("reports.created_at")}:</strong>{" "}
                 {new Date(report.createdAt).toDateString()}
               </Typography>
             </Box>
@@ -137,14 +138,14 @@ export default function ViewReport() {
               }}
             >
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Site Engineer Details
+                {t("reports.site_engineer_details")}
               </Typography>
       
               <Typography variant="body2">
-                <strong>Name:</strong> {report.siteEngineerId?.name}
+              <strong>{t("reports.name")}:</strong> {report.siteEngineerId?.name}
               </Typography>
               <Typography variant="body2">
-                <strong>Email:</strong> {report.siteEngineerId?.email}
+              <strong>{t("reports.email")}:</strong> {report.siteEngineerId?.email}
               </Typography>
             </Box>
           </Box>
@@ -160,20 +161,20 @@ export default function ViewReport() {
               }}
             >
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Report Details
+                {t("reports.report_details")}
               </Typography>
       
               <Typography variant="body2" sx={{ mb: 1 }}>
-                <strong>Work Done:</strong> {report.workDone}
+                <strong>{t("reports.work_done")}:</strong> {report.workDone}
               </Typography>
       
               <Typography variant="body2" sx={{ mb: 2 }}>
-                <strong>Issues Found:</strong> {report.issuesFound}
+              <strong>{t("reports.work_done")}:</strong> {report.issuesFound}
               </Typography>
       
               {/* IMAGES */}
               <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
-                Uploaded Images
+                {t("reports.uploaded_images")}
               </Typography>
       
               {report?.images && report.images.length > 0 ? (
@@ -203,7 +204,7 @@ export default function ViewReport() {
                 </Box>
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  No images uploaded.
+                  {t("reports.no_images")}
                 </Typography>
               )}
             </Box>
@@ -220,13 +221,13 @@ export default function ViewReport() {
               }}
             >
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Contractor Review
+                {t("reports.contractor_review")}
               </Typography>
       
               {!reviewed ? (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <TextField
-                    label="Comment"
+                    label={t("reports.comment")}
                     multiline
                     rows={3}
                     value={comment}
@@ -239,7 +240,7 @@ export default function ViewReport() {
                       color="primary"
                       onClick={() => handleAction("approved")}
                     >
-                      Approve
+                      {t("reports.approve")}
                     </Button>
       
                     <Button
@@ -247,13 +248,13 @@ export default function ViewReport() {
                       color="secondary"
                       onClick={() => handleAction("declined")}
                     >
-                      Decline
+                      {t("reports.decline")}
                     </Button>
                   </Box>
                 </Box>
               ) : (
                 <Typography color="success.main">
-                  Report has been reviewed.
+                  {t("reports.reviewed_success")}
                 </Typography>
               )}
             </Box>

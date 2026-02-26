@@ -13,10 +13,11 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
+import { useTranslation } from "react-i18next";
 
 export default function Attendance() {
   const { id: projectId } = useParams();
-
+  const { t } = useTranslation();
   const [project, setProject] = useState(null);
   const [workers, setWorkers] = useState([]);
   const [attendance, setAttendance] = useState({});
@@ -126,11 +127,11 @@ export default function Attendance() {
             variant="h4"
             sx={{ fontWeight: 700, mb: 1, color: "#1e1e1e" }}
           >
-            Attendance
+            {t("attendance.attendance")}
           </Typography>
   
           <Typography variant="body2" color="text.secondary">
-            Mark and manage worker attendance for the selected date.
+            {t("attendance.attendance_desc")}     
           </Typography>
         </Box>
   
@@ -173,7 +174,7 @@ export default function Attendance() {
         >
           {workers.length === 0 && (
             <Typography color="text.secondary">
-              No workers assigned to this project.
+              {t("attendance.attendance_desc")}
             </Typography>
           )}
   
@@ -208,8 +209,8 @@ export default function Attendance() {
                   }
                 >
                   {attendance[worker._id] === "present"
-                    ? "Present"
-                    : "Absent"}
+                    ? t("attendance.present")
+                    : t("attendance.absent")}
                 </Typography>
   
                 <Switch
@@ -231,13 +232,13 @@ export default function Attendance() {
               sx={{ mt: 3 }}
               onClick={submitAttendance}
             >
-              Save Attendance
+              {t("attendance.save_attendance")}
             </Button>
           )}
   
           {project.status === "Completed" && (
             <Typography color="error" sx={{ mt: 3 }}>
-              Project is completed. Attendance is read-only.
+              {t("attendance.attendance_read_only")}
             </Typography>
           )}
         </Paper>

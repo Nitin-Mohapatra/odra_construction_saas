@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import {io} from "socket.io-client"
 import ContractorNavbar from "../../Components/ContractorNavbar";
 import axiosInstance from "../../utils/axiosInstance";
+import { useTranslation } from "react-i18next";
 
 export default function ContractorAttendance() {
     const { id: projectId } = useParams();
@@ -20,6 +21,7 @@ export default function ContractorAttendance() {
     const [loading, setLoading] = useState(true);
     const [project, setProject] = useState(null);
     const socketRef = useRef(null);
+    const { t } = useTranslation();
 
     // fetch attendance
     const fetchAttendance = async () => {
@@ -73,10 +75,10 @@ export default function ContractorAttendance() {
               {/* HEADER */}
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h4" fontWeight={700} gutterBottom>
-                  Attendance Overview
+                  {t("attendance.attendance_overview")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  View daily attendance marked for this project
+                  {t("attendance.attendance_overview_desc")}
                 </Typography>
               </Box>
       
@@ -91,7 +93,7 @@ export default function ContractorAttendance() {
                 }}
               >
                 <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Select Date
+                  {t("attendance.attendance_overview_desc")}
                 </Typography>
       
                 <TextField
@@ -126,12 +128,12 @@ export default function ContractorAttendance() {
                   }}
                 >
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    Worker Attendance
+                    {t("attendance.select_date")}
                   </Typography>
       
                   {attendance.records.length === 0 && (
                     <Typography variant="body2" color="text.secondary">
-                      No attendance records found for this date.
+                      {t("attendance.no_records_found")}
                     </Typography>
                   )}
       
@@ -161,7 +163,9 @@ export default function ContractorAttendance() {
                                 : "error.main",
                           }}
                         >
-                          {rec.status === "present" ? "Present" : "Absent"}
+                          {rec.status === "present"
+                            ? t("attendance.present")
+                            : t("attendance.absent")}
                         </Typography>
                       </Box>
                     ))}

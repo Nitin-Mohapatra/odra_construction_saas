@@ -11,8 +11,10 @@ import {
   CircularProgress
 } from "@mui/material";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function AssignWorkers() {
+  const { t } = useTranslation();
   const {id: projectId } = useParams();
   const navigate = useNavigate();
 
@@ -84,10 +86,10 @@ export default function AssignWorkers() {
           {/* HEADER */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="h4" fontWeight={700} gutterBottom>
-              Assign Workers
+              {t("workers.assign_workers")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Select available workers and assign them to this project.
+              {t("workers.assign_workers_desc")}
             </Typography>
           </Box>
   
@@ -110,10 +112,10 @@ export default function AssignWorkers() {
               }}
             >
               <Typography variant="h6" gutterBottom>
-                No Free Workers Available
+                {t("workers.no_free_workers")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                All workers are currently assigned to projects.
+                {t("workers.no_free_workers_desc")}
               </Typography>
             </Paper>
           )}
@@ -177,7 +179,7 @@ export default function AssignWorkers() {
                         fontWeight: 600,
                       }}
                     >
-                      Available
+                      {t("workers.available")}
                     </Typography>
                   </Box>
   
@@ -187,7 +189,7 @@ export default function AssignWorkers() {
                     sx={{ mt: 3, fontWeight: 600 }}
                     onClick={() => assignWorker(worker._id)}
                   >
-                    Assign Worker
+                    {t("workers.assign_worker_btn")}
                   </Button>
                 </Paper>
               ))}
@@ -203,7 +205,7 @@ export default function AssignWorkers() {
                 fontWeight: 600,
               }}
             >
-              ← Back to Project
+              {t("workers.back_to_project")}
             </Button>
           </Box>
         </Box>
