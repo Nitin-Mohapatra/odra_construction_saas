@@ -3,7 +3,7 @@ const messageModel = require('../models/chatMessage');
 exports.getProjectChats = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const chats = await messageModel.find({ projectId }).populate('senderId', 'name email').sort({ createdAt: 1 });
+        const chats = await messageModel.find({ projectId,organizationId: req.user.organizationId }).populate('senderId', 'name email').sort({ createdAt: 1 });
         return res.status(200).json({ success: true, chats, message: "Chats fetched successfully" });
     }
     catch (error) {
@@ -18,6 +18,7 @@ exports.getUnreadCount = async (req, res) => {
         const userId = req.user.User_id || req.user._id;
         const count = await messageModel.countDocuments({
             projectId: projectId,
+            organizationId: req.user.organizationId,
             senderId: { $ne: userId },
             readBy: { $ne: userId }
         });
@@ -38,6 +39,7 @@ exports.markChatRead = async (req, res) => {
         const result = await messageModel.updateMany(
             {
                 projectId: projectId,
+                organizationId: req.user.organizationId,
                 senderId: { $ne: userId },
                 readBy: { $ne: userId }
             },

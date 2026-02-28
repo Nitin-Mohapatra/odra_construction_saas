@@ -39,6 +39,7 @@ export default function ProjectDetails() {
         const fetchProject = async () => {
             try {
                 const res = await axiosInstance.get(`/projects/${id}`);
+                console.log(res);
 
                 if (res.status === 200) {
                     setProject(res.data.project);
@@ -99,6 +100,7 @@ export default function ProjectDetails() {
         };
     }, [id]);
 
+    console.log(project)
     if (loading) return <CircularProgress />;
 
     // Safe checks for when project is not loaded due to error

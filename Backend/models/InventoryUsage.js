@@ -7,6 +7,11 @@ const inventoryUsageSchema = new mongoose.Schema(
       ref: "Project",
       required: true
     },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true
+    },
     inventoryItemId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "InventoryItem",

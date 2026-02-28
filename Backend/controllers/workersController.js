@@ -17,7 +17,8 @@ exports.createWorker = async (req, res) => {
       phone,
       createdBy: req.user.User_id,
       status: "free",
-      currentProjectId: null
+      currentProjectId: null,
+      organizationId: req.user.organizationId
     });
 
     return res.status(201).json({
@@ -36,6 +37,7 @@ exports.createWorker = async (req, res) => {
 exports.getProjectWorkers = async (req, res) => {
   try {
     const workers = await Worker.find({
+      organizationId: req.user.organizationId,
       currentProjectId: req.params.projectId,
       status: "assigned"
     }).sort({ createdAt: 1 });
@@ -77,7 +79,10 @@ exports.assignWorkerToProject = async (req, res) => {
     }
 
     // validate worker exists
-    const worker = await Worker.findById(workerId);
+    const worker = await Worker.findOne({
+      _id: workerId,
+      organizationId: req.user.organizationId
+   });
     if(!worker){
       return res.status(404).json({
         success: false,
@@ -114,7 +119,8 @@ exports.assignWorkerToProject = async (req, res) => {
 exports.getAllWorkers = async (req,res)=>{
   try{
     const workers = await Worker.find({
-      createdBy: req.user.User_id
+      createdBy: req.user.User_id,
+      organizationId: req.user.organizationId
     }).populate('currentProjectId', 'title').sort({ createdAt: 1 });
     return res.status(200).json({ success: true, workers });
   }catch(error){

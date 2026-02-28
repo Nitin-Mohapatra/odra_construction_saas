@@ -25,7 +25,12 @@ const projectSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Report"
     }
-  ]
+  ], 
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true
+  }
 },
 { timestamps: true });
 

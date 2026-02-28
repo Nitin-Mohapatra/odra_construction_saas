@@ -93,7 +93,7 @@ export default function ContractorAttendance() {
                 }}
               >
                 <Typography variant="h6" fontWeight={600} gutterBottom>
-                  {t("attendance.attendance_overview_desc")}
+                  {t("attendance.select_date")}
                 </Typography>
       
                 <TextField
@@ -128,7 +128,7 @@ export default function ContractorAttendance() {
                   }}
                 >
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    {t("attendance.select_date")}
+                    {t("attendance.worker_attendance")}
                   </Typography>
       
                   {attendance.records.length === 0 && (

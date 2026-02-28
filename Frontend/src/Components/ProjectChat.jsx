@@ -79,6 +79,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
             projectId,
             senderId: currentUserId,
             message: newMessage,
+            organizationId: decoded.organizationId
         });
 
         setNewMessage("");

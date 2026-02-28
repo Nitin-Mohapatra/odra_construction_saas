@@ -8,7 +8,7 @@ exports.markAttendance = async (req, res) => {
       const { projectId, date, records } = req.body;
   
       // validate project exists
-      const project = await Project.findById(projectId);
+      const project = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
       if(!project){
         return res.status(404).json({
           success: false,
@@ -26,7 +26,7 @@ exports.markAttendance = async (req, res) => {
 
       // checkt if the workers are assigned to the project & is not free
       for(const rec of records){
-        const worker = await Worker.findById(rec.workerId);
+        const worker = await Worker.findOne({_id:rec.workerId,organizationId: req.user.organizationId});
         if(!worker){
           return res.status(404).json({
             success: false,
@@ -48,7 +48,7 @@ exports.markAttendance = async (req, res) => {
       }
 
       const attendance = await Attendance.findOneAndUpdate(
-        { projectId, date },
+        { projectId, date,organizationId: req.user.organizationId },
         {
           projectId,
           date,
@@ -81,7 +81,7 @@ exports.markAttendance = async (req, res) => {
 // finding an attendance
 exports.getAttendance = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.projectId);
+    const project = await Project.findOne({_id:req.params.projectId,organizationId: req.user.organizationId});
     if(!project){
       return res.status(404).json({
         success: false,
@@ -91,6 +91,7 @@ exports.getAttendance = async (req, res) => {
     
     const attendance = await Attendance.findOne({
       projectId: req.params.projectId,
+      organizationId: req.user.organizationId,
       date: req.params.date
     }).populate("records.workerId").populate("projectId");
 

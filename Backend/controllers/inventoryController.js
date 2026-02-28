@@ -17,7 +17,7 @@ exports.addInventoryItem = async (req, res) => {
       });
     }
 
-    const project = await Project.findById(projectId);
+    const project = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -60,7 +60,8 @@ exports.addInventoryItem = async (req, res) => {
         pricePerUnit: price,
         totalQuantity: qty,
         availableQuantity: qty,
-        createdBy: req.user.User_id
+        createdBy: req.user.User_id,
+        organizationId: req.user.organizationId,
       });
     }
 
@@ -95,7 +96,7 @@ exports.getProjectInventory = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const items = await InventoryItem.find({ projectId }).populate({
+    const items = await InventoryItem.find({ projectId,organizationId: req.user.organizationId }).populate({
       path:"projectId",
       select:"title contractor",
       populate:{
@@ -140,7 +141,7 @@ exports.logInventoryUsage = async (req, res) => {
       });
     }
 
-    const project = await Project.findById(projectId);
+    const project = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -152,7 +153,10 @@ exports.logInventoryUsage = async (req, res) => {
       });
     }
 
-    const item = await InventoryItem.findById(inventoryItemId);
+    const item = await InventoryItem.findOne({
+      _id:inventoryItemId,
+      organizationId: req.user.organizationId
+    });
     if (!item) {
       return res.status(404).json({ message: "Inventory item not found" });
     }
@@ -170,6 +174,7 @@ exports.logInventoryUsage = async (req, res) => {
     await InventoryUsage.create({
       projectId,
       inventoryItemId,
+      organizationId: req.user.organizationId,
       usedQty,
       costAtThatTime: usageCost,
       usedBy: req.user.User_id,
@@ -216,7 +221,7 @@ exports.getInventoryUsageHistory = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const history = await InventoryUsage.find({ projectId })
+    const history = await InventoryUsage.find({ projectId,organizationId: req.user.organizationId })
       .populate("inventoryItemId", "name unit")
       .populate("usedBy", "name")
       .sort({ date: -1 });
@@ -239,10 +244,10 @@ exports.getInventorySummary = async (req, res) => {
     const { projectId } = req.params;
 
     // 1️⃣ Get all inventory items
-    const items = await InventoryItem.find({ projectId });
+    const items = await InventoryItem.find({ projectId ,organizationId: req.user.organizationId});
 
     // 2️⃣ Get all usage records
-    const usageRecords = await InventoryUsage.find({ projectId });
+    const usageRecords = await InventoryUsage.find({ projectId,organizationId: req.user.organizationId });
 
     // 3️⃣ Calculate totals
 

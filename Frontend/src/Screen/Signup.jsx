@@ -13,8 +13,7 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
-    role: "",
+    password: ""
   });
   const [validated, setValidated] = useState(false);
 
@@ -33,11 +32,11 @@ export default function Signup() {
     }
 
     try {
-      const { name, email, password, role } = formData;
+      const { name, email, password } = formData;
 
       const res = await axiosInstance.post(
         "/auth/signUp",
-        { name, email, password, role },
+        { name, email, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
@@ -49,16 +48,7 @@ export default function Signup() {
 
         toast.success("Account created successfully!");
 
-        switch (res.data.role) {
-          case "site engineer":
-            navigate("/engineer/home");
-            break;
-          case "manager":
-            navigate("/contractor/home");
-            break;
-          default:
-            navigate("/");
-        }
+        navigate("/contractor/home");
       }
     } catch (e) {
       console.log(e)
@@ -178,24 +168,6 @@ export default function Signup() {
                 required
                 minLength={6}
               />
-            </Box>
-
-            {/* Role */}
-            <Box mb={3}>
-              <label className="form-label fw-semibold">{t("auth.role")}</label>
-              <select
-                name="role"
-                className="form-select"
-                value={formData.role}
-                onChange={handleChange}
-                required
-              >
-                <option value="" disabled>
-                  {t("auth.choose_role")}
-                </option>
-                <option value="site engineer">{t("auth.site_engineer")}</option>
-                <option value="manager">{t("auth.manager")}</option>
-              </select>
             </Box>
 
             {/* Submit */}

@@ -9,7 +9,11 @@ const reportSchema = new mongoose.Schema(
       ref: "Project",
       required: true
     },
-
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true
+    },
     siteEngineerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -32,7 +32,16 @@ const workerSchema = new mongoose.Schema(
       type: String,
       enum: ["free", "assigned"],
       default: "free"
-    }
+    },
+
+    // organization
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true
+    },
+
+
   },
   { timestamps: true }
 );

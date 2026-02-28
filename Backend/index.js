@@ -56,7 +56,7 @@ io.on('connection',(socket)=>{
     })
 
     // listening for new messages
-    socket.on("chat:new", async ({ projectId, senderId, message }) => {
+    socket.on("chat:new", async ({ projectId, senderId, message,organizationId }) => {
       try {
         if (!projectId || !senderId || !message) return;
 
@@ -70,7 +70,8 @@ io.on('connection',(socket)=>{
         const chat = await ChatMessage.create({
           projectId,
           senderId,
-          message
+          message,
+          organizationId
         });
 
         io.to(`project-${projectId}`).emit("chat:new", chat);

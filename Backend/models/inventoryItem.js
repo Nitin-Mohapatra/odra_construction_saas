@@ -7,6 +7,11 @@ const inventoryItemSchema = new mongoose.Schema(
       ref: "Project",
       required: true
     },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true
+    },
     name: {
       type: String,
       required: true

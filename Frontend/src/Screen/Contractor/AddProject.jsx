@@ -12,6 +12,7 @@ export default function AddProject() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [siteEngineerEmail, setSiteEngineerEmail] = useState("");
+  const [siteEngineerName, setSiteEngineerName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {t} = useTranslation();
@@ -23,13 +24,14 @@ export default function AddProject() {
     try {
       await axiosInstance.post(
         "/projects",
-        { title, description, siteEngineerEmail }
+        { title, description, siteEngineerEmail,siteEngineerName }
       );
 
       toast.success("Project created successfully");
       navigate("/contractor/home");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error creating project");
+      console.error(err)
+      toast.error(err.response?.data?.error || "Error creating project");
     } finally {
       setLoading(false);
     }
@@ -112,6 +114,22 @@ export default function AddProject() {
                     onChange={(e) =>
                       setSiteEngineerEmail(e.target.value)
                     }
+                  />
+                </div>
+
+
+                {/* site eng name */}
+                <div className="mb-4">
+                  <label className="form-label fw-semibold">
+                    SiteEngineer name 
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder={t("SiteEngineer name")}
+                    required
+                    value={siteEngineerName}
+                    onChange={(e) => setSiteEngineerName(e.target.value)}
                   />
                 </div>
   

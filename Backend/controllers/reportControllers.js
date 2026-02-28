@@ -9,7 +9,7 @@ exports.createReport = async (req,res)=>{
         
 
         // validate projects
-        const projectDetails = await Project.findById(projectId);
+        const projectDetails = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
         if(!projectDetails) {
             return res.status(404).json({message: 'Project does not exit' });
         }
@@ -24,7 +24,7 @@ exports.createReport = async (req,res)=>{
             return res.status(403).json({ message: 'You are not assigned to this project' });
         }
 
-        const siteEngineer = await User.findById(siteEngineerId);
+        const siteEngineer = await User.findOne({_id:siteEngineerId,organizationId: req.user.organizationId});
         const siteEngName = siteEngineer?.name;
 
 
@@ -33,7 +33,8 @@ exports.createReport = async (req,res)=>{
             siteEngineerId,
             workDone,
             issuesFound,
-            images
+            images,
+            organizationId: req.user.organizationId
         })
 
         // push reports into the projects
@@ -76,7 +77,7 @@ exports.reviewReport = async (req,res)=>{
         const {contractorStatus, contractorComment } = req.body;
         const contractorId = req.user.User_id;
 
-        const report = await Report.findById(reportId).populate("projectId");
+        const report = await Report.findOne({_id:reportId,organizationId: req.user.organizationId}).populate("projectId");
         if (!report) return res.status(404).json({ message: 'Report not found' });
 
         // check if this is the valid contractor to review the report
@@ -122,7 +123,7 @@ exports.getReportById = async (req,res)=>{
             return res.status(400).json({ message: 'Report ID is required' });
         }
 
-        const report = await Report.findById(reportId).populate("projectId").populate("siteEngineerId");
+        const report = await Report.findOne({_id:reportId,organizationId: req.user.organizationId}).populate("projectId").populate("siteEngineerId");
 
         if(!report){
             return res.status(404).json({ message: 'Report not found' });

@@ -13,8 +13,12 @@ const userSchema = new Schema({
 
     createdProjects: [
         { type: Schema.Types.ObjectId, ref: "Project" }
-    ]
+    ],
+    organizationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Organization",
+    }
 },
-{ timestamps: true });
+    { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);
