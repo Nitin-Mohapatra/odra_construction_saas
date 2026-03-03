@@ -14,8 +14,13 @@ import {
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
 import { useTranslation } from "react-i18next";
+import { canAccess } from "../../utils/subscription";
+import { io } from "socket.io-client";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Attendance() {
+  const navigate = useNavigate();
   const { id: projectId } = useParams();
   const { t } = useTranslation();
   const [project, setProject] = useState(null);
@@ -25,6 +30,39 @@ export default function Attendance() {
     new Date().toISOString().split("T")[0]
   );
   const [loading, setLoading] = useState(true);
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    if (!canAccess("attendance")) {
+      toast.error("Upgrade to Business Plan to unlock Attendance.");
+      navigate("/site-engineer/projects");
+      return ;
+    }
+    socketRef.current = io("http://localhost:8080", {
+      transports: ["websocket"]
+    })
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    }
+  }, []);
+
+  useEffect(()=>{
+    // Check if socket is initialized before using it
+    if (!socketRef.current || !projectId) return;
+
+    // join the room 
+    socketRef.current.emit("join", { projectId: projectId });
+
+    socketRef.current.on("project:deleted", (data) => {
+      toast.info("Project has been deleted");
+      navigate(`/site-engineer/projects`);
+    });
+
+  },[projectId])
 
   /* --------------------------------
      Fetch project, workers & attendance

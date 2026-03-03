@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useTranslation } from "react-i18next";
+import DeleteIcon from  "@mui/icons-material/Delete"
 
 export default function Project() {
   const [projects, setProjects] = useState([]);
@@ -22,22 +23,39 @@ export default function Project() {
   const {t} = useTranslation();
 
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await axiosInstance.get("/projects");
-        if (res.status === 200) {
-          setProjects(res.data.projects);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Error fetching projects");
+  const fetchProjects = async () => {
+    try {
+      const res = await axiosInstance.get("/projects");
+      if (res.status === 200) {
+        setProjects(res.data.projects);
         setLoading(false);
       }
-    };
+    } catch (err) {
+      console.error(err);
+      toast.error("Error fetching projects");
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchProjects();
   }, []); // <-- fix: run only once on mount
+
+  const handleDelete = async (projectId) => {
+    const ans = window.confirm(
+      "Are you sure? This will permanently delete the project."
+    );
+  
+    if (!ans) return;
+  
+    try {
+      await axiosInstance.delete(`/projects/${projectId}`);
+      toast.success("Project deleted");
+      fetchProjects();
+    } catch (err) {
+      console.log(err)
+      toast.error("Delete failed");
+    }
+  };
 
   return (
     <>
@@ -117,23 +135,53 @@ export default function Project() {
                   }}
                 >
                   {/* TOP RIGHT ICON */}
-                  <Tooltip title={t("project.open_project")}>
-                    <IconButton
-                      onClick={() => navigate(`/contractor/project/${pro._id}`)}
-                      sx={{
-                        position: "absolute",
-                        top: 12,
-                        right: 12,
-                        backgroundColor: "#f5a623",
-                        color: "#000",
-                        "&:hover": {
-                          backgroundColor: "#e6a11e",
-                        },
-                      }}
-                    >
-                      <OpenInNewIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
+                  {/* TOP RIGHT ACTIONS */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      display: "flex",
+                      gap: 1,
+                    }}
+                  >
+                    <Tooltip title={t("project.open_project")}>
+                      <IconButton
+                        size="small"
+                        onClick={() => navigate(`/contractor/project/${pro._id}`)}
+                        sx={{
+                          backgroundColor: "#f5a623",
+                          color: "#000",
+                          width: 34,
+                          height: 34,
+                          "&:hover": {
+                            backgroundColor: "#e6a11e",
+                          },
+                        }}
+                      >
+                        <OpenInNewIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Delete Project">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(pro._id)}
+                        sx={{
+                          backgroundColor: "#fff",
+                          color: "#ef4444",
+                          width: 34,
+                          height: 34,
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+                          "&:hover": {
+                            backgroundColor: "#fee2e2",
+                          },
+                        }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
 
                   <CardContent sx={{ p: 4 }}>
                     <Typography variant="h6" fontWeight={600}>
@@ -158,7 +206,5 @@ export default function Project() {
       <Footer />
     </>
   );
-
-
 
 }

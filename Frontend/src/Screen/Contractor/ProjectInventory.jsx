@@ -212,7 +212,7 @@ export default function ProjectInventory() {
 
             <Button
               variant="outlined"
-              
+              disabled={items.length === 0}
               sx={{
                 borderColor: "#f5a623",
                 color: "#000",
@@ -387,6 +387,7 @@ export default function ProjectInventory() {
           </Box>
         </Box>
       </Box>
+
       <InventoryBreakdownModal
         open={breakdownOpen}
         handleClose={() => setBreakdownOpen(false)}

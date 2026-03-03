@@ -16,6 +16,9 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { canAccess } from "../utils/subscription";
+import LockIcon from "@mui/icons-material/Lock";
 
 const style = {
   position: "absolute",
@@ -243,16 +246,32 @@ doc.text(
         </Typography>
 
         <Box sx={{ textAlign: "right", mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+
           <Button
             variant="outlined"
-            onClick={exportPDF}
+            onClick={() => {
+              if (!canAccess("pdf")) {
+                toast.error("Upgrade to Business Plan to unlock PDF Export.");
+                return;
+              }
+              exportPDF();
+            }}
+            disabled={items.length === 0}
             sx={{
-              borderColor: "#f5a623",
-              color: "#000",
-              fontWeight: 600
+              borderColor: !canAccess("pdf") ? "#ccc" : "#f5a623",
+              color: !canAccess("pdf") ? "#999" : "#000",
+              fontWeight: 600,
+              opacity: !canAccess("pdf") ? 0.6 : 1,
+              display: "flex",
+              alignItems: "center",
+              gap: "6px"
             }}
           >
             {t("inventory.export_pdf")}
+
+            {!canAccess("pdf") && (
+              <LockIcon sx={{ fontSize: 16, color: "#ff9800" }} />
+            )}
           </Button>
 
           <Button

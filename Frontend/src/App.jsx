@@ -27,6 +27,7 @@ import Services from './Screen/Services'
 import ProjectInventory from './Screen/Contractor/ProjectInventory'
 import InventoryUsage from './Screen/SiteEngineer/InventoryUsage'
 import InventoryHistory from './Screen/Contractor/InventoryHistory'
+import Pricing from './Screen/Pricing'
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
         <Route path="/contractor/workers" element={<ContractorWorkers/>} />
         <Route path="/contractor/add-worker" element={<AddWorker/>} />
         <Route path="/contractor/projects/:id/assign-workers" element={<AssignWorker/>} />
+        <Route path="/pricing" element={<Pricing />} />
         </Routes>
     </BrowserRouter>
   )

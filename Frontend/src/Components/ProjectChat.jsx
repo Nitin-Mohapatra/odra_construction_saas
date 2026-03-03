@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-// import axios from "axios";
 import axiosInstance from "../utils/axiosInstance"
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
@@ -7,13 +6,23 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-// import { useRef } from "react";
+import { canAccess } from "../utils/subscription";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const socketRef = useRef(null);
     const messagesEndRef = useRef(null);
+
+    // checking access and making the connection 
+    useEffect(() => {
+        if (!canAccess("chat")) {
+            toast.error("Upgrade to Business Plan to unlock Attendance.");
+            navigate("/site-engineer/projects")
+            return;
+        }
+      }, []);
 
     // 🔐 get current user id from JWT
     const token = localStorage.getItem("token");
@@ -60,6 +69,12 @@ export default function ProjectChat({ projectId, onMessageSent }) {
         socket.on("chat:new", (data) => {
             setMessages((prev) => [...prev, data]);
         });
+
+        socketRef.current.on("project:deleted", (data) => {
+            toast.info("Project has been deleted");
+            navigate(`/site-engineer/projects`);
+        });
+      
 
         return () => {
             socket.emit("leave", { projectId });

@@ -100,6 +100,11 @@ export default function InventoryUsage() {
       
     });
 
+    socket.on("project:deleted", (data) => {
+      toast.info("Project has been deleted");
+      navigate(`/site-engineer/projects`);
+    })
+
     return () => socket.disconnect();
 
   }, [projectId, currentUserId]);

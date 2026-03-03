@@ -10,11 +10,15 @@ import heroImg from "../../assets/pic.png";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import UpgradeBanner from "../../Components/UpgradeBanner";
+import { getSubscription } from "../../utils/subscription";
 
 export default function SiteEngineer() {
   const socketRef = useRef(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+ 
   useEffect(() => {
     // decode token to get REAL MongoDB user id
     const token = localStorage.getItem("token");
@@ -56,6 +60,7 @@ export default function SiteEngineer() {
       <ToastContainer position="top-right" autoClose={4000} />
       <SiteEngineerNavbar />
 
+      {/* {getSubscription().plan === "free" && <UpgradeBanner />}   */}
       {/* HERO SECTION */}
       <section
         style={{

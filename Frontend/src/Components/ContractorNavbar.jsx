@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+import LockIcon from "@mui/icons-material/Lock";
+import { toast } from "react-toastify";
+import { canAccess } from "../utils/subscription";
 
 import {
   AppBar,
@@ -25,7 +28,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { deepOrange } from "@mui/material/colors";
 
 export default function ContractorNavbar() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
@@ -34,6 +37,9 @@ export default function ContractorNavbar() {
     localStorage.removeItem("IsLogin");
     localStorage.removeItem("User_id");
     localStorage.removeItem("name");
+    localStorage.removeItem("subscription");
+    localStorage.removeItem("organizationId");
+    localStorage.removeItem("role");
     navigate("/home");
   };
 
@@ -71,20 +77,41 @@ export default function ContractorNavbar() {
 
           {/* Desktop Menu */}
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
-            {menuItems.map((item) => (
-              <Typography
-                key={item.label}
-                component={Link}
-                to={item.path}
-                sx={{
-                  color: "white",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
-              >
-                {item.label}
-              </Typography>
-            ))}
+            {menuItems.map((item) => {
+              const isAddWorker = item.path === "/contractor/add-worker" || item.path ==="/contractor/workers";
+              const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
+
+              return (
+                <Typography
+                  key={item.label}
+                  onClick={() => {
+                    if (!allowed) {
+                      toast.error("Upgrade to Business Plan to unlock this feature.");
+                      return;
+                    }
+                    navigate(item.path);
+                  }}
+                  sx={{
+                    color: "white",
+                    textDecoration: "none",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    opacity: allowed ? 1 : 0.6,
+                  }}
+                >
+                  {item.label}
+
+                  {!allowed && (
+                    <LockIcon
+                      fontSize="small"
+                      sx={{ ml: 1, fontSize: 16, color: "#ff9800" }}
+                    />
+                  )}
+                </Typography>
+              );
+            })}
           </Box>
 
           {/* Avatar */}
@@ -145,23 +172,45 @@ export default function ContractorNavbar() {
         <Box sx={{ width: 260, p: 2 }}>
           <img src={logo} alt="logo" style={{ width: 60, marginBottom: 20 }} />
 
-            
+
           <List>
-            {menuItems.map((item) => (
-              <ListItem
-                button
-                key={item.label}
-                component={Link}
-                to={item.path}
-                onClick={() => setOpenDrawer(false)}
-              >
-                <ListItemText primary={item.label} />
-              </ListItem>
-            ))}
+            {menuItems.map((item) => {
+              const isAddWorker = item.path === "/contractor/add-worker" || item.path ==="/contractor/workers";
+              const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
+
+              return (
+                <ListItem
+                  button
+                  key={item.label}
+                  onClick={() => {
+                    if (!allowed) {
+                      toast.error("Upgrade to Business Plan to unlock this feature.");
+                      return;
+                    }
+                    navigate(item.path);
+                    setOpenDrawer(false);
+                  }}
+                  sx={{
+                    opacity: allowed ? 1 : 0.6,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <ListItemText primary={item.label} />
+
+                  {!allowed && (
+                    <LockIcon
+                      fontSize="small"
+                      sx={{ fontSize: 16, color: "#ff9800" }}
+                    />
+                  )}
+                </ListItem>
+              );
+            })}
           </List>
 
           {/* Avatar + Logout in Drawer */}
-          <Box sx={{ mt: 3, textAlign: "center", display:"flex",justifyContent:"flexStart", alignItems:"center", gap:1}}>
+          <Box sx={{ mt: 3, textAlign: "center", display: "flex", justifyContent: "flexStart", alignItems: "center", gap: 1 }}>
             <Avatar
               sx={{
                 bgcolor: deepOrange[500],

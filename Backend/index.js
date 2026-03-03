@@ -15,6 +15,8 @@ const workerRoutes = require('./routes/workerRoutes');
 const ChatMessage = require("./models/chatMessage");
 const Project = require("./models/project")
 const inventoryRoute = require('./routes/inventoryRoutes');
+const Subscription = require("./models/Subscription");
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
 
 // creating http server and mounting socket.io to it
 const httpServer = http.createServer(app);
@@ -58,7 +60,7 @@ io.on('connection',(socket)=>{
     // listening for new messages
     socket.on("chat:new", async ({ projectId, senderId, message,organizationId }) => {
       try {
-        if (!projectId || !senderId || !message) return;
+        if (!projectId || !senderId || !message || !organizationId) return;
 
         // check if the project is completed
         const project = await Project.findById(projectId);
@@ -66,6 +68,16 @@ io.on('connection',(socket)=>{
             console.log("Project is completed");
             return;
         }
+
+        // 2️⃣ Check subscription
+        const subscription = await Subscription.findOne({ organizationId });
+        if (!subscription || subscription.plan !== "business" || subscription.status !== "active") {
+            console.log("Chat blocked - Free plan");
+            socket.emit("subscription:error", {
+              message: "Chat feature is available only in Business plan."
+            });
+            return;
+          }
 
         const chat = await ChatMessage.create({
           projectId,
@@ -118,9 +130,12 @@ app.use('/chat',chatRouter);
 app.use('/workers',workerRoutes);
 app.use('/inventory',inventoryRoute);
 
+// using subcrtiption routes
+app.use("/subscription", subscriptionRoutes);
+
 // requiring tokenValidatorChecker
 const tokenValidation = require('./routes/tokenValiditiCheaker');
-const { Socket } = require('dgram');
+// const { Socket } = require('dgram');
 app.use('/token', tokenValidation);
 
 // connecting to database

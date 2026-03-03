@@ -9,7 +9,8 @@
     "add_project": "Add New Project",
     "all_projects": "All Projects",
     "workers": "Workers",
-    "add_worker": "Add Worker"
+    "add_worker": "Add Worker",
+    "pricing": "Pricing"
   },
   "auth": {
     "welcome_back": "Welcome Back",

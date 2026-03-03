@@ -17,7 +17,11 @@ const userSchema = new Schema({
     organizationId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Organization",
+    },totalProjects: {
+        type: Number,
+        default: 0
     }
+    
 },
     { timestamps: true });
 

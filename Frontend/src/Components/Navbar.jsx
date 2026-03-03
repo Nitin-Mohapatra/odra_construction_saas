@@ -74,6 +74,7 @@ export default function Navbar() {
     { label: t("navbar.home"), path: "/home" },
     { label: t("navbar.services"), path: "/services" },
     { label: t("navbar.contact"), path: "/Contact-Us" },
+    { label: t("navbar.pricing"), path: "/pricing" },
   ];
 
   return (
@@ -218,7 +219,7 @@ export default function Navbar() {
                   fontWeight: 600,
                 }}
               >
-                Sign Up
+                 {t("navbar.signup")}
               </Button>
             </Box>
           )}

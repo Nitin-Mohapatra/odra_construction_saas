@@ -9,7 +9,9 @@ import { jwtDecode } from "jwt-decode";
 import axiosInstance from '../../utils/axiosInstance';
 import { Box, Typography, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
+import UpgradeBanner from "../../Components/UpgradeBanner";
+import { canAccess } from "../../utils/subscription";
+import { getSubscription } from "../../utils/subscription";
 export default function ContractorDashboard() {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
@@ -60,8 +62,10 @@ export default function ContractorDashboard() {
   
   return (
     <>
+      {getSubscription().plan === "free" && <UpgradeBanner />}
       <ContractorNavbar />
-  
+
+      
       <Box
         style={{
           minHeight: "100vh",

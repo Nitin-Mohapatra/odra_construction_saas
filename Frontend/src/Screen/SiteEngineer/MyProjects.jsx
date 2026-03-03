@@ -61,6 +61,14 @@ export default function MyProjects() {
       toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`);
     })
 
+    socketRef.current.on("project:deleted", (data) => {
+      setProjects((prev) =>
+        prev.filter((pro) => pro._id !== data.project_id)
+      );
+    
+      toast.info(`Contractor deleted the project ${data.project_name}`);
+    });
+
 
     return () => {
       if (socketRef.current) {

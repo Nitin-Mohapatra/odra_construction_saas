@@ -7,6 +7,8 @@ import Badge from '@mui/material/Badge';
 import axiosInstance from "../utils/axiosInstance";
 import { io } from 'socket.io-client';
 import ProjectChat from './ProjectChat';
+import { canAccess } from "../utils/subscription";
+import { useEffect } from 'react';
 
 const style = {
   position: 'absolute',
@@ -24,6 +26,12 @@ export default function ChatModal({projectId}) {
   const [open, setOpen] = React.useState(false);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const socketRef = React.useRef(null);
+
+  useEffect(() => {
+    if (!canAccess("chat")) {
+      return;
+    }
+  }, []);
 
   const fetchUnreadCount = async () => {
     try {

@@ -25,6 +25,9 @@ axiosInstance.interceptors.response.use(
             localStorage.removeItem("User_id");
             localStorage.removeItem("IsLogin");
             localStorage.removeItem("name");
+            localStorage.removeItem("subscription");
+            localStorage.removeItem("organizationId");
+            localStorage.removeItem("role");
             toast.error("Session expired. Please login again.");
             // Cannot use React Router hooks here; use a simple redirect instead
             window.location.href = "/";

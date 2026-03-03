@@ -1,0 +1,6 @@
+
+1. ensure the axiosinstance.js remove localstorage on auto delay logout -- DONE
+2. enuse before upgrading he/she must login/sigup  -- DONE
+3. fix banner overlap -- DONE
+4. check entire work flow -- DONE
+5. Other features implementation. jitu Bhai's input

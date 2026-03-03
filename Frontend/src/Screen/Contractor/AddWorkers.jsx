@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import axiosInstance from '../../utils/axiosInstance';
 import workerImage from '../../assets/pic.png';
 import { useTranslation } from "react-i18next";
+import { canAccess } from "../../utils/subscription";
+import { useEffect } from 'react';
 
 export default function AddWorkers() {
     const navigate = useNavigate();
@@ -14,6 +16,13 @@ export default function AddWorkers() {
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
+    
+    useEffect(() => {
+      if (!canAccess("addWorker")) {
+        toast.error("Upgrade to Business Plan to unlock Worker Management.");
+        navigate("/contractor/home");
+      }
+    }, []);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,7 +51,7 @@ export default function AddWorkers() {
             }
         } catch (error) {
             console.error(error);
-            const errorMessage = error.response?.data?.message || 'Failed to add worker';
+            const errorMessage = error.response?.data?.error || 'Failed to add worker';
             toast.error(errorMessage);
         } finally {
             setLoading(false);

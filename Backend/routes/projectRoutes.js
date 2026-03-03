@@ -19,4 +19,7 @@ router.get('/:id',authen,validateRoles(["manager","site engineer"]),projectContr
 // complete project
 router.post('/:projectId/complete',authen,validateRoles("manager"),projectController.completeProject);
 
+// delete project 
+router.delete("/:id", authen, validateRoles("manager"), projectController.deleteProject);
+
 module.exports = router;

@@ -6,7 +6,12 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const nodemailer = require("nodemailer");
-const env = require("dotenv").config()
+const env = require("dotenv").config();
+const Subscription = require("../models/Subscription");
+const ChatMessage = require("../models/chatMessage")
+const InventoryItem = require("../models/inventoryItem");
+const InventoryUsage = require("../models/InventoryUsage");
+const Attendance = require("../models/Attendance");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",   // ✅ correct hostname
@@ -51,6 +56,34 @@ exports.createProject = async (req, res) => {
         if (!contractor) {
             return res.status(404).json({ success: false, error: "Contractor not found" });
         }
+
+        // check for suscription plan
+        const subscription = await Subscription.findOne({ organizationId });
+        if (!subscription) {
+            return res.status(403).json({
+                success: false,
+                error: "Subscription not found for organization"
+            });
+        }
+        // if it is a free plan
+        if(subscription.plan === "free"){
+            const existingProjectCount = contractor.totalProjects;
+
+            if(existingProjectCount >= 1){
+                return res.status(402).json({
+                    success: false,
+                    error: "Free plan allows only 1 project. Please upgrade to Business plan."
+                });
+            }
+        }
+        // if business plan but expired
+        if(subscription.plan === "business" && subscription.status != "active"){
+            return res.status(402).json({
+                success: false,
+                error: "Subscription expired. Please renew your Business plan."
+            });
+        }
+        
 
         // 🔎 Find site engineer by email
         let stEng = await User.findOne({
@@ -146,6 +179,9 @@ exports.createProject = async (req, res) => {
             contractor: contractorId,
             organizationId
         });
+
+        contractor.totalProjects+=1;
+        await contractor.save();
 
         // Push project reference
         await User.findByIdAndUpdate(contractorId, {
@@ -299,5 +335,79 @@ exports.completeProject = async (req, res) => {
     } catch (error) {
         console.error("Complete Project Error:", error);
         return res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+}
+
+// delete projects
+exports.deleteProject = async (req, res)=>{
+    try{
+        const {id} = req.params;
+        const contractor_id = req.user.User_id;
+        const organizationId = req.user.organizationId;
+        const project = await Project.findOne({ _id: id, organizationId });
+        const project_name = project.title;
+        const siteEng_id = project.siteEngineer;
+
+        if(!project){
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        // 1 remove project from contractor
+        await User.findOneAndUpdate({_id:project.contractor,organizationId:organizationId},{
+            $pull:{createdProjects:id}
+        })
+
+        // 2️⃣ Remove project from site engineer
+        await User.findOneAndUpdate({_id:project.siteEngineer,organizationId}, {
+            $pull: { assignedProjects: id }
+        });
+
+        // 3️⃣ Free workers (remove project reference)
+        await Worker.updateMany(
+            { currentProjectId: id },
+            { $set: { currentProjectId: null,status:"free" } }
+        );
+
+        // 4️⃣ Delete reports
+        await Report.deleteMany({ projectId: id , organizationId});
+
+        // 5️⃣ Delete chats
+        await ChatMessage.deleteMany({ projectId: id ,organizationId});
+
+        // 6️⃣ Delete inventory usage logs
+        await InventoryUsage.deleteMany({ projectId: id ,organizationId});
+
+        // 7️⃣ Delete inventory items
+        await InventoryItem.deleteMany({ projectId: id ,organizationId});
+
+        // 8 Delete project
+        await Project.findOneAndDelete({_id:id,organizationId});
+
+        // 9 delete attendance
+        await Project.deleteMany({projectId:id,organizationId});
+
+        // 🔔 Real-time notify engineer
+        const io = req.app.get("io");
+        const roomName = `siteEngineer-${siteEng_id.toString()}`;
+        const roomName2 = `project-${id}`
+
+        io.to(roomName).emit("project:deleted", {
+            project_id:id,
+            project_name
+        });
+
+        io.to(roomName2).emit("project:deleted",{
+            project_id:id,
+            project_name
+        })
+
+
+        return res.status(200).json({
+            message: "Project deleted successfully"
+        });
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({success:false,error:"Internal server error"});
     }
 }

@@ -45,6 +45,9 @@ export default function Login() {
         localStorage.setItem("User_id", response.data.User_id);
         localStorage.setItem("IsLogin", true);
         localStorage.setItem("name", response.data.name);
+        // set the subscription in local storage
+        const subRes = await axiosInstance.get("/subscription/me");
+        localStorage.setItem("subscription", JSON.stringify(subRes.data));
 
         toast.success("Logged in successfully!");
 

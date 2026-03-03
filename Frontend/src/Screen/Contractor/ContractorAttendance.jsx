@@ -13,6 +13,8 @@ import {io} from "socket.io-client"
 import ContractorNavbar from "../../Components/ContractorNavbar";
 import axiosInstance from "../../utils/axiosInstance";
 import { useTranslation } from "react-i18next";
+import { canAccess } from "../../utils/subscription";
+import { useNavigate } from "react-router-dom";
 
 export default function ContractorAttendance() {
     const { id: projectId } = useParams();
@@ -22,6 +24,14 @@ export default function ContractorAttendance() {
     const [project, setProject] = useState(null);
     const socketRef = useRef(null);
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (!canAccess("attendance")) {
+        toast.error("Upgrade to Business Plan to unlock Attendance.");
+        navigate("/contractor/home");
+      }
+    }, []);
 
     // fetch attendance
     const fetchAttendance = async () => {

@@ -8,16 +8,55 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import { useTranslation } from "react-i18next";
+import { canAccess } from "../../utils/subscription";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { useRef } from "react";
 
 export default function SubmitReport() {
+    const navigate = useNavigate();
     const { t } = useTranslation();
+    const socketRef = useRef(null);
     const [data, setData] = useState({
       workDone: "",
       issuesFound: "",
     });
+
+    // checking for access and setting io connection 
+    useEffect(() => {
+      if (!canAccess("reports")) {
+        toast.error("Upgrade to Business Plan to unlock Report Submission.");
+        navigate("/site-engineer/projects");
+        return ;
+      }
+      socketRef.current = io("http://localhost:8080", {
+        transports: ["websocket"]
+      })
   
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.disconnect();
+          socketRef.current = null;
+        }
+      }
+    }, []);
+
     const { id } = useParams();
-    const navigate = useNavigate();
+
+    useEffect(()=>{
+      // Check if socket is initialized before using it
+      if (!socketRef.current || !id) return;
+
+      // join the room 
+      socketRef.current.emit("join", { projectId: id });
+
+      socketRef.current.on("project:deleted", (data) => {
+        toast.info("Project has been deleted");
+        navigate(`/site-engineer/projects`);
+      });
+
+    },[id])
   
     const handleChange = (e) => {
       const { name, value } = e.target;

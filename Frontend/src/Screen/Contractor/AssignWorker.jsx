@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { canAccess } from "../../utils/subscription";
 
 export default function AssignWorkers() {
   const { t } = useTranslation();
@@ -20,6 +21,14 @@ export default function AssignWorkers() {
 
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // check if it is allowed in the plan
+  useEffect(() => {
+    if (!canAccess("assignWorkers")) {
+      toast.error("Upgrade to Business Plan to unlock Worker Assignment.");
+      navigate("/contractor/home");
+    }
+  }, []);
 
   /* -------------------------
      Fetch FREE workers
@@ -64,7 +73,7 @@ export default function AssignWorkers() {
 
     } catch (err) {
       toast.error(
-        err.response?.data?.message || "Failed to assign worker"
+        err.response?.data?.error || "Failed to assign worker"
       );
     }
   };
