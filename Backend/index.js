@@ -17,6 +17,9 @@ const Project = require("./models/project")
 const inventoryRoute = require('./routes/inventoryRoutes');
 const Subscription = require("./models/Subscription");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const tokenValidation = require('./routes/tokenValiditiCheaker');
+const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 
 // creating http server and mounting socket.io to it
 const httpServer = http.createServer(app);
@@ -97,7 +100,6 @@ io.on('connection',(socket)=>{
     })
 })
 
-
 // requiring routes
 const { signup, signin } = require('./routes/auth/createUser')
 const { googleAuth } = require('./routes/auth/googleAuth');
@@ -130,12 +132,14 @@ app.use('/chat',chatRouter);
 app.use('/workers',workerRoutes);
 app.use('/inventory',inventoryRoute);
 
+// using admin routes
+app.use("/admin", adminRoutes);
+app.use("/admin", adminDashboardRoutes);
+
 // using subcrtiption routes
 app.use("/subscription", subscriptionRoutes);
 
 // requiring tokenValidatorChecker
-const tokenValidation = require('./routes/tokenValiditiCheaker');
-// const { Socket } = require('dgram');
 app.use('/token', tokenValidation);
 
 // connecting to database

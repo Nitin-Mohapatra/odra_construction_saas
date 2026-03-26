@@ -18,7 +18,7 @@ exports.authen = (req, res, next) => {
             } else {
                 req.user = decoded;
                 // 🔐 Organization safety check
-                if (!decoded.organizationId) {
+                if (!decoded.organizationId && decoded.role != "admin") {
                     return res.status(403).json({
                         message: "Invalid organization access"
                     });

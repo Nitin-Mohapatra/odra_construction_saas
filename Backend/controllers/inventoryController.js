@@ -8,7 +8,7 @@ const InventoryUsage = require("../models/InventoryUsage");
 exports.addInventoryItem = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { name, unit, quantity, pricePerUnit } = req.body;
+    const { name, unit, quantity, pricePerUnit,supplierName,companyName } = req.body;
 
     if (!name || !unit || quantity == null) {
       return res.status(400).json({
@@ -56,6 +56,8 @@ exports.addInventoryItem = async (req, res) => {
       item = await InventoryItem.create({
         projectId,
         name: normalizedName,
+        supplierName,
+        companyName,
         unit: normalizedUnit,
         pricePerUnit: price,
         totalQuantity: qty,

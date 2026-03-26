@@ -3,7 +3,7 @@ const Project = require("../models/project");
 
 exports.createWorker = async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const { name, phone ,dailyWage, payoutType } = req.body;
     // basic validation
     if (!name) {
       return res.status(400).json({
@@ -16,6 +16,8 @@ exports.createWorker = async (req, res) => {
       name,
       phone,
       createdBy: req.user.User_id,
+      dailyWage, 
+      payoutType,
       status: "free",
       currentProjectId: null,
       organizationId: req.user.organizationId

@@ -14,6 +14,8 @@ export default function AddWorkers() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [dailyWage, setDailyWage] = useState('');
+    const [payoutType, setPayoutType] = useState('daily');
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     
@@ -38,7 +40,9 @@ export default function AddWorkers() {
                 '/workers',
                 {
                     name: name.trim(),
-                    phone: phone.trim() || undefined
+                    phone: phone.trim() || undefined,
+                    dailyWage,
+                    payoutType
                 }
             );
 
@@ -146,6 +150,29 @@ export default function AddWorkers() {
                     margin="normal"
                     disabled={loading}
                   />
+
+                <TextField
+                  fullWidth
+                  label="Daily Wage"
+                  type="number"
+                  value={dailyWage}
+                  onChange={(e) => setDailyWage(e.target.value)}
+                  margin="normal"
+                  required
+                />
+
+                <TextField
+                  select
+                  fullWidth
+                  label="Payout Type"
+                  value={payoutType}
+                  onChange={(e) => setPayoutType(e.target.value)}
+                  margin="normal"
+                  SelectProps={{ native: true }}
+                >
+                  <option value="daily">Daily</option>
+                  <option value="monthly">Monthly</option>
+                </TextField>
       
                   <Box sx={{ display: "flex", gap: 2, mt: 4 }}>
                     <Button

@@ -25,6 +25,8 @@ export default function ProjectInventory() {
   const [items, setItems] = useState([]);
   const [breakdownOpen, setBreakdownOpen] = useState(false);
   const [name, setName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [supplierName, setSupplierName] = useState("");
   const [unit, setUnit] = useState("");
   const [quantity, setQuantity] = useState("");
   const [pricePerUnit, setPricePerUnit] = useState("");
@@ -106,6 +108,8 @@ export default function ProjectInventory() {
       await axios.post(`/inventory/${projectId}`, {
         name,
         unit,
+        supplierName,
+        companyName,
         quantity: Number(quantity),
         pricePerUnit: Number(pricePerUnit)
       });
@@ -117,6 +121,8 @@ export default function ProjectInventory() {
       setPricePerUnit("");
       fetchInventory();
       refreshSummary();
+      setSupplierName("");
+      setCompanyName("");
 
     } catch (err) {
       console.log(err);
@@ -265,6 +271,22 @@ export default function ProjectInventory() {
                 sx={{ mb: 2 }}
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
+              />
+
+              <TextField
+                label="Supplier Name"
+                fullWidth
+                sx={{ mb: 2 }}
+                value={supplierName}
+                onChange={(e) => setSupplierName(e.target.value)}
+              />
+
+              <TextField
+                label="Company Name"
+                fullWidth
+                sx={{ mb: 2 }}
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
               />
 
               <TextField

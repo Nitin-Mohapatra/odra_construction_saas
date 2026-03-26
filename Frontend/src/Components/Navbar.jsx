@@ -1,9 +1,9 @@
 import React from "react";
 import logo from "../assets/Logo/lg-1.png";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+import axiosInstance from "../utils/axiosInstance";
 
 import {
   Select,
@@ -31,21 +31,18 @@ export default function Navbar() {
 
   React.useEffect(() => {
     const checkValidity = async () => {
-      const token = localStorage.getItem("token");
 
       try {
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:8080/token/me",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const token = localStorage.getItem("token");
+          if (!token) return;
+          
+          const response = await axiosInstance.get("/token/me");
 
           if (response.status === 200) {
-            setLogin(true);
+            // console.log(response.data)
+            if(response.data.role != "admin"){
+              setLogin(true);
+            }
 
             const backendRole = response.data.role;
 
@@ -57,7 +54,7 @@ export default function Navbar() {
               navigate("/");
             }
           }
-        }
+        
       } catch (err) {
         console.log(err);
         setLogin(false);

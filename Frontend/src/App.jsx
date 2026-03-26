@@ -28,6 +28,11 @@ import ProjectInventory from './Screen/Contractor/ProjectInventory'
 import InventoryUsage from './Screen/SiteEngineer/InventoryUsage'
 import InventoryHistory from './Screen/Contractor/InventoryHistory'
 import Pricing from './Screen/Pricing'
+// import AdminDashboard from "./Screen/Admin/AdminDashboard";
+import AdminDashboard from "./Screen/Admin/admin dashboard/Dashboard";
+import AdminRoute from "./utils/AdminRoute";
+// import AdminLogin from "./Screen/Admin/AdminLogin";
+import SignInSide from "./Screen/Admin/admin-signin-mui/signin-mui/SignInSide"
 
 function App() {
   return (
@@ -75,6 +80,18 @@ function App() {
         <Route path="/contractor/add-worker" element={<AddWorker/>} />
         <Route path="/contractor/projects/:id/assign-workers" element={<AssignWorker/>} />
         <Route path="/pricing" element={<Pricing />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<SignInSide />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        
         </Routes>
     </BrowserRouter>
   )

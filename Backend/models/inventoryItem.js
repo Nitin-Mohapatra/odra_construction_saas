@@ -16,6 +16,13 @@ const inventoryItemSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    supplierName:{
+      type:String,
+      required:true,
+    },companyName:{
+      type:String,
+      required:true,
+    },
     unit: {
       type: String,
       required: true

@@ -12,6 +12,17 @@ const workerSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    dailyWage: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+
+    payoutType: {
+      type: String,
+      enum: ["daily", "monthly"],
+      default: "daily"
+    },
 
     // Contractor who owns this worker
     createdBy: {
