@@ -52,7 +52,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
        2️⃣ Setup socket connection
     -------------------------- */
     useEffect(() => {
-        const socket = io("http://localhost:8080", {
+        const socket = io(import.meta.env.VITE_API_URL, {
             transports: ["websocket"],
         });
 

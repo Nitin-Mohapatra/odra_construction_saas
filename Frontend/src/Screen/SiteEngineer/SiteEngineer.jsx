@@ -27,7 +27,7 @@ export default function SiteEngineer() {
     const decoded = jwtDecode(token);
     const siteEngineerId = decoded.User_id; // IMPORTANT
 
-    const socket = io("http://localhost:8080", {
+    const socket = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
     });
 

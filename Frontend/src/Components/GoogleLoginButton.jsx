@@ -1,6 +1,7 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import axiosinstance from "../utils/axiosInstance"
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -14,7 +15,7 @@ export default function GoogleLoginButton() {
     onSuccess: async ({ code }) => {
       try {
         // Send the code to your backend for verification & token exchange
-        const res = await axios.post("http://localhost:8080/auth/google", { code });
+        const res = await axiosInstance.post("/auth/google", { code });
 
         // if the response is 200
         if(res.status === 200 && res.data.success){

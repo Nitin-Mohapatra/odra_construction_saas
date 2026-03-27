@@ -68,7 +68,7 @@ export default function ChatModal({projectId}) {
     fetchUnreadCount();
     
     // Set up socket to listen for new messages
-    const socket = io("http://localhost:8080", {
+    const socket = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
     });
     

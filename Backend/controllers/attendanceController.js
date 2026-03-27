@@ -27,6 +27,7 @@ exports.markAttendance = async (req, res) => {
       // checkt if the workers are assigned to the project & is not free
       for(const rec of records){
         const worker = await Worker.findOne({_id:rec.workerId,organizationId: req.user.organizationId});
+        
         if(!worker){
           return res.status(404).json({
             success: false,

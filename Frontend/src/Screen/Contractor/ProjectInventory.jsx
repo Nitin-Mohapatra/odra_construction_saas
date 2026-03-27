@@ -56,7 +56,7 @@ export default function ProjectInventory() {
   };
 
   useEffect(() => {
-    const socket = io("http://localhost:8080", {
+    const socket = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
     });
 

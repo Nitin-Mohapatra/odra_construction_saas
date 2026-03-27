@@ -412,3 +412,99 @@ exports.deleteProject = async (req, res)=>{
     }
 }
 
+// wage calculation
+exports.getProjectWages = async (req, res) => {
+  try {
+
+    const { projectId } = req.params;
+    const organizationId = req.user.organizationId;
+
+    // 1️⃣ Get project
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // 2️⃣ Get workers in this project
+    const workers = await Worker.find({
+      currentProjectId: projectId,
+      organizationId
+    });
+
+    // 3️⃣ Get attendance records
+    const attendanceRecords = await Attendance.find({
+      projectId,
+      organizationId
+    });
+
+    // 4️⃣ Count present days per worker
+    const presentCount = {};
+
+    attendanceRecords.forEach(day => {
+      day.records.forEach(rec => {
+        if (rec.status === "present") {
+          const wid = rec.workerId.toString();
+          presentCount[wid] = (presentCount[wid] || 0) + 1;
+        }
+      });
+    });
+
+    // 5️⃣ Calculate months (for monthly workers)
+    const startDate = new Date(project.startDate);
+    const endDate = project.status === "Completed"
+      ? new Date(project.endDate)
+      : new Date();
+
+    const months =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth()) + 1;
+
+    // 6️⃣ Final wage calculation
+    const result = workers.map(worker => {
+
+      let totalWage = 0;
+
+      if (worker.payoutType === "daily") {
+
+        const days = presentCount[worker._id] || 0;
+        totalWage = days * worker.dailyWage;
+
+      } else {
+
+        totalWage = months * worker.dailyWage; // monthly wage
+
+      }
+
+      return {
+        workerId: worker._id,
+        name: worker.name,
+        payoutType: worker.payoutType,
+        totalWage
+      };
+
+    });
+
+    const totalProjectWage = result.reduce(
+      (sum, w) => sum + w.totalWage,
+      0
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        workers: result,
+        totalProjectWage
+      }
+    });
+
+  } catch (error) {
+
+    console.error("Wage calc error:", error);
+
+    return res.status(500).json({
+      error: "Internal Server Error"
+    });
+
+  }
+};

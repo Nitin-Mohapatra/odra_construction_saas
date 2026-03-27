@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ContractorNavbar from '../../Components/ContractorNavbar';
 import Footer from '../../Components/Footer';
+import WageModal from "../../Components/WageModal";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Button } from '@mui/material';
 import { toast } from 'react-toastify';
@@ -14,6 +15,7 @@ import { canAccess } from "../../utils/subscription";
 export default function ProjectDetails() {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openWageModal, setOpenWageModal] = useState(false);
   const { id } = useParams();
   const socketRef = useRef(null);
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ export default function ProjectDetails() {
     fetchProject();
 
     // set the socket connection
-    socketRef.current = io("http://localhost:8080", {
+    socketRef.current = io(import.meta.env.VITE_API_URL, {
       transports: ['websocket']
     });
     socketRef.current.emit("join", {
@@ -248,6 +250,34 @@ export default function ProjectDetails() {
               )}
             </Button>
 
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => {
+                if (!canAccess("workerWage")) {
+                  toast.error("Upgrade to Business Plan to unlock Attendance.");
+                  return;
+                }
+                setOpenWageModal(true)
+              }}
+              sx={{
+                position: "relative",
+                opacity: canAccess("workerWage") ? 1 : 0.6
+              }}
+            >
+              View Worker Wages
+              {!canAccess("workerWage") && (
+                <LockIcon
+                  fontSize="small"
+                  sx={{
+                    ml: 1,
+                    fontSize: 18,
+                    color: "#ff9800"
+                  }}
+                />
+              )}
+            </Button>
+
             {project.status === "Ongoing" && (
               <>
                 <Button
@@ -288,6 +318,7 @@ export default function ProjectDetails() {
                 </Button>
               </>
             )}
+
             <Button
               variant="outlined"
               onClick={() =>
@@ -438,6 +469,12 @@ export default function ProjectDetails() {
         </Box>}
 
       </Box>
+
+      <WageModal
+        open={openWageModal}
+        onClose={() => setOpenWageModal(false)}
+        projectId={id}
+      />
 
       <Footer />
     </Box>

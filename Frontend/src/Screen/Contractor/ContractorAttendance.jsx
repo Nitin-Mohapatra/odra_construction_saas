@@ -52,7 +52,7 @@ export default function ContractorAttendance() {
 
     // make the socket connection one time
     useEffect(()=>{
-        socketRef.current = io("http://localhost:8080",{
+        socketRef.current = io(import.meta.env.VITE_API_URL,{
             transports:["websocket"]
         })
         return ()=> socketRef.current.disconnect();

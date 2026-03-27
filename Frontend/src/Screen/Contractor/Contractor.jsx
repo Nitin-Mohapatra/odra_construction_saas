@@ -25,7 +25,7 @@ export default function ContractorDashboard() {
   useEffect(() => {
     fetchProjects();
 
-    socketRef.current = io("http://localhost:8080", {
+    socketRef.current = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
     });
     if (!socketRef.current) return;

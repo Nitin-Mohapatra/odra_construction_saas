@@ -21,11 +21,17 @@ const adminRoutes = require("./routes/adminRoutes");
 const tokenValidation = require('./routes/tokenValiditiCheaker');
 const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://your-netlify-site.netlify.app",
+  "https://yourdomain.com"
+];
+
 // creating http server and mounting socket.io to it
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -110,7 +116,7 @@ httpServer.listen(port, () => {
     console.log("Connection to backend established")
 })
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true
 }))
 

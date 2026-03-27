@@ -3,6 +3,7 @@ const router = express.Router();
 const projectController = require("../controllers/projectController");
 const {validateRoles} = require("../middleware/roles");
 const {authen} = require("../middleware/tokenValidatorsMiddleware");
+const checkBusinessPlan = require("../middleware/checkBusinessPlan");
 
 // create Project
 router.post('/',authen,validateRoles("manager"),projectController.createProject);
@@ -18,6 +19,9 @@ router.get('/:id',authen,validateRoles(["manager","site engineer"]),projectContr
 
 // complete project
 router.post('/:projectId/complete',authen,validateRoles("manager"),projectController.completeProject);
+
+// get wage
+router.get( "/:projectId/wages", authen, checkBusinessPlan,validateRoles(["manager"]), projectController.getProjectWages);
 
 // delete project 
 router.delete("/:id", authen, validateRoles("manager"), projectController.deleteProject);

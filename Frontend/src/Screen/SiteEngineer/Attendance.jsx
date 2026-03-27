@@ -38,7 +38,7 @@ export default function Attendance() {
       navigate("/site-engineer/projects");
       return ;
     }
-    socketRef.current = io("http://localhost:8080", {
+    socketRef.current = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
     })
 

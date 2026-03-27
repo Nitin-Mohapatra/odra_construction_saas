@@ -10,6 +10,7 @@ Backend/.env
 # =========================
 Frontend/node_modules/
 Frontend/.env
+Frontend/dist
 
 
 
