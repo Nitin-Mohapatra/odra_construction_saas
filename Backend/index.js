@@ -23,8 +23,9 @@ const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://your-netlify-site.netlify.app",
-  "https://yourdomain.com"
+  "https://odraopssaas.netlify.app",
+  "https://odraops.com",
+  "https://www.odraops.com"
 ];
 
 // creating http server and mounting socket.io to it
