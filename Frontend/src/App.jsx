@@ -33,6 +33,7 @@ import AdminDashboard from "./Screen/Admin/admin dashboard/Dashboard";
 import AdminRoute from "./utils/AdminRoute";
 // import AdminLogin from "./Screen/Admin/AdminLogin";
 import SignInSide from "./Screen/Admin/admin-signin-mui/signin-mui/SignInSide"
+import NotFound from "./Components/NotFound"
 
 function App() {
   return (
@@ -91,6 +92,9 @@ function App() {
             </AdminRoute>
           }
         />
+
+        {/* 404 page */}
+        <Route path="*" element={<NotFound />} />
         
         </Routes>
     </BrowserRouter>
