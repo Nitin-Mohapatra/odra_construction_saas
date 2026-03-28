@@ -149,5 +149,10 @@ app.use("/subscription", subscriptionRoutes);
 // requiring tokenValidatorChecker
 app.use('/token', tokenValidation);
 
+// for testing porpose
+app.get("/ping", (req, res) => {
+  res.status(200).send("OK");
+});
+
 // connecting to database
 connectDb()
