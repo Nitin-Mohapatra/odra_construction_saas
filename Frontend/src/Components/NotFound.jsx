@@ -37,36 +37,6 @@ export default function NotFound() {
           The page you’re looking for doesn’t exist or has been moved.
         </Typography>
 
-        {/* BUTTONS */}
-        <Stack direction="row" spacing={2}>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/admin/dashboard")}
-            sx={{
-              bgcolor: "#ffcc00",
-              color: "#000",
-              fontWeight: 600,
-              px: 3,
-              "&:hover": {
-                bgcolor: "#e6b800",
-              },
-            }}
-          >
-            Go to Dashboard
-          </Button>
-
-          <Button
-            variant="outlined"
-            onClick={() => navigate(-1)}
-            sx={{
-              borderColor: "#ccc",
-              color: "#555",
-            }}
-          >
-            Go Back
-          </Button>
-        </Stack>
-
       </Stack>
     </Box>
   );
