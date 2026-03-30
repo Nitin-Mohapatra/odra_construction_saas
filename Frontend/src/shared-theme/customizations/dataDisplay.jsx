@@ -68,17 +68,6 @@ export const dataDisplayCustomizations = {
       }),
     },
   },
-  MuiListSubheader: {
-    styleOverrides: {
-      root: ({ theme }) => ({
-        backgroundColor: 'transparent',
-        padding: '4px 8px',
-        fontSize: theme.typography.caption.fontSize,
-        fontWeight: 500,
-        lineHeight: theme.typography.caption.lineHeight,
-      }),
-    },
-  },
   MuiListItemIcon: {
     styleOverrides: {
       root: {
@@ -197,37 +186,48 @@ export const dataDisplayCustomizations = {
       }),
     },
   },
-  MuiTablePagination: {
-    styleOverrides: {
-      actions: {
-        display: 'flex',
-        gap: 8,
-        marginRight: 6,
-        [`& .${iconButtonClasses.root}`]: {
-          minWidth: 0,
-          width: 36,
-          height: 36,
-        },
-      },
-    },
-  },
-  MuiIcon: {
-    defaultProps: {
-      fontSize: 'small',
-    },
-    styleOverrides: {
-      root: {
-        variants: [
-          {
-            props: {
-              fontSize: 'small',
-            },
-            style: {
-              fontSize: '1rem',
-            },
-          },
-        ],
-      },
-    },
-  },
+  // MuiTablePagination: {
+  //   styleOverrides: {
+  //     actions: {
+  //       display: 'flex',
+  //       gap: 8,
+  //       marginRight: 6,
+  //       [`& .${iconButtonClasses.root}`]: {
+  //         minWidth: 0,
+  //         width: 36,
+  //         height: 36,
+  //       },
+  //     },
+  //   },
+  // },
+  // MuiIcon: {
+  //   defaultProps: {
+  //     fontSize: 'small',
+  //   },
+  //   styleOverrides: {
+  //     root: {
+  //       variants: [
+  //         {
+  //           props: {
+  //             fontSize: 'small',
+  //           },
+  //           style: {
+  //             fontSize: '1rem',
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  // },
+  // MuiListSubheader: {
+  //   styleOverrides: {
+  //     root: ({ theme }) => ({
+  //       backgroundColor: 'transparent',
+  //       padding: '4px 8px',
+  //       fontSize: theme.typography.caption.fontSize,
+  //       fontWeight: 500,
+  //       lineHeight: theme.typography.caption.lineHeight,
+  //     }),
+  //   },
+  // }
 };
