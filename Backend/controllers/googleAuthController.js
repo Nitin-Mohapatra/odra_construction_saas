@@ -7,7 +7,7 @@ const User = require('../models/user');
 const client = new OAuth2Client({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: "http://localhost:5173"
+    redirectUri: "https://odraops.com"
 })
 
 
