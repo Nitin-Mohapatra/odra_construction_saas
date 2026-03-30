@@ -1,6 +1,6 @@
 1. deploy the app & connect to domain --- done
 2. fix the render sleep issure by settign the corn jobs / or cold start  --- done
 2. Add the 404 part --- done
-3. Fix the google login
-4. Fix the colour pallet and edit the themePrimitive
+3. Fix the google login --- pending
+4. Fix the colour pallet and edit the themePrimitive 
 5. Optimize the speed

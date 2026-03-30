@@ -25,7 +25,7 @@ function AppTheme({ children }) {
       shadows,
       shape,
       components: {
-        ...inputsCustomizations,
+        // ...inputsCustomizations,
         ...dataDisplayCustomizations,
         ...feedbackCustomizations,
         ...navigationCustomizations,
