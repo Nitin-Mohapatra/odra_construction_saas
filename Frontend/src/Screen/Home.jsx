@@ -18,7 +18,7 @@ export default function Home() {
       {/* main should grow */}
       <main style={{ flexGrow: 1 }}>
 
-        {/* ===== HERO SECTION (Exact Design) ===== */}
+        {/* ===== HERO SECTION===== */}
         <Box
           sx={{
             backgroundColor: "#cfc3b7",   // exact beige tone
@@ -59,64 +59,21 @@ export default function Home() {
                   color: "#000",
                 }}
               >
-                {t("dashboard.home.hero_line_1")} <br />
-                {t("dashboard.home.hero_line_2")}
+                {/* {t("dashboard.home.hero_line_1")} <br />
+                {t("dashboard.home.hero_line_2")} */}
+                From Site To Dashboard
               </Typography>
             </Grid>
 
-            {/* RIGHT SIDE
-            <Grid item xs={12} md={12}>
-              <Typography
-                sx={{
-                  fontSize: "20px",
-                  lineHeight: 1.6,
-                  mb: 4,
-                  fontWeight: 500,
-                }}
-              >
-                Manage your construction projects from preconstruction to closeout with the insights you need to maximise safety, efficiency, and return.
-              </Typography>
-
-              <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <Box
-                  component="button"
-                  sx={{
-                    backgroundColor: "#ff5a00",
-                    color: "#fff",
-                    border: "none",
-                    px: 4,
-                    py: 1.8,
-                    fontSize: "18px",
-                    fontWeight: 600,
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: "#e14f00",
-                    },
-                  }}
-                >
-                  Learn more
-                </Box>
-
-                <Typography
-                  sx={{
-                    fontSize: "18px",
-                    fontWeight: 500,
-                    cursor: "pointer",
-                  }}
-                >
-                  See it in action →
-                </Typography>
-              </Box>
-            </Grid> */}
+            {/* RIGHT SIDE */}
 
           </Grid>
         </Box>
 
-        {/* ===== KEEP EXISTING CAROUSEL ===== */}
+        {/* =====  CAROUSEL ===== */}
         <Caroucell />
 
-        {/* ===== EXISTING VIDEO SECTION ===== */}
+        {/* =====  VIDEO SECTION ===== */}
         <Box sx={{ my: 5 }}>
           <video
             src={vd}
@@ -135,14 +92,13 @@ export default function Home() {
         {/* ===== REST REMAINS SAME ===== */}
         <Box>
           <Typography
-            variant="h4"
+            variant="h2"
             sx={{
               textAlign: "center",
               display: { xs: "none", sm: "block" },
-              fontWeight: "bold",
             }}
           >
-            {t("dashboard.home.mission_short")}
+            {/* {t("dashboard.home.mission_short")} */}
           </Typography>
 
           <Typography
@@ -150,10 +106,9 @@ export default function Home() {
             sx={{
               textAlign: "center",
               display: { xs: "block", sm: "none" },
-              fontWeight: "bold",
             }}
           >
-            Digitising Indian Construction
+            Intelligent Solutions for Modern Construction
           </Typography>
 
           <Box>
