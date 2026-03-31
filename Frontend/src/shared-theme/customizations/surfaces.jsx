@@ -15,7 +15,7 @@ export const surfacesCustomizations = {
           padding: 16,
           gap: 16,
           transition: 'all 100ms ease',
-          backgroundColor: gray[50],
+          backgroundColor: theme.palette.background.paper,
           borderRadius: (theme.vars || theme).shape.borderRadius,
           border: `1px solid ${(theme.vars || theme).palette.divider}`,
           boxShadow: 'none',

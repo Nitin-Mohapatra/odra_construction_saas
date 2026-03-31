@@ -8,23 +8,13 @@ export const chartsCustomizations = {
     styleOverrides: {
       root: ({ theme }) => ({
         [`& .${axisClasses.line}`]: {
-          stroke: gray[300],
+          stroke: theme.palette.divider,
         },
-        [`& .${axisClasses.tick}`]: { stroke: gray[300] },
+        [`& .${axisClasses.tick}`]: { stroke: theme.palette.divider },
         [`& .${axisClasses.tickLabel}`]: {
-          fill: gray[500],
+          fill: theme.palette.text.secondary,
           fontWeight: 500,
         },
-        ...theme.applyStyles('dark', {
-          [`& .${axisClasses.line}`]: {
-            stroke: gray[700],
-          },
-          [`& .${axisClasses.tick}`]: { stroke: gray[700] },
-          [`& .${axisClasses.tickLabel}`]: {
-            fill: gray[300],
-            fontWeight: 500,
-          },
-        }),
       }),
     },
   },
@@ -39,9 +29,6 @@ export const chartsCustomizations = {
         border: `1px solid ${(theme.vars || theme).palette.divider}`,
         borderRadius: theme.shape.borderRadius,
         background: 'hsl(0, 0%, 100%)',
-        ...theme.applyStyles('dark', {
-          background: gray[900],
-        }),
       }),
     },
   },
@@ -58,17 +45,10 @@ export const chartsCustomizations = {
     styleOverrides: {
       root: ({ theme }) => ({
         [`& .${chartsGridClasses.line}`]: {
-          stroke: gray[200],
+          stroke: theme.palette.divider,
           strokeDasharray: '4 2',
           strokeWidth: 0.8,
         },
-        ...theme.applyStyles('dark', {
-          [`& .${chartsGridClasses.line}`]: {
-            stroke: gray[700],
-            strokeDasharray: '4 2',
-            strokeWidth: 0.8,
-          },
-        }),
       }),
     },
   },
