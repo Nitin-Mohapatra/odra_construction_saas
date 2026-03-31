@@ -7,7 +7,7 @@ import { dataDisplayCustomizations } from './customizations/dataDisplay';
 import { feedbackCustomizations } from './customizations/feedback';
 import { navigationCustomizations } from './customizations/navigation';
 import { surfacesCustomizations } from './customizations/surfaces';
-import { colorSchemes, typography, shadows, shape } from './themePrimitives';
+import { colorSchemes, typography, shape } from './themePrimitives';
 
 const lightColorSchemes = {
   light: colorSchemes.light,
@@ -22,7 +22,6 @@ function AppTheme({ children }) {
       },
       colorSchemes: lightColorSchemes,
       typography,
-      shadows,
       shape,
       components: {
         // ...inputsCustomizations,

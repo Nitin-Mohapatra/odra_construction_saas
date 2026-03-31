@@ -121,8 +121,6 @@ export default function Home() {
         </Box>
 
       </main>
-
-
       <Footer />
     </div>
   )
