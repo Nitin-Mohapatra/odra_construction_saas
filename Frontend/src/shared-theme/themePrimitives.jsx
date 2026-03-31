@@ -126,30 +126,36 @@ export const colorSchemes = {
 export const typography = {
   fontFamily: 'Inter, sans-serif',
   h1: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(48),
     fontWeight: 600,
     lineHeight: 1.2,
     letterSpacing: -0.5,
   },
   h2: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(36),
     fontWeight: 600,
     lineHeight: 1.2,
   },
   h3: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(30),
     lineHeight: 1.2,
   },
   h4: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(24),
     fontWeight: 600,
     lineHeight: 1.5,
   },
   h5: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(20),
     fontWeight: 600,
   },
   h6: {
+    fontFamily: "Sora, sans-serif",
     fontSize: defaultTheme.typography.pxToRem(18),
     fontWeight: 600,
   },
