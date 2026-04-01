@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 import axiosInstance from "../utils/axiosInstance";
+import { useTheme } from "@emotion/react";
 
 import {
   Select,
@@ -25,6 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 export default function Navbar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme()
 
   const [login, setLogin] = React.useState(false);
   const [openDrawer, setOpenDrawer] = React.useState(false);
@@ -102,7 +104,7 @@ export default function Navbar() {
                 component={Link}
                 to={item.path}
                 sx={{
-                  color: "white",
+                  color: "text.secondary",
                   textDecoration: "none",
                   fontWeight: 500,
                 }}
@@ -120,12 +122,12 @@ export default function Navbar() {
                 to="/Login"
                 variant="outlined"
                 sx={{
-                  color: "#fff",
-                  borderColor: "#fff",
+                  color: "text.secondary",
+                  borderColor: "text.secondary",
                   fontWeight: 600,
                   "&:hover": {
-                    borderColor: "#f5a623",
-                    color: "#f5a623",
+                    borderColor: "primary.main",
+                    color: "primary.main",
                   },
                 }}
               >
@@ -137,11 +139,11 @@ export default function Navbar() {
                 to="/signup"
                 variant="contained"
                 sx={{
-                  backgroundColor: "#f5a623",
+                  backgroundColor: "primary.main",
                   color: "#000",
                   fontWeight: 600,
                   "&:hover": {
-                    backgroundColor: "#e0941d",
+                    backgroundColor: "text.secondary",
                   },
                 }}
               >
