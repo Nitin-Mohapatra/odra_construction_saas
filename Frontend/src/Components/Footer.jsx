@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
+import { Box, Typography, Divider } from "@mui/material";
 import logo from "../assets/Logo/lg-1.png";
 import { useTheme } from "@emotion/react";
+
+const footerLinkStyle = {
+  textDecoration: "none",
+  color: "text.secondary",
+};
 
 export default function Footer() {
   const theme = useTheme();
@@ -17,13 +22,13 @@ export default function Footer() {
         <div className="row gy-4">
 
           {/* LEFT - BRAND */}
-          <div className="col-md-4 d-block">
+          <div className="col-md-4 text-center text-md-start">
             <img
               src={logo}
-              alt="PBM Intel"
+              alt="Odraops"
               style={{ height: "45px", marginBottom: "15px" }}
             />
-            <Typography  sx={{ color: "text.secondary"}} variant="p">
+            <Typography  sx={{ color: "text.secondary" , display:"block"}} variant="body1">
               Construction Management Software designed to simplify
               project tracking, attendance, reporting and inventory management.
             </Typography>
@@ -31,86 +36,98 @@ export default function Footer() {
           </div>
 
           {/* CENTER - QUICK LINKS */}
-          <div className="col-md-4">
+          <div className="col-md-4 text-center text-md-start">
             <Typography
               variant="h4"
               sx={{
-                color:"text.secondary"
+                color:"text.secondary",
+                marginBottom:"0.5em"
               }}
               >
               Quick Links
             </Typography>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Link
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" ,alignItems: "center" }} className="align-items-md-start">
+              <Typography
+                component={Link}
+                variant="body1"
                 to="/"
-                style={{ textDecoration: "none", color: "text.secondary" }}
+                sx={footerLinkStyle}
               >
                 Home
-              </Link>
+              </Typography>
 
-              <Link
+              <Typography
+                component={Link}
+                variant="body1"
                 to="/services"
-                style={{ textDecoration: "none", color: "text.secondary" }}
+                sx={footerLinkStyle}
               >
                 Services
-              </Link>
+              </Typography>
 
-              <Link
+              <Typography
+                component={Link}
+                variant="body1"
                 to="/login"
-                style={{ textDecoration: "none", color: "text.secondary" }}
+                sx={footerLinkStyle}
               >
                 Login
-              </Link>
+              </Typography>
 
-              <Link
+              <Typography
+                component={Link}
+                variant="body1"
                 to="/contact-us"
-                style={{ textDecoration: "none", color: "text.secondary" }}
+                sx={{ textDecoration: "none", color: "text.secondary" }}
               >
                 Contact
-              </Link>
+              </Typography>
             </div>
           </div>
 
           {/* RIGHT - CONTACT */}
-          <div className="col-md-4">
+          <div className="col-md-4 text-center text-md-start">
            <Typography
               variant="h4"
               sx={{
-                color:"text.secondary"
+                color:"text.secondary",
+                marginBottom:"0.5em"
               }}
               >
               Contact
             </Typography>
 
-              <div style={{display: "flex", flexDirection: "column", gap: "8px" }}>
-                <Typography  variant="p" sx={{ color: "text.secondary" }}>
-                  📧  odraops@gmail.com
-                </Typography>
-                <Typography  variant="p" sx={{ color: "text.secondary"}}>
-                  📞 +91 6370627088
-                </Typography>
-                <Typography  variant="p" sx={{ color: "text.secondary" }}>
-                  📍 Bhubaneswar, India
-                </Typography>
-              </div>
+            <div style={{display: "flex", flexDirection: "column", gap: "8px" }} className="align-items-md-start">
+              <Typography  variant="body1" sx={{ color: "text.secondary" }}>
+                📧  odraops@gmail.com
+              </Typography>
+              <Typography  variant="body1" sx={{ color: "text.secondary"}}>
+                📞 +91 6370627088
+              </Typography>
+              <Typography  variant="body1" sx={{ color: "text.secondary" }}>
+                📍 Bhubaneswar, India
+              </Typography>
+            </div>
           </div>
 
         </div>
       </div>
 
       {/* Bottom Strip */}
-      <div
-        style={{
-          borderTop: "1px solid #222",
+      <Box
+        sx={{
+          borderTop: "1px solid #fff",
           textAlign: "center",
           padding: "15px 0",
           fontSize: "14px",
-          color: "#777",
+          color: "text.secondary",
         }}
       >
         © {new Date().getFullYear()} PBM Intel. All rights reserved.
-      </div>
+      </Box>
     </footer>
   );
 }
+
+
