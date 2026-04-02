@@ -79,7 +79,7 @@ export default function Navbar() {
   return (
     <>
       {/* TOP BAR */}
-      <AppBar position="static" sx={{ backgroundColor: "#1e1e1e" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#000" }}>
         <Toolbar>
           {/* Mobile Menu Icon */}
           <IconButton

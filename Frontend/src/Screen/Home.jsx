@@ -46,7 +46,7 @@ export default function Home() {
                   display: "inline-block",
                   width: "14px",
                   height: "14px",
-                  backgroundColor: "primary.main",
+                  backgroundColor: "#83C441",
                   marginRight: "10px",
                   clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)"
                 }} />

@@ -1,14 +1,16 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import logo from "../assets/Logo/lg-1.png";
+import { useTheme } from "@emotion/react";
+import { typography } from "../shared-theme/themePrimitives";
 
 export default function Footer() {
+  const theme = useTheme();
   return (
     <footer
       style={{
-        backgroundColor: "#111111",
-        color: "#ffffff",
+        backgroundColor: "#000",
+        color: "text.secondary",
         marginTop: "auto",
       }}
     >
@@ -22,60 +24,49 @@ export default function Footer() {
               alt="PBM Intel"
               style={{ height: "45px", marginBottom: "15px" }}
             />
-            <p style={{ color: "#aaa", fontSize: "14px" }}>
+            <typography sx={{ color: "text.secondary"}} variant="p">
               Construction Management Software designed to simplify
               project tracking, attendance, reporting and inventory management.
-            </p>
+            </typography>
 
-            {/* CTA Button */}
-            <Button
-              component={Link}
-              to="/signup"
-              variant="contained"
-              sx={{
-                mt: 2,
-                backgroundColor: "#ff5a00",
-                fontWeight: 600,
-                "&:hover": {
-                  backgroundColor: "#e14f00",
-                },
-              }}
-            >
-              Get Started
-            </Button>
           </div>
 
           {/* CENTER - QUICK LINKS */}
           <div className="col-md-4">
-            <h6 style={{ fontWeight: 600, marginBottom: "15px" }}>
+            <Typography
+              variant="h4"
+              sx={{
+                color:"text.secondary"
+              }}
+              >
               Quick Links
-            </h6>
+            </Typography>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <Link
                 to="/"
-                style={{ textDecoration: "none", color: "#aaa" }}
+                style={{ textDecoration: "none", color: "text.secondary" }}
               >
                 Home
               </Link>
 
               <Link
                 to="/services"
-                style={{ textDecoration: "none", color: "#aaa" }}
+                style={{ textDecoration: "none", color: "text.secondary" }}
               >
                 Services
               </Link>
 
               <Link
                 to="/login"
-                style={{ textDecoration: "none", color: "#aaa" }}
+                style={{ textDecoration: "none", color: "text.secondary" }}
               >
                 Login
               </Link>
 
               <Link
                 to="/contact-us"
-                style={{ textDecoration: "none", color: "#aaa" }}
+                style={{ textDecoration: "none", color: "text.secondary" }}
               >
                 Contact
               </Link>
@@ -84,18 +75,24 @@ export default function Footer() {
 
           {/* RIGHT - CONTACT */}
           <div className="col-md-4">
-            <h6 style={{ fontWeight: 600, marginBottom: "15px" }}>
+           <Typography
+              variant="h4"
+              sx={{
+                color:"text.secondary"
+              }}
+              >
               Contact
-            </h6>
-            <p style={{ color: "#aaa", marginBottom: "6px" }}>
-              📧 nitinmohapatra26@gmail.com
-            </p>
-            <p style={{ color: "#aaa", marginBottom: "6px" }}>
+            </Typography>
+
+            <typography variant="p" sx={{ color: "text.secondary", marginBottom: "6px" }}>
+              📧  odraops@gmail.com
+            </typography>
+            <typography variant="p" sx={{ color: "text.secondary", marginBottom: "6px" }}>
               📞 +91 6370627088
-            </p>
-            <p style={{ color: "#aaa" }}>
+            </typography>
+            <typography variant="p" sx={{ color: "text.secondary" }}>
               📍 Bhubaneswar, India
-            </p>
+            </typography>
           </div>
 
         </div>
