@@ -75,8 +75,8 @@ export const colorSchemes = {
 
       // 🚨 FIXED (VERY IMPORTANT)
       text: {
-        primary: "#000",     // your dark green ✅
-        secondary: "#fff",   // soft readable gray-green ✅
+        primary: "#000",     
+        secondary: "#fff",   
       },
 
       divider: "rgba(0, 48, 35, 0.1)",

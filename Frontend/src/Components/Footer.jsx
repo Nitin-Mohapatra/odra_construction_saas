@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import logo from "../assets/Logo/lg-1.png";
 import { useTheme } from "@emotion/react";
-import { typography } from "../shared-theme/themePrimitives";
 
 export default function Footer() {
   const theme = useTheme();
@@ -18,16 +17,16 @@ export default function Footer() {
         <div className="row gy-4">
 
           {/* LEFT - BRAND */}
-          <div className="col-md-4">
+          <div className="col-md-4 d-block">
             <img
               src={logo}
               alt="PBM Intel"
               style={{ height: "45px", marginBottom: "15px" }}
             />
-            <typography sx={{ color: "text.secondary"}} variant="p">
+            <Typography  sx={{ color: "text.secondary"}} variant="p">
               Construction Management Software designed to simplify
               project tracking, attendance, reporting and inventory management.
-            </typography>
+            </Typography>
 
           </div>
 
@@ -84,15 +83,17 @@ export default function Footer() {
               Contact
             </Typography>
 
-            <typography variant="p" sx={{ color: "text.secondary", marginBottom: "6px" }}>
-              📧  odraops@gmail.com
-            </typography>
-            <typography variant="p" sx={{ color: "text.secondary", marginBottom: "6px" }}>
-              📞 +91 6370627088
-            </typography>
-            <typography variant="p" sx={{ color: "text.secondary" }}>
-              📍 Bhubaneswar, India
-            </typography>
+              <div style={{display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Typography  variant="p" sx={{ color: "text.secondary" }}>
+                  📧  odraops@gmail.com
+                </Typography>
+                <Typography  variant="p" sx={{ color: "text.secondary"}}>
+                  📞 +91 6370627088
+                </Typography>
+                <Typography  variant="p" sx={{ color: "text.secondary" }}>
+                  📍 Bhubaneswar, India
+                </Typography>
+              </div>
           </div>
 
         </div>
