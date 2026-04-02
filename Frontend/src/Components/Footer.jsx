@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { Box, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider , IconButton} from "@mui/material";
 import logo from "../assets/Logo/lg-1.png";
 import { useTheme } from "@emotion/react";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import SocialBar from "./SocialBar";
 
 const footerLinkStyle = {
   textDecoration: "none",
@@ -22,16 +25,20 @@ export default function Footer() {
         <div className="row gy-4">
 
           {/* LEFT - BRAND */}
-          <div className="col-md-4 text-center text-md-start">
+          <div className="col-md-4 text-center text-md-start d-none d-md-block">
             <img
               src={logo}
               alt="Odraops"
               style={{ height: "45px", marginBottom: "15px" }}
             />
-            <Typography  sx={{ color: "text.secondary" , display:"block"}} variant="body1">
+            <Typography sx={{ color: "text.secondary", display: "block" }} variant="body1">
               Construction Management Software designed to simplify
               project tracking, attendance, reporting and inventory management.
             </Typography>
+            
+            <Box>
+              <SocialBar/>
+            </Box>
 
           </div>
 
@@ -40,14 +47,14 @@ export default function Footer() {
             <Typography
               variant="h4"
               sx={{
-                color:"text.secondary",
-                marginBottom:"0.5em"
+                color: "text.secondary",
+                marginBottom: "0.5em"
               }}
-              >
+            >
               Quick Links
             </Typography>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" ,alignItems: "center" }} className="align-items-md-start">
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }} className="align-items-md-start">
               <Typography
                 component={Link}
                 variant="body1"
@@ -88,27 +95,31 @@ export default function Footer() {
 
           {/* RIGHT - CONTACT */}
           <div className="col-md-4 text-center text-md-start">
-           <Typography
+            <Typography
               variant="h4"
               sx={{
-                color:"text.secondary",
-                marginBottom:"0.5em"
+                color: "text.secondary",
+                marginBottom: "0.5em"
               }}
-              >
+            >
               Contact
             </Typography>
 
-            <div style={{display: "flex", flexDirection: "column", gap: "8px" }} className="align-items-md-start">
-              <Typography  variant="body1" sx={{ color: "text.secondary" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} className="align-items-md-start">
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
                 📧  odraops@gmail.com
               </Typography>
-              <Typography  variant="body1" sx={{ color: "text.secondary"}}>
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
                 📞 +91 6370627088
               </Typography>
-              <Typography  variant="body1" sx={{ color: "text.secondary" }}>
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
                 📍 Bhubaneswar, India
               </Typography>
             </div>
+
+            <Box className="d-md-none">
+              <SocialBar/>
+            </Box>
           </div>
 
         </div>
