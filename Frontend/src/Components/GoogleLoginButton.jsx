@@ -1,7 +1,7 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import axiosinstance from "../utils/axiosInstance"
+import axiosInstance from "../utils/axiosInstance"
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
