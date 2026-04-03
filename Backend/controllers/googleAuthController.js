@@ -7,7 +7,7 @@ const User = require('../models/user');
 const client = new OAuth2Client({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: "https://www.odraops.com"
+    redirectUri: "postmessage"
 })
 
 
@@ -55,8 +55,8 @@ const googleAuthHandler = async(req , res)=>{
             return res.status(200).json({success:true, token, User_id:existingUser._id, role:existingUser.role, redirect:"/", name , });
         }
     }catch(e){
-        console.error('Internal server error',e);
-        return res.status(500).json({success:false,error:"Internal server error"});
+        console.error("GOOGLE ERROR:", e.response?.data || e.message);
+        return res.status(500).json({success:false,error:"Internal server error", errorObject:e});
     }
     }
 
