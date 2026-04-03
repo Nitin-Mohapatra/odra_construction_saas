@@ -69,7 +69,7 @@ export const colorSchemes = {
       },
 
       background: {
-        default: "#F6F6F9",
+        default: "#fff",
         paper: "#ffffff",
       },
 
@@ -96,7 +96,7 @@ export const typography = {
   fontFamily: 'Inter, sans-serif',
   h1: {
     fontFamily: "Sora, sans-serif",
-    fontSize: defaultTheme.typography.pxToRem(48),
+    fontSize: defaultTheme.typography.pxToRem(50),
     fontWeight: 600,
     lineHeight: 1.2,
     letterSpacing: -0.5,

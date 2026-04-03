@@ -43,15 +43,16 @@ const googleAuthHandler = async(req , res)=>{
         const token = jwt.sign({
             User_id: existingUser._id,
             isLoggedIn: true,
-            role: existingUser.role
+            role: existingUser.role,
+            organizationId: existingUser.organizationId
         },process.env.secret_key,{expiresIn:'1h'});
         
         if(existingUser.role === "manager"){
-            return res.status(200).json({success:true,token,User_id:existingUser._id,role:existingUser.role,redirect:"/contractor/home",name});
+            return res.status(200).json({success:true, token, User_id:existingUser._id, role:existingUser.role, redirect:"/contractor/home", name , });
         }else if(existingUser.role === "site engineer"){
-            return res.status(200).json({success:true,token,User_id:existingUser._id,role:existingUser.role,redirect:"/engineer/home",name});
+            return res.status(200).json({success:true, token, User_id:existingUser._id, role:existingUser.role, redirect:"/engineer/home", name , });
         }else{
-            return res.status(200).json({success:true,token,User_id:existingUser._id,role:existingUser.role,redirect:"/",name});
+            return res.status(200).json({success:true, token, User_id:existingUser._id, role:existingUser.role, redirect:"/", name , });
         }
     }catch(e){
         console.error('Internal server error',e);

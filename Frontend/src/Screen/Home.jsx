@@ -33,8 +33,8 @@ export default function Home() {
             {/* LEFT SIDE */}
             <Grid item xs={12} md={6}>
               <Typography
+                variant='body1'
                 sx={{
-                  fontSize: "12px",
                   letterSpacing: "2px",
                   textTransform: "uppercase",
                   fontWeight: 600,
@@ -57,7 +57,6 @@ export default function Home() {
                 variant="h1"
                 sx={{
                   fontWeight: 900,
-                  fontSize: { xs: "48px", md: "90px" },
                   lineHeight: 1.05,
                   color: "text.secondary",
                 }}
@@ -78,6 +77,12 @@ export default function Home() {
 
      
         <Box className="mx-1">
+          <Typography
+            variant='h2'
+            className='text-center my-3'
+            >
+            Trusted By 
+          </Typography>
           <ImgSlider />
         </Box>
 

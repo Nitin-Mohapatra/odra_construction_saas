@@ -4,7 +4,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, Typography, Divider, IconButton } from "@mui/material";
 
-export default function SocialBar() {
+export default function SocialBar({colourStyle}) {
     return (
         <Box
             sx={{
@@ -28,7 +28,7 @@ export default function SocialBar() {
                     },
                 }}
             >
-                <InstagramIcon />
+                <InstagramIcon sx={{...colourStyle}}/>
             </IconButton>
 
             <IconButton
@@ -45,7 +45,7 @@ export default function SocialBar() {
                     },
                 }}
             >
-                <WhatsAppIcon />
+                <WhatsAppIcon sx={{...colourStyle}}/>
             </IconButton>
         </Box>
     )

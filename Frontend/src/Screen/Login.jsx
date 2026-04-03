@@ -27,6 +27,7 @@ export default function Login() {
     const form = event.currentTarget;
 
     if (!form.checkValidity()) {
+      setValidated(true);
       event.stopPropagation();
       return;
     }
@@ -144,6 +145,9 @@ export default function Login() {
                 onChange={handleChange}
                 required
               />
+              <div className="invalid-feedback">
+               Please enter a valid email.
+              </div>
             </Box>
 
             {/* Role */}
@@ -162,6 +166,9 @@ export default function Login() {
                 <option value="site engineer">{t("auth.site_engineer")}</option>
                 <option value="manager">{t("auth.manager")}</option>
               </select>
+              <div className="invalid-feedback">
+                Please select a role.
+              </div>
             </Box>
 
             {/* Password */}
@@ -175,8 +182,11 @@ export default function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                minLength={6}
+                minLength={5}
               />
+              <div className="invalid-feedback">
+                Password must be at least 5 characters.
+              </div>
             </Box>
 
             {/* Submit */}
@@ -194,11 +204,11 @@ export default function Login() {
 
           {/* Divider */}
           <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
-            <Divider sx={{ flex: 1 }} />
-            <Typography sx={{ px: 2 }} variant="body2" color="text.secondary">
+            <Divider sx={{ flex: 1 ,backgroundColor:"text.primary"}} />
+            <Typography sx={{ px: 2, fontWeight:"bold" }} variant="body2" color="text.primary">
               OR
             </Typography>
-            <Divider sx={{ flex: 1 }} />
+            <Divider sx={{ flex: 1 ,backgroundColor:"text.primary"}} />
           </Box>
 
           {/* Google Login */}

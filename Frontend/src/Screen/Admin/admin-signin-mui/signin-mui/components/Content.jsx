@@ -47,11 +47,11 @@ export default function Content() {
         <Stack key={index} direction="row" sx={{ gap: 2 }}>
           {item.icon}
           <div>
-            <Typography gutterBottom sx={{ fontWeight: 'medium' }}>
+            <Typography variant='h6' gutterBottom sx={{ fontWeight: 'bold' }}>
               {item.title}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {item.description}
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+               {item.description}
             </Typography>
           </div>
         </Stack>

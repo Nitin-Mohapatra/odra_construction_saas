@@ -25,6 +25,11 @@ export default function GoogleLoginButton() {
           localStorage.setItem("IsLogin", true);
           localStorage.setItem("name",res.data.name);
           toast.success("Logged in with Google successfully!");
+
+          // check for subscription
+        const subRes = await axiosInstance.get("/subscription/me");
+        localStorage.setItem("subscription", JSON.stringify(subRes.data));
+
           navigate(res.data.redirect);
         }else{
           console.log("Error during google login");

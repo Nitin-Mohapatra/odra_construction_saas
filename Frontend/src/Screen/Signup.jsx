@@ -27,6 +27,7 @@ export default function Signup() {
     const form = event.currentTarget;
 
     if (!form.checkValidity()) {
+      setValidated(true);
       event.stopPropagation();
       return;
     }
@@ -142,6 +143,9 @@ export default function Signup() {
                 required
                 minLength={2}
               />
+              <div class="invalid-feedback">
+                Please provide a valid name.
+              </div>
             </Box>
 
             {/* Email */}
@@ -156,6 +160,9 @@ export default function Signup() {
                 onChange={handleChange}
                 required
               />
+              <div class="invalid-feedback">
+                Please provide a valid email.
+              </div>
             </Box>
 
             {/* Password */}
@@ -169,8 +176,11 @@ export default function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                minLength={6}
+                minLength={5}
               />
+              <div class="invalid-feedback">
+                Password must be at least 5 characters.
+              </div>
             </Box>
 
             {/* Submit */}
