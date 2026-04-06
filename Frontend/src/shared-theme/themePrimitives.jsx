@@ -96,7 +96,7 @@ export const typography = {
   fontFamily: 'Inter, sans-serif',
   h1: {
     fontFamily: "Sora, sans-serif",
-    fontSize: defaultTheme.typography.pxToRem(50),
+    fontSize: defaultTheme.typography.pxToRem(35),
     fontWeight: 600,
     lineHeight: 1.2,
     letterSpacing: -0.5,

@@ -38,7 +38,7 @@ export default function Project() {
   };
   useEffect(() => {
     fetchProjects();
-  }, []); // <-- fix: run only once on mount
+  }, []); 
 
   const handleDelete = async (projectId) => {
     const ans = window.confirm(
@@ -71,10 +71,10 @@ export default function Project() {
       >
         {/* HEADER */}
         <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h1" fontWeight={700} >
             {t("project.projects")}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1"  className="my-3">
             {t("project.manage_projects")}
           </Typography>
         </Box>
@@ -150,12 +150,13 @@ export default function Project() {
                         size="small"
                         onClick={() => navigate(`/contractor/project/${pro._id}`)}
                         sx={{
-                          backgroundColor: "#f5a623",
-                          color: "#000",
+                          backgroundColor: "primary.main",
+                          color: "text.primary",
                           width: 34,
                           height: 34,
                           "&:hover": {
-                            backgroundColor: "#e6a11e",
+                            backgroundColor: "secondary.main",
+                            color:"text.secondary"
                           },
                         }}
                       >
@@ -183,7 +184,7 @@ export default function Project() {
                     </Tooltip>
                   </Box>
 
-                  <CardContent sx={{ p: 4 }}>
+                  <CardContent sx={{ p:2 }}>
                     <Typography variant="h6" fontWeight={600}>
                       {pro.title.length > 20
                         ? pro.title.substring(0, 20) + "..."

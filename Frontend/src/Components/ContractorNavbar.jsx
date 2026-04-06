@@ -70,7 +70,7 @@ export default function ContractorNavbar() {
             <img
               src={logo}
               alt="logo"
-              style={{ width: 48, cursor: "pointer" }}
+              style={{ width: "10em", cursor: "pointer" }}
               onClick={() => navigate("/home")}
             />
           </Box>
@@ -133,11 +133,11 @@ export default function ContractorNavbar() {
             variant="contained"
             onClick={logout}
             sx={{
-              backgroundColor: "#f5a623",
+              backgroundColor: "primary.main",
               color: "#000",
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#e0941d",
+                backgroundColor: "text.secondary",
               },
             }}
           >

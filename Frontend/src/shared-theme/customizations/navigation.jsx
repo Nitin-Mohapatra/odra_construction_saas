@@ -138,7 +138,7 @@ export const navigationCustomizations = {
         textTransform: 'none',
         minWidth: 'fit-content',
         minHeight: 'fit-content',
-        color: (theme.vars || theme).palette.text.secondary,
+        color: (theme.vars || theme).palette.text.primary,
         borderRadius: (theme.vars || theme).shape.borderRadius,
         border: '1px solid',
         borderColor: 'transparent',

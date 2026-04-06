@@ -129,7 +129,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                 }}
             >
                 {messages.length === 0 && (
-                    <Typography color="text.secondary">
+                    <Typography color="text.primary">
                         No messages yet.
                     </Typography>
                 )}

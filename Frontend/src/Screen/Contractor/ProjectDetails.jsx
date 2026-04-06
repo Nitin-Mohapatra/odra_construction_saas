@@ -136,10 +136,10 @@ export default function ProjectDetails() {
       <Box className="container py-5">
         {/* HEADER */}
         <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h1" >
             {t("project.project_overview")}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1" sx={{mt:2}}>
             {t("project.project_overview_desc")}
           </Typography>
         </Box>
@@ -162,11 +162,11 @@ export default function ProjectDetails() {
               boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
             }}
           >
-            <Typography variant="h5" fontWeight={600} gutterBottom>
+            <Typography variant="h5" >
               {project.title}
             </Typography>
 
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography variant="body2" sx={{ mb: 3,mt:1 }}>
               {project.description}
             </Typography>
 
@@ -218,7 +218,7 @@ export default function ProjectDetails() {
               height: "fit-content",
             }}
           >
-            <Typography variant="h6" fontWeight={600}>
+            <Typography variant="h4" >
               {t("project.actions")}
             </Typography>
 
@@ -233,7 +233,13 @@ export default function ProjectDetails() {
               }}
               sx={{
                 position: "relative",
-                opacity: canAccess("attendance") ? 1 : 0.6
+                opacity: canAccess("attendance") ? 1 : 0.6,
+                backgroundColor: "primary.main",
+                color: "#000",
+                fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: "text.secondary",
+                },
               }}
             >
               {t("project.view_attendance")}
@@ -251,7 +257,7 @@ export default function ProjectDetails() {
             </Button>
 
             <Button
-              variant="contained"
+              variant="outlined"
               color="info"
               onClick={() => {
                 if (!canAccess("workerWage")) {
@@ -262,7 +268,14 @@ export default function ProjectDetails() {
               }}
               sx={{
                 position: "relative",
-                opacity: canAccess("workerWage") ? 1 : 0.6
+                opacity: canAccess("workerWage") ? 1 : 0.6,
+                color: "primary.main",
+                borderColor: "primary.main",
+                fontWeight: 600,
+                "&:hover": {
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                },
               }}
             >
               View Worker Wages
@@ -292,7 +305,14 @@ export default function ProjectDetails() {
                   }}
                   sx={{
                     position: "relative",
-                    opacity: canAccess("assignWorkers") ? 1 : 0.6
+                    opacity: canAccess("assignWorkers") ? 1 : 0.6,
+                    backgroundColor: "primary.main",
+                    color: "#000",
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: "text.secondary",
+                    },
+                    
                   }}
                 >
                   {t("project.assign_workers")}
@@ -377,13 +397,13 @@ export default function ProjectDetails() {
               backgroundColor: "#fafafa",
             }}
           >
-            <Typography variant="h5" fontWeight={600}>
+            <Typography variant="h5" >
               🔒 {t("project.reports")}
             </Typography>
 
             <Typography
               variant="body2"
-              sx={{ mt: 1, color: "text.secondary" }}
+              sx={{ mt: 1}}
             >
               Upgrade to Business Plan to unlock Reports feature.
             </Typography>
@@ -413,7 +433,7 @@ export default function ProjectDetails() {
                     boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
                   }}
                 >
-                  <Typography fontWeight={600}>
+                  <Typography variant='body1' fontWeight="bold">
                     {t("project.report_by", { name: report.siteEngineerId?.name || "Unknown" })}
                   </Typography>
 
@@ -439,7 +459,14 @@ export default function ProjectDetails() {
                     sx={{
                       mt: 2,
                       opacity: canAccess("reports") ? 1 : 0.6,
-                      position: "relative"
+                      position: "relative",
+                      backgroundColor: "primary.main",
+                      color: "#000",
+                      fontWeight: 600,
+                      "&:hover": {
+                        backgroundColor: "text.secondary",
+                      },
+
                     }}
                     onClick={() => {
                       if (!canAccess("reports")) {

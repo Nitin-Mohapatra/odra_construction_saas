@@ -1,9 +1,10 @@
 import React from 'react';
 import vd3 from "../assets/vd3.mp4";
+import {Box} from "@mui/material"
 
 export default function Caroucell() {
   return (
-    <div style={{ height: "75vh", overflow: "hidden" }}>
+    <Box sx={{ height: "75vh", overflow: "hidden" }}>
       <video
         src={vd3}
         style={{
@@ -16,6 +17,6 @@ export default function Caroucell() {
         muted
         playsInline
       />
-    </div>
+    </Box>
   );
 }

@@ -23,15 +23,15 @@ export default function Home() {
         {/* ===== HERO SECTION===== */}
         <Box
           sx={{
-            backgroundColor: "secondary.main",   // exact beige tone
+            backgroundColor: "secondary.main",   
             px: { xs: 3, md: 10 },
-            py: { xs: 8, md: 6 },
+            py: { xs: 5, md: 6 },
           }}
         >
           <Grid container spacing={6} alignItems="center">
 
             {/* LEFT SIDE */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <Typography
                 variant='body1'
                 sx={{
@@ -57,7 +57,6 @@ export default function Home() {
                 variant="h1"
                 sx={{
                   fontWeight: 900,
-                  lineHeight: 1.05,
                   color: "text.secondary",
                 }}
               >
@@ -67,7 +66,6 @@ export default function Home() {
               </Typography>
             </Grid>
 
-            {/* RIGHT SIDE */}
 
           </Grid>
         </Box>

@@ -218,8 +218,8 @@
       "total_projects": "Total Projects",
       "ongoing_projects": "Ongoing Projects",
       "completed_projects": "Completed Projects",
-      "add_project": "+ Add New Project",
-      "view_projects": "View All Projects",
+      "add_project": "Add Project",
+      "view_projects": "All Projects",
       "recent_projects": "Recent Projects",
       "no_projects": "No projects available."
     },

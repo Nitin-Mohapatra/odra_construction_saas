@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import UpgradeBanner from "../../Components/UpgradeBanner";
 import { canAccess } from "../../utils/subscription";
 import { getSubscription } from "../../utils/subscription";
+
+
 export default function ContractorDashboard() {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
@@ -76,12 +78,12 @@ export default function ContractorDashboard() {
         <div className="container">
           {/* HEADER */}
           <div className="mb-5">
-            <h2 style={{ fontWeight: 700, color: "#1e1e1e" }}>
+            <Typography variant="h1">
               {t("dashboard.contractor.title")}
-            </h2>
-            <p className="text-muted">
+            </Typography>
+            <Typography variant="body1" className="text-muted">
               {t("dashboard.contractor.subtitle")}
-            </p>
+            </Typography>
           </div>
   
           {/* SUMMARY CARDS */}
@@ -95,8 +97,8 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">{t("dashboard.contractor.total_projects")}</h6>
-                  <h2 style={{ fontWeight: 700 }}>{total}</h2>
+                  <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.total_projects")}</Typography>
+                  <Typography variant="h2" sx={{color:"primary.dark"}}>{total}</Typography>
                 </div>
               </div>
             </div>
@@ -110,10 +112,10 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">{t("dashboard.contractor.ongoing_projects")}</h6>
-                  <h2 style={{ fontWeight: 700, color: "#f5a623" }}>
+                  <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.ongoing_projects")}</Typography>
+                  <Typography variant="h2" sx={{color:"primary.dark"}}>
                     {ongoing}
-                  </h2>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -127,10 +129,10 @@ export default function ContractorDashboard() {
                 }}
               >
                 <div className="card-body">
-                  <h6 className="text-muted mb-2">{t("dashboard.contractor.completed_projects")}</h6>
-                  <h2 style={{ fontWeight: 700, color: "#16a34a" }}>
+                  <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.completed_projects")}</Typography>
+                  <Typography variant="h2" sx={{color:"primary.dark"}}>
                     {completed}
-                  </h2>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -143,9 +145,12 @@ export default function ContractorDashboard() {
               color="success"
               component={Link} to="/contractor/add-project"
               sx={{
-                backgroundColor: "#f5a623",
+                backgroundColor: "primary.main",
                 color: "#000",
                 fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: "text.secondary",
+                },
               }}
             >
               {t("dashboard.contractor.add_project")}
@@ -156,12 +161,14 @@ export default function ContractorDashboard() {
               color="primary"
               component={Link} to="/contractor/project"
               sx={{
-                backgroundColor: "#fff",
-                color: "#000",
-                borderColor: "#f5a623",
-                fontWeight: 600,
-               
-              }}
+                    color: "text.primary",
+                    borderColor: "text.primary",
+                    fontWeight: 600,
+                    "&:hover": {
+                      borderColor: "primary.main",
+                      color: "primary.main",
+                    },
+                  }}
             >
               {t("dashboard.contractor.view_projects")}
             </Button>
@@ -169,12 +176,12 @@ export default function ContractorDashboard() {
   
           {/* RECENT PROJECTS */}
           <div>
-            <h5 style={{ fontWeight: 600 }} className="mb-3">
+            <Typography variant="h5"  className="mb-3">
               {t("dashboard.contractor.view_projects")}
-            </h5>
+            </Typography>
   
             {projects.slice(0, 5).length === 0 && (
-              <p className="text-muted">{t("dashboard.contractor.no_projects")}</p>
+              <Typography variant="body1" className="text-muted">{t("dashboard.contractor.no_projects")}</Typography>
             )}
   
             {projects.slice(0, 5).map((project) => (

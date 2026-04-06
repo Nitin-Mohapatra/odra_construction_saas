@@ -216,8 +216,8 @@
       "total_projects": "कुल प्रोजेक्ट",
       "ongoing_projects": "चल रहे प्रोजेक्ट",
       "completed_projects": "पूर्ण हुए प्रोजेक्ट",
-      "add_project": "+ नया प्रोजेक्ट जोड़ें",
-      "view_projects": "सभी प्रोजेक्ट देखें",
+      "add_project": "प्रोजेक्ट जोड़ें",
+      "view_projects": "प्रोजेक्ट देखें",
       "recent_projects": "हाल के प्रोजेक्ट",
       "no_projects": "कोई प्रोजेक्ट उपलब्ध नहीं है।"
     },

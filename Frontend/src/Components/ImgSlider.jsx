@@ -11,12 +11,12 @@ export default function ImgSlider() {
   return (
     <div className='my-3'>
        <Marquee pauseOnHover={true} speed={50} gradient={false}>
-        <img src={img1} alt="logo1" style={{ height: 80, marginRight: 40 }} />
-        <img src={img2} alt="logo2" style={{ height: 80, marginRight: 40 }} />
-        <img src={img3} alt="logo3" style={{ height: 80, marginRight: 40 }} />
-        <img src={img4} alt="logo4" style={{ height: 80, marginRight: 40 }} />
-        <img src={img5} alt="logo4" style={{ height: 80, marginRight: 40 }} />
-        <img src={img6} alt="logo4" style={{ height: 80, marginRight: 40 }} />
+        <img src={img1} alt="logo1" style={{ height: 50, marginRight: 90 }} />
+        <img src={img2} alt="logo2" style={{ height: 50, marginRight: 90 }} />
+        <img src={img3} alt="logo3" style={{ height: 50, marginRight: 90 }} />
+        <img src={img4} alt="logo4" style={{ height: 50, marginRight: 90 }} />
+        <img src={img5} alt="logo4" style={{ height: 50, marginRight: 90 }} />
+        <img src={img6} alt="logo4" style={{ height: 50, marginRight: 90 }} />
       </Marquee>
     </div>
   )

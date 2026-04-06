@@ -95,7 +95,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}>
-            <img src={logo} alt="logo" style={{ width: 48, cursor: "pointer" }} onClick={() => navigate("/home")} />
+            <img src={logo} alt="logo" style={{ width: "10em", cursor: "pointer" }} onClick={() => navigate("/home")} />
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

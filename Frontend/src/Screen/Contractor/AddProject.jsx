@@ -51,12 +51,12 @@ export default function AddProject() {
         <div className="container">
           {/* HEADER */}
           <div className="mb-5">
-            <h2 style={{ fontWeight: 700, color: "#1e1e1e" }}>
+            <Typography variant="h1" >
             {t("project.add_project")}
-            </h2>
-            <p className="text-muted">
+            </Typography>
+            <Typography variant="body1" className="text-muted">
             {t("project.add_project_desc")}
-            </p>
+            </Typography>
           </div>
   
           {/* FORM CARD */}
@@ -141,9 +141,12 @@ export default function AddProject() {
                     disabled={loading}
                     onClick={handleSubmit}
                     sx={{
-                      backgroundColor: "#f5a623",
+                      backgroundColor: "primary.main",
                       color: "#000",
                       fontWeight: 600,
+                      "&:hover": {
+                        backgroundColor: "text.secondary",
+                      },
                     }}
                   >
                       {loading ? t("project.creating") : t("project.create_project")}
@@ -157,7 +160,7 @@ export default function AddProject() {
                     sx={{
                       backgroundColor: "#fff",
                       color: "#000",
-                      borderColor: "#f5a623",
+                      borderColor: "primary.main",
                       fontWeight: 600,
                     }}
                   >
