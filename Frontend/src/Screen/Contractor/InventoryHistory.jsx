@@ -61,10 +61,10 @@ export default function InventoryHistory() {
         <Box className="container">
           {/* HEADER */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h1"  gutterBottom>
               {t("inventory.usage_history")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1">
               {t("inventory.usage_history_desc")}
             </Typography>
           </Box>
@@ -117,7 +117,7 @@ export default function InventoryHistory() {
             }}
           >
             {filteredHistory.length === 0 && (
-              <Typography color="text.secondary">
+              <Typography variant="body1">
                 {t("inventory.no_usage_records")}
               </Typography>
             )}

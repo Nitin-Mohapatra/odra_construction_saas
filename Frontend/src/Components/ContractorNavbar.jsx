@@ -7,6 +7,7 @@ import i18n from "../i18n";
 import LockIcon from "@mui/icons-material/Lock";
 import { toast } from "react-toastify";
 import { canAccess } from "../utils/subscription";
+import SocialBar from "./SocialBar";
 
 import {
   AppBar,
@@ -54,7 +55,7 @@ export default function ContractorNavbar() {
     <>
       {/* TOP BAR */}
       <AppBar position="static" sx={{ backgroundColor: "#1e1e1e" }}>
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
           {/* Mobile Menu Icon */}
           <IconButton
             edge="start"
@@ -66,100 +67,104 @@ export default function ContractorNavbar() {
           </IconButton>
 
           {/* Logo */}
-          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}>
             <img
               src={logo}
               alt="logo"
               style={{ width: "10em", cursor: "pointer" }}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/contractor/home")}
             />
           </Box>
 
-          {/* Desktop Menu */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
-            {menuItems.map((item) => {
-              const isAddWorker = item.path === "/contractor/add-worker" || item.path ==="/contractor/workers";
-              const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 
-              return (
-                <Typography
-                  key={item.label}
-                  onClick={() => {
-                    if (!allowed) {
-                      toast.error("Upgrade to Business Plan to unlock this feature.");
-                      return;
-                    }
-                    navigate(item.path);
-                  }}
-                  sx={{
-                    color: "white",
-                    textDecoration: "none",
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    opacity: allowed ? 1 : 0.6,
-                  }}
-                >
-                  {item.label}
 
-                  {!allowed && (
-                    <LockIcon
-                      fontSize="small"
-                      sx={{ ml: 1, fontSize: 16, color: "#ff9800" }}
-                    />
-                  )}
-                </Typography>
-              );
-            })}
+
+            {/* Desktop Menu */}
+            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
+              {menuItems.map((item) => {
+                const isAddWorker = item.path === "/contractor/add-worker" || item.path === "/contractor/workers";
+                const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
+
+                return (
+                  <Typography
+                    key={item.label}
+                    onClick={() => {
+                      if (!allowed) {
+                        toast.error("Upgrade to Business Plan to unlock this feature.");
+                        return;
+                      }
+                      navigate(item.path);
+                    }}
+                    sx={{
+                      color: "white",
+                      textDecoration: "none",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      opacity: allowed ? 1 : 0.6,
+                    }}
+                  >
+                    {item.label}
+
+                    {!allowed && (
+                      <LockIcon
+                        fontSize="small"
+                        sx={{ ml: 1, fontSize: 16, color: "#ff9800" }}
+                      />
+                    )}
+                  </Typography>
+                );
+              })}
+            </Box>
+
+            {/* Avatar */}
+            <Avatar
+              sx={{
+                bgcolor: deepOrange[500],
+                ml: 3,
+                mr: 2,
+                width: 36,
+                height: 36,
+                fontSize: 16,
+              }}
+            >
+              {localStorage.getItem("name")?.charAt(0)}
+            </Avatar>
+
+            {/* Logout Button */}
+            <Button
+              variant="contained"
+              onClick={logout}
+              sx={{
+                backgroundColor: "primary.main",
+                color: "#000",
+                fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: "text.secondary",
+                },
+              }}
+            >
+              {t("navbar.logout")}
+            </Button>
+
+            <Select
+              size="small"
+              value={i18n.language}
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              sx={{
+                ml: 2,
+                backgroundColor: "#fff",
+                borderRadius: 1,
+                height: 35
+              }}
+            >
+              <MenuItem value="en">EN</MenuItem>
+              <MenuItem value="hi">हिं</MenuItem>
+              <MenuItem value="or">ଓଡ଼ିଆ</MenuItem>
+            </Select>
           </Box>
-
-          {/* Avatar */}
-          <Avatar
-            sx={{
-              bgcolor: deepOrange[500],
-              ml: 3,
-              mr: 2,
-              width: 36,
-              height: 36,
-              fontSize: 16,
-            }}
-          >
-            {localStorage.getItem("name")?.charAt(0)}
-          </Avatar>
-
-          {/* Logout Button */}
-          <Button
-            variant="contained"
-            onClick={logout}
-            sx={{
-              backgroundColor: "primary.main",
-              color: "#000",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "text.secondary",
-              },
-            }}
-          >
-            {t("navbar.logout")}
-          </Button>
-
-          <Select
-            size="small"
-            value={i18n.language}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-            sx={{
-              ml: 2,
-              backgroundColor: "#fff",
-              borderRadius: 1,
-              height: 35
-            }}
-          >
-            <MenuItem value="en">EN</MenuItem>
-            <MenuItem value="hi">हिं</MenuItem>
-            <MenuItem value="or">ଓଡ଼ିଆ</MenuItem>
-          </Select>
-
         </Toolbar>
       </AppBar>
 
@@ -169,69 +174,130 @@ export default function ContractorNavbar() {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <Box sx={{ width: 260, p: 2 }}>
-          <img src={logo} alt="logo" style={{ width: 60, marginBottom: 20 }} />
+        <Box
+          sx={{
+            width: 260,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            p: 2,
+          }}
+        >
+          {/* TOP SECTION */}
+          <Box>
+            {/* LOGO */}
+            <Box sx={{ textAlign: "start", mb: 2 }}>
+              <img
+                src={logo}
+                alt="logo"
+                style={{ width: 70, cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/contractor/home");
+                  setOpenDrawer(false);
+                }}
+              />
+            </Box>
 
+            {/* DIVIDER */}
+            <Divider sx={{ mb: 2, bgcolor: "divider" }} />
 
-          <List>
-            {menuItems.map((item) => {
-              const isAddWorker = item.path === "/contractor/add-worker" || item.path ==="/contractor/workers";
-              const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
+            {/* MENU ITEMS */}
+            <List>
+              {menuItems.map((item) => {
+                const isAddWorker =
+                  item.path === "/contractor/add-worker" ||
+                  item.path === "/contractor/workers";
 
-              return (
-                <ListItem
-                  button
-                  key={item.label}
-                  onClick={() => {
-                    if (!allowed) {
-                      toast.error("Upgrade to Business Plan to unlock this feature.");
-                      return;
-                    }
-                    navigate(item.path);
-                    setOpenDrawer(false);
-                  }}
-                  sx={{
-                    opacity: allowed ? 1 : 0.6,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <ListItemText primary={item.label} />
+                const allowed =
+                  !isAddWorker ||
+                  canAccess("addWorker") ||
+                  canAccess("viewWorkers");
 
-                  {!allowed && (
-                    <LockIcon
-                      fontSize="small"
-                      sx={{ fontSize: 16, color: "#ff9800" }}
+                return (
+                  <ListItem
+                    key={item.label}
+                    onClick={() => {
+                      if (!allowed) {
+                        toast.error(
+                          "Upgrade to Business Plan to unlock this feature."
+                        );
+                        return;
+                      }
+                      navigate(item.path);
+                      setOpenDrawer(false);
+                    }}
+                    sx={{
+                      borderRadius: 2,
+                      mb: 1,
+                      cursor: "pointer",
+                      opacity: allowed ? 1 : 0.6,
+                      "&:hover": {
+                        backgroundColor: "action.hover",
+                      },
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{
+                        fontWeight: 500,
+                      }}
                     />
-                  )}
-                </ListItem>
-              );
-            })}
-          </List>
 
-          {/* Avatar + Logout in Drawer */}
-          <Box sx={{ mt: 3, textAlign: "center", display: "flex", justifyContent: "flexStart", alignItems: "center", gap: 1 }}>
-            <Avatar
+                    {!allowed && (
+                      <LockIcon
+                        fontSize="small"
+                        sx={{ fontSize: 16, color: "#ff9800" }}
+                      />
+                    )}
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Box>
+
+          {/* BOTTOM SECTION */}
+          <Box>
+            {/* USER + LOGOUT */}
+            <Box
               sx={{
-                bgcolor: deepOrange[500],
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mb: 2,
               }}
             >
-              {localStorage.getItem("name")?.charAt(0)}
-            </Avatar>
+              <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                {localStorage.getItem("name")?.charAt(0)}
+              </Avatar>
 
-            <Button
-              small
-              variant="contained"
-              onClick={logout}
+              <Button
+                variant="contained"
+                onClick={logout}
+                sx={{
+                  flex: 1,
+                  fontWeight: 600,
+                }}
+              >
+                {t("navbar.logout")}
+              </Button>
+            </Box>
+
+            {/* DIVIDER */}
+            <Divider sx={{ mb: 1, bgcolor: "divider" }} />
+
+            {/* SOCIAL BAR */}
+            <Box
               sx={{
-                mt: 0,
-                backgroundColor: "#f5a623",
-                color: "#000",
-                fontWeight: 600,
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: 2,
               }}
             >
-              {t("navbar.logout")}
-            </Button>
+              <SocialBar colourStyle={{ color: "#000" }} />
+            </Box>
           </Box>
         </Box>
       </Drawer>

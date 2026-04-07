@@ -84,10 +84,10 @@ export default function ContractorAttendance() {
             <Box className="container">
               {/* HEADER */}
               <Box sx={{ mb: 4 }}>
-                <Typography variant="h4" fontWeight={700} gutterBottom>
+                <Typography variant="h1"   gutterBottom>
                   {t("attendance.attendance_overview")}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" >
                   {t("attendance.attendance_overview_desc")}
                 </Typography>
               </Box>
@@ -142,7 +142,7 @@ export default function ContractorAttendance() {
                   </Typography>
       
                   {attendance.records.length === 0 && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2">
                       {t("attendance.no_records_found")}
                     </Typography>
                   )}

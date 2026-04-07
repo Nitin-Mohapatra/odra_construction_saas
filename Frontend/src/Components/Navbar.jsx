@@ -201,7 +201,7 @@ export default function Navbar() {
                 alt="logo"
                 style={{ width: 70, cursor: "pointer" }}
                 onClick={() => {
-                  navigate("/home");
+                  navigate("/contractor/home");
                   setOpenDrawer(false);
                 }}
               />

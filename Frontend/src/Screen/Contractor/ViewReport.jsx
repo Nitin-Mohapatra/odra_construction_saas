@@ -100,10 +100,10 @@ export default function ViewReport() {
       
           {/* HEADER */}
           <Box className="container py-5">
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h1"  gutterBottom>
               {t("reports.view_report")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" >
               {t("reports.review_desc")}
             </Typography>
           </Box>

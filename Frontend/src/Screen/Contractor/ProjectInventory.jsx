@@ -145,10 +145,10 @@ export default function ProjectInventory() {
 
           {/* HEADER */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h1" gutterBottom>
               {t("inventory.project_inventory")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1">
               {t("inventory.manage_inventory")}
             </Typography>
           </Box>
@@ -170,14 +170,15 @@ export default function ProjectInventory() {
               sx={{
                 p: 3,
                 borderRadius: "16px",
-                background: "linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%)",
+                background: "white",
+                border:"1px solid black",
                 boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body1" >
                 {t("inventory.total_purchased_value")}
               </Typography>
-              <Typography variant="h5" fontWeight={700} sx={{ mt: 1 }}>
+              <Typography variant="h5"  sx={{ mt: 1 }}>
                 ₹ {summary.totalPurchasedValue}
               </Typography>
             </Paper>
@@ -187,14 +188,15 @@ export default function ProjectInventory() {
               sx={{
                 p: 3,
                 borderRadius: "16px",
-                background: "linear-gradient(135deg, #ffffff 0%, #fef3c7 100%)",
+                background: "white",
+                border:"1px solid black",
                 boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body1" >
                 {t("inventory.total_used_cost")}
               </Typography>
-              <Typography variant="h5" fontWeight={700} sx={{ mt: 1 }}>
+              <Typography variant="h5"  sx={{ mt: 1 }}>
                 ₹ {summary.totalUsedCost}
               </Typography>
             </Paper>
@@ -204,14 +206,15 @@ export default function ProjectInventory() {
               sx={{
                 p: 3,
                 borderRadius: "16px",
-                background: "linear-gradient(135deg, #ffffff 0%, #dcfce7 100%)",
+                background: "white",
+                border:"1px solid black",
                 boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body1" >
                 {t("inventory.remaining_stock_value")}
               </Typography>
-              <Typography variant="h5" fontWeight={700} sx={{ mt: 1 }}>
+              <Typography variant="h5"  sx={{ mt: 1 }}>
                 ₹ {summary.remainingStockValue}
               </Typography>
             </Paper>
@@ -312,12 +315,13 @@ export default function ProjectInventory() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  backgroundColor: "#f5a623",
-                  color: "#000",
-                  fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: "#e0941d",
-                  },
+                  backgroundColor: "primary.main",
+                    color: "#000",
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: "text.secondary",
+                      border:"1px solid #5FA32D"
+                    },
                 }}
                 onClick={addItem}
               >
@@ -342,7 +346,7 @@ export default function ProjectInventory() {
                   mb: 3,
                 }}
               >
-                <Typography variant="h6" fontWeight={600}>
+                <Typography variant="h6" >
                   {t("inventory.current_inventory")}
                 </Typography>
 
@@ -351,9 +355,13 @@ export default function ProjectInventory() {
                   component={Link}
                   to={`/contractor/projects/${projectId}/inventory-history`}
                   sx={{
-                    borderColor: "#f5a623",
-                    color: "#000",
+                    color: "primary.main",
+                    borderColor: "primary.main",
                     fontWeight: 600,
+                    "&:hover": {
+                      borderColor: "primary.main",
+                      color: "primary.main",
+                    },
                   }}
                 >
                   {t("inventory.view_history")}
