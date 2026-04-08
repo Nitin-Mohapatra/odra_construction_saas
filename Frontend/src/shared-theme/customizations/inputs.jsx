@@ -206,8 +206,8 @@ export const inputsCustomizations = {
       root: { border: 'none' },
       input: {
         '&::placeholder': {
-          opacity: 0.7,
-          color: '#5f6f65',
+          opacity: 1,
+          color: 'black',
         },
       },
     },
@@ -215,7 +215,7 @@ export const inputsCustomizations = {
 
   MuiOutlinedInput: {
     styleOverrides: {
-      input: { padding: 0 },
+      input: { padding: 0, },
       root: ({ theme }) => ({
         padding: '8px 12px',
         color: theme.palette.text.primary,

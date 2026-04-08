@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from '../../Components/Footer';
 import SiteEngineerNavbar from '../../Components/SiteEngineerNavbar';
-import { useParams, useNavigate } from "react-router-dom";
+import { Link,useParams, useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,6 +18,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { useTranslation } from "react-i18next";
 import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
+import { Button } from "@mui/material";
 
 export default function ProjectWork() {
   const { id } = useParams();
@@ -121,22 +122,19 @@ export default function ProjectWork() {
         {/* PROJECT HEADER */}
         <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
           <Typography
-            variant="h4"
-            component="h1"
-            sx={{ fontWeight: 700, mb: 1 }}
+            variant="h1"
+            sx={{  mb: 1 }}
           >
             {project.title}
           </Typography>
 
           <Typography
             variant="body1"
-            color="text.secondary"
             sx={{ mb: 2 }}
           >
             {project.description}
           </Typography>
 
-          <Divider />
         </Box>
 
         {/* CONTENT */}
@@ -179,7 +177,7 @@ export default function ProjectWork() {
 
                 <Typography
                   variant="body2"
-                  sx={{ mt: 1, color: "text.secondary" }}
+                  sx={{ mt: 1 }}
                 >
                   Unlock Reports feature by upgrading your plan.
                 </Typography>
@@ -214,7 +212,6 @@ export default function ProjectWork() {
 
                       <Typography
                         variant="body2"
-                        color="text.secondary"
                       >
                         {t("project.report_status")}: {rept.contractorStatus || t("project.pending")}
                       </Typography>
@@ -225,7 +222,7 @@ export default function ProjectWork() {
                           sx={{
                             mt: 1,
                             fontStyle: "italic",
-                            color: "text.secondary",
+                          
                           }}
                         >
                           {t("project.comment")}: {rept.contractorComment}
@@ -236,7 +233,7 @@ export default function ProjectWork() {
                 ))}
               </Box>
             ) : (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" >
                 {t("project.no_reports_submitted")}
               </Typography>
             )}
@@ -270,20 +267,28 @@ export default function ProjectWork() {
             >
               {project.status !== "Completed" ? (
                 <>
-                  <button
-                    className="btn btn-sm btn-success"
-                    style={{
+                  <Button
+                    component={Link}
+                    to={`/site-engineer/projects/${id}/report`}
+                    variant="contained"
+                    sx={{
                       opacity: canAccess("reports") ? 1 : 0.6,
                       display: "flex",
                       alignItems: "center",
-                      gap: "6px"
+                      gap: "6px",
+                      backgroundColor: "primary.main",
+                      color: "#000",
+                      fontWeight: 600,
+                      "&:hover": {
+                        backgroundColor: "text.secondary",
+                      },
                     }}
                     onClick={() => {
                       if (!canAccess("reports")) {
                         toast.error("Upgrade to Business Plan to unlock Report Submission.");
                         return;
                       }
-                      navigate(`/site-engineer/projects/${id}/report`);
+                      
                     }}
                   >
                     {t("project.submit_report_btn")}
@@ -294,22 +299,30 @@ export default function ProjectWork() {
                         sx={{ fontSize: 16, color: "#ff9800" }}
                       />
                     )}
-                  </button>
+                  </Button>
 
-                  <button
-                    className="btn btn-sm btn-primary"
+                  <Button
+                    component={Link}
+                    to={`/site-engineer/projects/${id}/attendance`}
+                    variant="outlined"
                     style={{
                       opacity: canAccess("attendance") ? 1 : 0.6,
                       display: "flex",
                       alignItems: "center",
-                      gap: "6px"
+                      gap: "6px",
+                      color: "black",
+                      borderColor: "text.secondary",
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                      },
                     }}
                     onClick={() => {
                       if (!canAccess("attendance")) {
                         toast.error("Upgrade to Business Plan to unlock Attendance.");
                         return;
                       }
-                      navigate(`/site-engineer/projects/${id}/attendance`);
                     }}
                   >
                     {t("project.mark_attendance")}
@@ -320,16 +333,24 @@ export default function ProjectWork() {
                         sx={{ fontSize: 16, color: "#ff9800" }}
                       />
                     )}
-                  </button>
+                  </Button>
 
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() =>
-                      navigate(`/site-engineer/projects/${id}/inventory`)
-                    }
+                  <Button
+                    component={Link}
+                    variant="outlined"
+                    to={`/site-engineer/projects/${id}/inventory`}
+                    sx={{
+                      color: "black",
+                      borderColor: "text.primary",
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                      },
+                    }}
                   >
                     {t("project.log_inventory")}
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <Typography color="error">
@@ -338,8 +359,8 @@ export default function ProjectWork() {
               )}
 
               {!canAccess("chat") ? (
-                <button
-                  className="btn btn-sm btn-primary"
+                <Button
+                  
                   style={{
                     opacity: 0.6,
                     display: "flex",
@@ -355,7 +376,7 @@ export default function ProjectWork() {
                     fontSize="small"
                     sx={{ fontSize: 16, color: "#ff9800" }}
                   />
-                </button>
+                </Button>
               ) : (
                 <ChatModal projectId={id} />
               )}

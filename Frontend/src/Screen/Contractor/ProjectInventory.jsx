@@ -223,7 +223,7 @@ export default function ProjectInventory() {
               variant="outlined"
               disabled={items.length === 0}
               sx={{
-                borderColor: "#f5a623",
+                borderColor: "#5FA32D",
                 color: "#000",
                 fontWeight: 600,
                 mb: 3

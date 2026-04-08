@@ -162,13 +162,13 @@ export default function Attendance() {
         {/* HEADER */}
         <Box sx={{ maxWidth: 900, mx: "auto", mb: 4 }}>
           <Typography
-            variant="h4"
-            sx={{ fontWeight: 700, mb: 1, color: "#1e1e1e" }}
+            variant="h1"
+            sx={{ mb: 1}}
           >
             {t("attendance.attendance")}
           </Typography>
   
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1">
             {t("attendance.attendance_desc")}     
           </Typography>
         </Box>

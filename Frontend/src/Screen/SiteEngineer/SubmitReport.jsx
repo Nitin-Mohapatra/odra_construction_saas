@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useRef } from "react";
+import { Button } from "@mui/material";
 
 export default function SubmitReport() {
     const navigate = useNavigate();
@@ -105,15 +106,15 @@ export default function SubmitReport() {
             {/* HEADER */}
             <Box sx={{ mb: 3 }}>
               <Typography
-                variant="h5"
-                sx={{ fontWeight: 700, mb: 0.5 }}
+                variant="h1"
+                sx={{  mb: 0.5 }}
               >
                 {t("project.submit_report")}
               </Typography>
     
               <Typography
                 variant="body2"
-                color="text.secondary"
+                
               >
                 {t("project.report_date_label", {
                   date: new Date().toLocaleDateString()
@@ -152,9 +153,19 @@ export default function SubmitReport() {
                   mt: 3,
                 }}
               >
-                <button className="btn btn-success">
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "#000",
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: "text.secondary",
+                    },
+                  }} 
+                >
                   {t("project.submit")}
-                </button>
+                </Button>
               </Box>
             </form>
           </Paper>

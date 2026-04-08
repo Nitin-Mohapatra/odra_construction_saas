@@ -65,7 +65,7 @@ export default function InventoryBreakdownModal({open,handleClose,items}) {
     const today = new Date().toLocaleDateString();
   
     // ===== HEADER BAR =====
-    doc.setFillColor(245, 166, 35);
+    doc.setFillColor(95, 163, 45);
     doc.rect(0, 0, pageWidth, 25, "F");
   
     doc.setFont("helvetica", "bold");
@@ -110,7 +110,7 @@ export default function InventoryBreakdownModal({open,handleClose,items}) {
         cellPadding: 3
       },
       headStyles: {
-        fillColor: [245, 166, 35],
+        fillColor: [95, 163, 45],
         textColor: 0,
         fontStyle: "bold"
       },
@@ -191,7 +191,7 @@ doc.text(
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
 
-        <Typography variant="h5" fontWeight={700} gutterBottom>
+        <Typography variant="h6"  gutterBottom>
           {t("inventory.cost_breakdown")}
         </Typography>
 
@@ -242,7 +242,7 @@ doc.text(
         </Typography>
 
         <Typography variant="h6" sx={{ mt: 1 }}>
-          T{t("inventory.remaining_stock_value")}: ₹ {totalRemaining}
+          {t("inventory.remaining_stock_value")}: ₹ {totalRemaining}
         </Typography>
 
         <Box sx={{ textAlign: "right", mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
@@ -258,7 +258,7 @@ doc.text(
             }}
             disabled={items.length === 0}
             sx={{
-              borderColor: !canAccess("pdf") ? "#ccc" : "#f5a623",
+              borderColor: !canAccess("pdf") ? "#ccc" : "#5FA32D",
               color: !canAccess("pdf") ? "#999" : "#000",
               fontWeight: 600,
               opacity: !canAccess("pdf") ? 0.6 : 1,
@@ -278,11 +278,11 @@ doc.text(
             variant="contained"
             onClick={handleClose}
             sx={{
-              backgroundColor: "#f5a623",
+              backgroundColor: "primary.main",
               color: "#000",
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#e0941d",
+                backgroundColor: "text.secondary"
               },
             }}
           >

@@ -1,0 +1,18 @@
+{
+  "name": "ODRAOPS",
+  "short_name": "ODRA",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/icons/lg-mb-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/lg-mb-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

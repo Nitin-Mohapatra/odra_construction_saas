@@ -180,10 +180,10 @@ export default function InventoryUsage() {
   
           {/* HEADER */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h1" gutterBottom>
               {t("inventory.inventory_usage")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1">
               {t("inventory.inventory_usage_desc")}
             </Typography>
           </Box>
@@ -243,16 +243,13 @@ export default function InventoryUsage() {
   
             {/* ACTION BUTTON */}
             <Button
-              fullWidth
               variant="contained"
               sx={{
-                backgroundColor: "#f5a623",
+                backgroundColor: "primary.main",
                 color: "#000",
                 fontWeight: 600,
-                py: 1.5,
-                borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#e0941d",
+                  backgroundColor: "text.secondary",
                 },
               }}
               onClick={submitUsage}

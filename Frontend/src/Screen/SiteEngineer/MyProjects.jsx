@@ -17,6 +17,9 @@ import { Button } from '@mui/material';
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useTranslation } from "react-i18next";
+import Tooltip from "@mui/material/Tooltip";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import IconButton from "@mui/material/IconButton";
 
 export default function MyProjects() {
   const [projects, setProjects] = useState([]);
@@ -98,16 +101,15 @@ export default function MyProjects() {
         {/* HEADER */}
         <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
           <Typography
-            variant="h4"
-            component="h1"
-            sx={{ fontWeight: 700, mb: 1 }}
+            variant="h1"
+            sx={{  mb: 1 }}
           >
             {t("project.my_projects")}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1" >
             {t("project.track_projects")}
           </Typography>
-          <Divider sx={{ mt: 3 }} />
+          {/* <Divider sx={{ mt: 3 }} /> */}
         </Box>
 
         {/* TABS */}
@@ -163,8 +165,42 @@ export default function MyProjects() {
                   },
                 }}
               >
+                
+                {/* TOP RIGHT ACTIONS */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      display: "flex",
+                      gap: 1,
+                    }}
+                  >
+                    <Tooltip title={t("project.open_project")}>
+                      <IconButton
+                        size="small"
+                        onClick={() =>
+                        navigate(
+                          `/site-engineer/projects/${project._id}`
+                        )
+                      }
+                        sx={{
+                          backgroundColor: "primary.main",
+                          color: "text.primary",
+                          width: 34,
+                          height: 34,
+                          "&:hover": {
+                            backgroundColor: "secondary.main",
+                            color:"text.secondary"
+                          },
+                        }}
+                      >
+                        <OpenInNewIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
 
-
+                  </Box>
+                
                 <CardContent sx={{ p: 3 }}>
                   <Typography
                     variant="h6"
@@ -175,26 +211,12 @@ export default function MyProjects() {
 
                   <Typography
                     variant="body2"
-                    color="text.secondary"
                     sx={{ mb: 2 }}
                   >
                     {project.contractor?.name
                       ? t("project.contractor_with_name", { name: project.contractor.name })
                       : t("project.contractor_with_name", { name: t("project.na") })}
                   </Typography>
-
-                  <Box sx={{ textAlign: "right" }}>
-                    <button
-                      className="btn btn-sm btn-dark"
-                      onClick={() =>
-                        navigate(
-                          `/site-engineer/projects/${project._id}`
-                        )
-                      }
-                    >
-                      {t("project.open_project")}
-                    </button>
-                  </Box>
                 </CardContent>
               </Card>
             ))}

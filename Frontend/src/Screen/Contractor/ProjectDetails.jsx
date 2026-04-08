@@ -416,7 +416,7 @@ export default function ProjectDetails() {
           </Typography>
 
           {Array.isArray(project.reports) && project.reports.length === 0 && (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1">
               {t("project.no_reports")}
             </Typography>
           )}
