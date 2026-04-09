@@ -154,6 +154,7 @@ export default function SubmitReport() {
                 }}
               >
                 <Button
+                  type="submit"
                   variant="contained"
                   sx={{
                     backgroundColor: "primary.main",
