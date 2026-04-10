@@ -39,7 +39,7 @@ export default function Home() {
                   textTransform: "uppercase",
                   fontWeight: 600,
                   mb: 3,
-                  color:"text.secondary"
+                  color:"white"
                 }}
               >
                 <span style={{
@@ -57,7 +57,7 @@ export default function Home() {
                 variant="h1"
                 sx={{
                   fontWeight: 900,
-                  color: "text.secondary",
+                  color: "white",
                 }}
               >
                 {/* {t("dashboard.home.hero_line_1")} <br />

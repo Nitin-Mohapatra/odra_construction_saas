@@ -156,7 +156,7 @@ export default function Project() {
                           height: 34,
                           "&:hover": {
                             backgroundColor: "secondary.main",
-                            color:"text.secondary"
+                            color:"white"
                           },
                         }}
                       >

@@ -8,7 +8,7 @@ import SocialBar from "./SocialBar";
 
 const footerLinkStyle = {
   textDecoration: "none",
-  color: "text.secondary",
+  color: "white",
 };
 
 export default function Footer() {
@@ -17,7 +17,7 @@ export default function Footer() {
     <footer
       style={{
         backgroundColor: "#000",
-        color: "text.secondary",
+        color: "white",
         marginTop: "auto",
       }}
     >
@@ -31,7 +31,7 @@ export default function Footer() {
               alt="Odraops"
               style={{ height: "45px", marginBottom: "15px" }}
             />
-            <Typography sx={{ color: "text.secondary", display: "block" }} variant="body1">
+            <Typography sx={{ color: "white", display: "block" }} variant="body1">
               Construction Management Software designed to simplify
               project tracking, attendance, reporting and inventory management.
             </Typography>
@@ -47,7 +47,7 @@ export default function Footer() {
             <Typography
               variant="h4"
               sx={{
-                color: "text.secondary",
+                color: "white",
                 marginBottom: "0.5em"
               }}
             >
@@ -86,7 +86,7 @@ export default function Footer() {
                 component={Link}
                 variant="body1"
                 to="/contact-us"
-                sx={{ textDecoration: "none", color: "text.secondary" }}
+                sx={{ textDecoration: "none", color: "white" }}
               >
                 Contact
               </Typography>
@@ -98,7 +98,7 @@ export default function Footer() {
             <Typography
               variant="h4"
               sx={{
-                color: "text.secondary",
+                color: "white",
                 marginBottom: "0.5em"
               }}
             >
@@ -106,13 +106,13 @@ export default function Footer() {
             </Typography>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} className="align-items-md-start">
-              <Typography variant="body1" sx={{ color: "text.secondary" }}>
+              <Typography variant="body1" sx={{ color: "white" }}>
                 📧  odraops@gmail.com
               </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary" }}>
+              <Typography variant="body1" sx={{ color: "white" }}>
                 📞 +91 6370627088
               </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary" }}>
+              <Typography variant="body1" sx={{ color: "white" }}>
                 📍 Bhubaneswar, India
               </Typography>
             </div>
@@ -132,7 +132,7 @@ export default function Footer() {
           textAlign: "center",
           padding: "15px 0",
           fontSize: "14px",
-          color: "text.secondary",
+          color: "white",
         }}
       >
         © {new Date().getFullYear()} PBM Intel. All rights reserved.

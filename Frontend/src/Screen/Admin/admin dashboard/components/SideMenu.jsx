@@ -78,7 +78,7 @@ export default function SideMenu() {
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             {decoded.name}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography variant="caption" sx={{ color: 'white' }}>
             {decoded.email}
           </Typography>
         </Box>

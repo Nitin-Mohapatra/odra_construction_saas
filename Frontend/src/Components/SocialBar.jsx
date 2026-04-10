@@ -18,7 +18,7 @@ export default function SocialBar({colourStyle}) {
                 href="https://instagram.com"
                 target="_blank"
                 sx={{
-                    color: "text.secondary",
+                    color: "white",
                     border: "1px solid",
                     borderColor: "divider",
                     "&:hover": {
@@ -35,7 +35,7 @@ export default function SocialBar({colourStyle}) {
                 href="https://wa.me/916370627088"
                 target="_blank"
                 sx={{
-                    color: "text.secondary",
+                    color: "white",
                     border: "1px solid",
                     borderColor: "divider",
                     "&:hover": {

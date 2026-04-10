@@ -319,7 +319,7 @@ export default function ProjectInventory() {
                     color: "#000",
                     fontWeight: 600,
                     "&:hover": {
-                      backgroundColor: "text.secondary",
+                      backgroundColor: "white",
                       border:"1px solid #5FA32D"
                     },
                 }}

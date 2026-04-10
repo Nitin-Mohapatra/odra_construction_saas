@@ -33,7 +33,7 @@ export default function NotFound() {
         </Typography>
 
         {/* DESCRIPTION */}
-        <Typography variant="body1" color="text.secondary" maxWidth={400}>
+        <Typography variant="body1" color="white" maxWidth={400}>
           The page you’re looking for doesn’t exist or has been moved.
         </Typography>
 

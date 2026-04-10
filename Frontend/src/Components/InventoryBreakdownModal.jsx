@@ -282,7 +282,7 @@ doc.text(
               color: "#000",
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "text.secondary"
+                backgroundColor: "white"
               },
             }}
           >

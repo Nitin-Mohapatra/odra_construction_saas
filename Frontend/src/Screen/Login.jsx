@@ -16,7 +16,6 @@ export default function Login() {
     password: "",
   });
   const [validated, setValidated] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -124,7 +123,7 @@ export default function Login() {
             <Typography variant="h5" fontWeight={700}>
               {t("auth.welcome_back")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="white">
             {t("auth.sign_in_continue")}
             </Typography>
           </Box>
@@ -177,7 +176,7 @@ export default function Login() {
               <label className="form-label fw-semibold">{t("auth.password")}</label>
               <input
                 name="password"
-                type={showPassword?"text":"password"}
+                type="text"
                 className="form-control"
                 placeholder={t("auth.password_placeholder")}
                 value={formData.password}
@@ -185,21 +184,7 @@ export default function Login() {
                 required
                 minLength={5}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {showPassword ? "🙈" : "👁️"}
-              </button>
+             
               <div className="invalid-feedback">
                 Password must be at least 5 characters.
               </div>

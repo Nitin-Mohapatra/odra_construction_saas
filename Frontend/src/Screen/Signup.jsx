@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export default function Signup() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [showPassword, setShowPassword] = useState(false);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -171,7 +171,7 @@ export default function Signup() {
               <label className="form-label fw-semibold">{t("auth.password")}</label>
               <input
                 name="password"
-                type={showPassword?"text":"password"}
+                type="text"
                 className="form-control"
                 placeholder={t("auth.min_password_placeholder")}
                 value={formData.password}
@@ -179,21 +179,7 @@ export default function Signup() {
                 required
                 minLength={5}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {showPassword ? "🙈" : "👁️"}
-              </button>
+            
               <div class="invalid-feedback">
                 Password must be at least 5 characters.
               </div>

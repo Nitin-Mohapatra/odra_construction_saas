@@ -149,7 +149,7 @@ export default function ContractorDashboard() {
                 color: "#000",
                 fontWeight: 600,
                 "&:hover": {
-                  backgroundColor: "text.secondary",
+                  backgroundColor: "white",
                 },
               }}
             >

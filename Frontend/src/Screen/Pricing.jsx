@@ -92,7 +92,7 @@ export default function Pricing() {
 
       <Typography
         align="center"
-        color="text.secondary"
+        color="white"
         sx={{ mb: 6 }}
       >
         Unlock powerful tools to manage unlimited construction projects.

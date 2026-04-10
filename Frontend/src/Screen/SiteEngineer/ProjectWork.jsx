@@ -280,7 +280,7 @@ export default function ProjectWork() {
                       color: "#000",
                       fontWeight: 600,
                       "&:hover": {
-                        backgroundColor: "text.secondary",
+                        backgroundColor: "white",
                       },
                     }}
                     onClick={() => {
@@ -311,7 +311,7 @@ export default function ProjectWork() {
                       alignItems: "center",
                       gap: "6px",
                       color: "black",
-                      borderColor: "text.secondary",
+                      borderColor: "white",
                       fontWeight: 600,
                       "&:hover": {
                         borderColor: "primary.main",

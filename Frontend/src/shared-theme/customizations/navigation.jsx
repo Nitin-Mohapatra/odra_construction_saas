@@ -100,7 +100,7 @@ export const navigationCustomizations = {
           height: '1px',
           bottom: 0,
           left: 0,
-          backgroundColor: (theme.vars || theme).palette.text.secondary,
+          backgroundColor: "white",
           opacity: 0.3,
           transition: 'width 0.3s ease, opacity 0.3s ease',
         },

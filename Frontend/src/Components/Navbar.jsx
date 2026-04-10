@@ -107,7 +107,7 @@ export default function Navbar() {
                   component={Link}
                   to={item.path}
                   sx={{
-                    color: "text.secondary",
+                    color: "white",
                     textDecoration: "none",
                     fontWeight: 500,
                   }}
@@ -125,8 +125,8 @@ export default function Navbar() {
                   to="/Login"
                   variant="outlined"
                   sx={{
-                    color: "text.secondary",
-                    borderColor: "text.secondary",
+                    color: "white",
+                    borderColor: "white",
                     fontWeight: 600,
                     "&:hover": {
                       borderColor: "primary.main",
@@ -146,7 +146,7 @@ export default function Navbar() {
                     color: "#000",
                     fontWeight: 600,
                     "&:hover": {
-                      backgroundColor: "text.secondary",
+                      backgroundColor: "white",
                     },
                   }}
                 >

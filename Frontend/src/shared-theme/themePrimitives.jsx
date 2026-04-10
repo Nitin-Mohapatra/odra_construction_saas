@@ -76,7 +76,7 @@ export const colorSchemes = {
       // 🚨 FIXED (VERY IMPORTANT)
       text: {
         primary: "#000",     
-        secondary: "#fff",   
+        secondary: "#000",   
       },
 
       divider: "rgba(0, 48, 35, 0.1)",
