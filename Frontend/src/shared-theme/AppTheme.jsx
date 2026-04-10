@@ -24,7 +24,7 @@ function AppTheme({ children }) {
       typography,
       shape,
       components: {
-        // ...inputsCustomizations,
+        ...inputsCustomizations, //comment this to controll the input elemtts
         ...dataDisplayCustomizations,
         ...feedbackCustomizations,
         ...navigationCustomizations,

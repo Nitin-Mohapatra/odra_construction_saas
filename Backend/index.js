@@ -112,14 +112,13 @@ const { signup, signin } = require('./routes/auth/createUser')
 const { googleAuth } = require('./routes/auth/googleAuth');
 const { messagePost } = require("./routes/message");
 
-app.use(express.json())
-httpServer.listen(port, () => {
-    console.log("Connection to backend established")
-})
 app.use(cors({
     origin: allowedOrigins,
     credentials: true
 }))
+app.use(express.json())
+
+
 
 // requiring singup and signin
 app.use('/auth', signup);
@@ -153,6 +152,11 @@ app.use('/token', tokenValidation);
 app.get("/ping", (req, res) => {
   res.status(200).send("OK");
 });
+
+
+httpServer.listen(port, () => {
+    console.log("Connection to backend established")
+})
 
 // connecting to database
 connectDb()
