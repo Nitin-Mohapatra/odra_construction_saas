@@ -43,7 +43,7 @@ const sendEmail = async (from, to, subject, msg, html = "") => {
 
 exports.createProject = async (req, res) => {
     try {
-        const { title, description, startDate, endDate, siteEngineerEmail,siteEngineerName } = req.body;
+        const { title, description, startDate, endDate, siteEngineerEmail, siteEngineerName } = req.body;
         if (!title || !description || !siteEngineerEmail) {
             return res.status(404).json({ success: false, error: "Fields can not be empty." });
         }
@@ -66,10 +66,10 @@ exports.createProject = async (req, res) => {
             });
         }
         // if it is a free plan
-        if(subscription.plan === "free"){
+        if (subscription.plan === "free") {
             const existingProjectCount = contractor.totalProjects;
 
-            if(existingProjectCount >= 1){
+            if (existingProjectCount >= 1) {
                 return res.status(402).json({
                     success: false,
                     error: "Free plan allows only 1 project. Please upgrade to Business plan."
@@ -77,13 +77,13 @@ exports.createProject = async (req, res) => {
             }
         }
         // if business plan but expired
-        if(subscription.plan === "business" && subscription.status != "active"){
+        if (subscription.plan === "business" && subscription.status != "active") {
             return res.status(402).json({
                 success: false,
                 error: "Subscription expired. Please renew your Business plan."
             });
         }
-        
+
 
         // 🔎 Find site engineer by email
         let stEng = await User.findOne({
@@ -139,7 +139,7 @@ exports.createProject = async (req, res) => {
             </div>
 
             <div style="text-align:center; margin:25px 0;">
-                <a href="http://localhost:5173/Login" 
+                <a href="https://odraopssaas.netlify.app/Login" 
                    style="background:#1abc9c; color:white; padding:12px 25px; 
                    text-decoration:none; border-radius:5px;">
                    Login to Dashboard
@@ -159,13 +159,18 @@ exports.createProject = async (req, res) => {
     </div>
     `;
 
-            await sendEmail(
-                process.env.gmail_user,
-                siteEngineerEmail,
-                `You’ve Been Assigned to Project "${title}"`,
-                `You have been assigned to project ${title}. Login using your email and temporary password: ${tempPassword}`,
-                htmlContent
-            );
+            try {
+                await sendEmail(
+                    process.env.gmail_user,
+                    siteEngineerEmail,
+                    `You’ve Been Assigned to Project "${title}"`,
+                    `You have been assigned to project ${title}. Login using your email and temporary password: ${tempPassword}`,
+                    htmlContent
+                );
+            } catch (err) {
+                console.error("EMAIL ERROR FULL:", err);
+                return false;
+            }
         }
 
         // 🏗 Create project (organization locked)
@@ -180,7 +185,7 @@ exports.createProject = async (req, res) => {
             organizationId
         });
 
-        contractor.totalProjects+=1;
+        contractor.totalProjects += 1;
         await contractor.save();
 
         // Push project reference
@@ -339,52 +344,52 @@ exports.completeProject = async (req, res) => {
 }
 
 // delete projects
-exports.deleteProject = async (req, res)=>{
-    try{
-        const {id} = req.params;
+exports.deleteProject = async (req, res) => {
+    try {
+        const { id } = req.params;
         const contractor_id = req.user.User_id;
         const organizationId = req.user.organizationId;
         const project = await Project.findOne({ _id: id, organizationId });
         const project_name = project.title;
         const siteEng_id = project.siteEngineer;
 
-        if(!project){
+        if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
 
         // 1 remove project from contractor
-        await User.findOneAndUpdate({_id:project.contractor,organizationId:organizationId},{
-            $pull:{createdProjects:id}
+        await User.findOneAndUpdate({ _id: project.contractor, organizationId: organizationId }, {
+            $pull: { createdProjects: id }
         })
 
         // 2️⃣ Remove project from site engineer
-        await User.findOneAndUpdate({_id:project.siteEngineer,organizationId}, {
+        await User.findOneAndUpdate({ _id: project.siteEngineer, organizationId }, {
             $pull: { assignedProjects: id }
         });
 
         // 3️⃣ Free workers (remove project reference)
         await Worker.updateMany(
             { currentProjectId: id },
-            { $set: { currentProjectId: null,status:"free" } }
+            { $set: { currentProjectId: null, status: "free" } }
         );
 
         // 4️⃣ Delete reports
-        await Report.deleteMany({ projectId: id , organizationId});
+        await Report.deleteMany({ projectId: id, organizationId });
 
         // 5️⃣ Delete chats
-        await ChatMessage.deleteMany({ projectId: id ,organizationId});
+        await ChatMessage.deleteMany({ projectId: id, organizationId });
 
         // 6️⃣ Delete inventory usage logs
-        await InventoryUsage.deleteMany({ projectId: id ,organizationId});
+        await InventoryUsage.deleteMany({ projectId: id, organizationId });
 
         // 7️⃣ Delete inventory items
-        await InventoryItem.deleteMany({ projectId: id ,organizationId});
+        await InventoryItem.deleteMany({ projectId: id, organizationId });
 
         // 8 Delete project
-        await Project.findOneAndDelete({_id:id,organizationId});
+        await Project.findOneAndDelete({ _id: id, organizationId });
 
         // 9 delete attendance
-        await Project.deleteMany({projectId:id,organizationId});
+        await Project.deleteMany({ projectId: id, organizationId });
 
         // 🔔 Real-time notify engineer
         const io = req.app.get("io");
@@ -392,12 +397,12 @@ exports.deleteProject = async (req, res)=>{
         const roomName2 = `project-${id}`
 
         io.to(roomName).emit("project:deleted", {
-            project_id:id,
+            project_id: id,
             project_name
         });
 
-        io.to(roomName2).emit("project:deleted",{
-            project_id:id,
+        io.to(roomName2).emit("project:deleted", {
+            project_id: id,
             project_name
         })
 
@@ -406,105 +411,105 @@ exports.deleteProject = async (req, res)=>{
             message: "Project deleted successfully"
         });
 
-    }catch(err){
+    } catch (err) {
         console.error(err);
-        res.status(500).json({success:false,error:"Internal server error"});
+        res.status(500).json({ success: false, error: "Internal server error" });
     }
 }
 
 // wage calculation
 exports.getProjectWages = async (req, res) => {
-  try {
+    try {
 
-    const { projectId } = req.params;
-    const organizationId = req.user.organizationId;
+        const { projectId } = req.params;
+        const organizationId = req.user.organizationId;
 
-    // 1️⃣ Get project
-    const project = await Project.findById(projectId);
+        // 1️⃣ Get project
+        const project = await Project.findById(projectId);
 
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
-
-    // 2️⃣ Get workers in this project
-    const workers = await Worker.find({
-      currentProjectId: projectId,
-      organizationId
-    });
-
-    // 3️⃣ Get attendance records
-    const attendanceRecords = await Attendance.find({
-      projectId,
-      organizationId
-    });
-
-    // 4️⃣ Count present days per worker
-    const presentCount = {};
-
-    attendanceRecords.forEach(day => {
-      day.records.forEach(rec => {
-        if (rec.status === "present") {
-          const wid = rec.workerId.toString();
-          presentCount[wid] = (presentCount[wid] || 0) + 1;
+        if (!project) {
+            return res.status(404).json({ error: "Project not found" });
         }
-      });
-    });
 
-    // 5️⃣ Calculate months (for monthly workers)
-    const startDate = new Date(project.startDate);
-    const endDate = project.status === "Completed"
-      ? new Date(project.endDate)
-      : new Date();
+        // 2️⃣ Get workers in this project
+        const workers = await Worker.find({
+            currentProjectId: projectId,
+            organizationId
+        });
 
-    const months =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      (endDate.getMonth() - startDate.getMonth()) + 1;
+        // 3️⃣ Get attendance records
+        const attendanceRecords = await Attendance.find({
+            projectId,
+            organizationId
+        });
 
-    // 6️⃣ Final wage calculation
-    const result = workers.map(worker => {
+        // 4️⃣ Count present days per worker
+        const presentCount = {};
 
-      let totalWage = 0;
+        attendanceRecords.forEach(day => {
+            day.records.forEach(rec => {
+                if (rec.status === "present") {
+                    const wid = rec.workerId.toString();
+                    presentCount[wid] = (presentCount[wid] || 0) + 1;
+                }
+            });
+        });
 
-      if (worker.payoutType === "daily") {
+        // 5️⃣ Calculate months (for monthly workers)
+        const startDate = new Date(project.startDate);
+        const endDate = project.status === "Completed"
+            ? new Date(project.endDate)
+            : new Date();
 
-        const days = presentCount[worker._id] || 0;
-        totalWage = days * worker.dailyWage;
+        const months =
+            (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+            (endDate.getMonth() - startDate.getMonth()) + 1;
 
-      } else {
+        // 6️⃣ Final wage calculation
+        const result = workers.map(worker => {
 
-        totalWage = months * worker.dailyWage; // monthly wage
+            let totalWage = 0;
 
-      }
+            if (worker.payoutType === "daily") {
 
-      return {
-        workerId: worker._id,
-        name: worker.name,
-        payoutType: worker.payoutType,
-        totalWage
-      };
+                const days = presentCount[worker._id] || 0;
+                totalWage = days * worker.dailyWage;
 
-    });
+            } else {
 
-    const totalProjectWage = result.reduce(
-      (sum, w) => sum + w.totalWage,
-      0
-    );
+                totalWage = months * worker.dailyWage; // monthly wage
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        workers: result,
-        totalProjectWage
-      }
-    });
+            }
 
-  } catch (error) {
+            return {
+                workerId: worker._id,
+                name: worker.name,
+                payoutType: worker.payoutType,
+                totalWage
+            };
 
-    console.error("Wage calc error:", error);
+        });
 
-    return res.status(500).json({
-      error: "Internal Server Error"
-    });
+        const totalProjectWage = result.reduce(
+            (sum, w) => sum + w.totalWage,
+            0
+        );
 
-  }
+        return res.status(200).json({
+            success: true,
+            data: {
+                workers: result,
+                totalProjectWage
+            }
+        });
+
+    } catch (error) {
+
+        console.error("Wage calc error:", error);
+
+        return res.status(500).json({
+            error: "Internal Server Error"
+        });
+
+    }
 };
