@@ -12,32 +12,54 @@ const ChatMessage = require("../models/chatMessage")
 const InventoryItem = require("../models/inventoryItem");
 const InventoryUsage = require("../models/InventoryUsage");
 const Attendance = require("../models/Attendance");
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",   // ✅ correct hostname
-    port: 465,                // ✅ secure port
-    secure: true,
-    auth: {
-        user: process.env.gmail_user,
-        pass: process.env.gmail_pass
-    }
-});
+// const transporter = nodemailer.createTransport({
+//     host: "smtp.gmail.com",   // ✅ correct hostname
+//     port: 465,                // ✅ secure port
+//     secure: true,
+//     auth: {
+//         user: process.env.gmail_user,
+//         pass: process.env.gmail_pass
+//     }
+// });
 
-const sendEmail = async (from, to, subject, msg, html = "") => {
-    try {
-        const info = await transporter.sendMail({
-            from: `PBM Team <${from}>`,
-            to,
-            subject,
-            text: msg,
-            html,
-        });
-        console.log("Email sent:", info.messageId);
-        return true;
-    } catch (err) {
-        console.error("Error while sending mail:", err);
-        return false;
-    }
+// const sendEmail = async (from, to, subject, msg, html = "") => {
+//     try {
+//         const info = await transporter.sendMail({
+//             from: `PBM Team <${from}>`,
+//             to,
+//             subject,
+//             text: msg,
+//             html,
+//         });
+//         console.log("Email sent:", info.messageId);
+//         return true;
+//     } catch (err) {
+//         console.error("Error while sending mail:", err);
+//         return false;
+//     }
+// };
+
+
+
+const sendEmail = async (to, subject, html, replyToEmail) => {
+  try {
+    const response = await resend.emails.send({
+      from: 'ODRA <onboarding@resend.dev>', // for now
+      to: to,
+      subject: subject,
+      html: html,
+      reply_to: replyToEmail,
+    });
+
+    console.log("Email sent:", response);
+    return true;
+  } catch (error) {
+    console.error("RESEND ERROR:", error);
+    return false;
+  }
 };
 
 
@@ -159,18 +181,25 @@ exports.createProject = async (req, res) => {
     </div>
     `;
 
-            try {
-                await sendEmail(
-                    process.env.gmail_user,
-                    siteEngineerEmail,
-                    `You’ve Been Assigned to Project "${title}"`,
-                    `You have been assigned to project ${title}. Login using your email and temporary password: ${tempPassword}`,
-                    htmlContent
-                );
-            } catch (err) {
-                console.error("EMAIL ERROR FULL:", err);
-                return false;
-            }
+            // try {
+            //     await sendEmail(
+            //         process.env.gmail_user,
+            //         siteEngineerEmail,
+            //         `You’ve Been Assigned to Project "${title}"`,
+            //         `You have been assigned to project ${title}. Login using your email and temporary password: ${tempPassword}`,
+            //         htmlContent
+            //     );
+            // } catch (err) {
+            //     console.error("EMAIL ERROR FULL:", err);
+            //     return false;
+            // }
+
+            await sendEmail(
+                siteEngineerEmail,
+                `You’ve Been Assigned to Project "${title}"`,
+                htmlContent,
+                contractor.email   // 🔥 THIS IS KEY
+            );
         }
 
         // 🏗 Create project (organization locked)
