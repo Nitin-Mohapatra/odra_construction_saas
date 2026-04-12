@@ -124,6 +124,7 @@ exports.createProject = async (req, res) => {
         // 🆕 If engineer does not exist → create inside same organization
         let tempPassword = null;
         if (!stEng) {
+            console.log("Creating SE")
             tempPassword = crypto.randomBytes(4).toString("hex"); // random 8 chars
             const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
@@ -136,7 +137,7 @@ exports.createProject = async (req, res) => {
             });
 
         }
-        // send email to site engineer
+        // send email to site engineer 
         if (tempPassword) {
             const htmlContent = `
     <div style="font-family: Arial, sans-serif; background:#f4f6f9; padding:20px;">
@@ -179,21 +180,7 @@ exports.createProject = async (req, res) => {
             </p>
         </div>
     </div>
-    `;
-
-            // try {
-            //     await sendEmail(
-            //         process.env.gmail_user,
-            //         siteEngineerEmail,
-            //         `You’ve Been Assigned to Project "${title}"`,
-            //         `You have been assigned to project ${title}. Login using your email and temporary password: ${tempPassword}`,
-            //         htmlContent
-            //     );
-            // } catch (err) {
-            //     console.error("EMAIL ERROR FULL:", err);
-            //     return false;
-            // }
-
+`;          console.log("Sendign email")
             await sendEmail(
                 siteEngineerEmail,
                 `You’ve Been Assigned to Project "${title}"`,
