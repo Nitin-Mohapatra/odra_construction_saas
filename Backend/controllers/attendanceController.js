@@ -24,29 +24,69 @@ exports.markAttendance = async (req, res) => {
         });
       }
 
-      // checkt if the workers are assigned to the project & is not free
-      for(const rec of records){
-        const worker = await Worker.findOne({_id:rec.workerId,organizationId: req.user.organizationId});
-        
-        if(!worker){
+      // Extract all the workerIds
+      const workerIds = records.map(rec=>rec.workerId)
+
+      // Fetch ALL workers in ONE query
+      const workers = await Worker.find({
+        _id:{$in:workerIds},
+        organizationId:req.user.organizationId
+      }).lean();
+
+      // Creating a Map to enhance the lookup
+      const workerMap = new Map();
+      workers.forEach(worker=>{
+        workerMap.set(worker._id.toString(),worker);
+      })
+
+      for (const rec of records) {
+        const worker = workerMap.get(rec.workerId.toString());
+
+        if (!worker) {
           return res.status(404).json({
             success: false,
             message: "Worker not found"
           });
         }
-        if(worker.currentProjectId.toString() !== projectId.toString()){
+
+        if (worker.currentProjectId.toString() !== projectId.toString()) {
           return res.status(400).json({
             success: false,
             message: "Worker is not assigned to this project"
           });
         }
-        if(worker.status === "free"){
+
+        if (worker.status === "free") {
           return res.status(400).json({
             success: false,
             message: "Worker is free"
-          }); 
+          });
         }
       }
+
+      // checkt if the workers are assigned to the project & is not free
+      // for(const rec of records){
+      //   const worker = await Worker.findOne({_id:rec.workerId,organizationId: req.user.organizationId});
+        
+      //   if(!worker){
+      //     return res.status(404).json({
+      //       success: false,
+      //       message: "Worker not found"
+      //     });
+      //   }
+      //   if(worker.currentProjectId.toString() !== projectId.toString()){
+      //     return res.status(400).json({
+      //       success: false,
+      //       message: "Worker is not assigned to this project"
+      //     });
+      //   }
+      //   if(worker.status === "free"){
+      //     return res.status(400).json({
+      //       success: false,
+      //       message: "Worker is free"
+      //     }); 
+      //   }
+      // }
 
       const attendance = await Attendance.findOneAndUpdate(
         { projectId, date,organizationId: req.user.organizationId },
