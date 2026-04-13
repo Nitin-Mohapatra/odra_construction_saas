@@ -47,7 +47,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendEmail = async (to, subject, html, replyToEmail) => {
   try {
     const response = await resend.emails.send({
-      from: 'ODRA <onboarding@resend.dev>', // for now
+      from: "OdraOps <noreply@odraops.com>",
       to: to,
       subject: subject,
       html: html,
