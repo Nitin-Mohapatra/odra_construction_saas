@@ -55,6 +55,7 @@ io.on('connection',(socket)=>{
             console.log(`Socket ${socket.id} joined project-${projectId}`);
 
             socket.data.chatAccess = false; // ✅ default
+            console.log("Is chat = ",isChat)
             if (isChat) {
                 try {
                     // ✅ Check project ONCE
