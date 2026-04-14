@@ -49,8 +49,11 @@ io.on('connection',(socket)=>{
         if(contractorId) {
             socket.join(`contractor-${contractorId}`);
             console.log(`Socket ${socket.id} joined contractor-${contractorId}`);
-
-            try{
+        }
+        if(projectId) {
+            socket.join(`project-${projectId}`);
+            console.log(`Socket ${socket.id} joined project-${projectId}`);
+            try {
                 // ✅ Check project ONCE
                 const project = await Project.findById(projectId).select("status");
 
@@ -69,14 +72,10 @@ io.on('connection',(socket)=>{
                 socket.data.projectId = projectId;
                 socket.data.organizationId = organizationId;
 
-            }catch(err){
+            } catch (err) {
                 console.error("Join validation error:", err);
                 socket.data.chatAccess = false;
             }
-        }
-        if(projectId) {
-            socket.join(`project-${projectId}`);
-            console.log(`Socket ${socket.id} joined project-${projectId}`);
         }
         if(siteEngineerId) {
             socket.join(`siteEngineer-${siteEngineerId}`);
