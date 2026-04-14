@@ -63,6 +63,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
 
             socket.emit("join", {
                 projectId,
+                organizationId: decoded.organizationId
             });
         });
 

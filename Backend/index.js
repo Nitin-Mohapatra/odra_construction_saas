@@ -44,11 +44,35 @@ io.on('connection',(socket)=>{
     console.log('A user connected:', socket.id);
 
     // listen for joining room events
-    socket.on('join',({contractorId , projectId, siteEngineerId}) => {
+    socket.on('join',async ({contractorId , projectId, siteEngineerId, organizationId }) => {
         console.log('Join event received:', { contractorId, projectId, siteEngineerId });
         if(contractorId) {
             socket.join(`contractor-${contractorId}`);
             console.log(`Socket ${socket.id} joined contractor-${contractorId}`);
+
+            try{
+                // ✅ Check project ONCE
+                const project = await Project.findById(projectId).select("status");
+
+                // ✅ Check subscription ONCE
+                const subscription = await Subscription.findOne({ organizationId }).select("plan status");
+
+                const canChat =
+                    project &&
+                    project.status !== "Completed" &&
+                    subscription &&
+                    subscription.plan === "business" &&
+                    subscription.status === "active";
+
+                // ✅ Store in socket (VERY IMPORTANT)
+                socket.data.chatAccess = canChat;
+                socket.data.projectId = projectId;
+                socket.data.organizationId = organizationId;
+
+            }catch(err){
+                console.error("Join validation error:", err);
+                socket.data.chatAccess = false;
+            }
         }
         if(projectId) {
             socket.join(`project-${projectId}`);
@@ -68,38 +92,30 @@ io.on('connection',(socket)=>{
     })
 
     // listening for new messages
-    socket.on("chat:new", async ({ projectId, senderId, message,organizationId }) => {
-      try {
-        if (!projectId || !senderId || !message || !organizationId) return;
+    socket.on("chat:new", async ({ projectId, senderId, message }) => {
+        try {
+            if (!projectId || !senderId || !message) return;
 
-        // check if the project is completed
-        const project = await Project.findById(projectId);
-        if(!project || project.status === "Completed"){
-            console.log("Project is completed");
-            return;
-        }
+            // ✅ Use cached validation
+            if (!socket.data.chatAccess) {
+                socket.emit("subscription:error", {
+                    message: "Chat not allowed"
+                });
+                return;
+            }
 
-        // 2️⃣ Check subscription
-        const subscription = await Subscription.findOne({ organizationId });
-        if (!subscription || subscription.plan !== "business" || subscription.status !== "active") {
-            console.log("Chat blocked - Free plan");
-            socket.emit("subscription:error", {
-              message: "Chat feature is available only in Business plan."
+            const chat = await ChatMessage.create({
+                projectId,
+                senderId,
+                message,
+                organizationId: socket.data.organizationId
             });
-            return;
-          }
 
-        const chat = await ChatMessage.create({
-          projectId,
-          senderId,
-          message,
-          organizationId
-        });
+            io.to(`project-${projectId}`).emit("chat:new", chat);
 
-        io.to(`project-${projectId}`).emit("chat:new", chat);
-      } catch (err) {
-        console.error("Chat socket error:", err);
-      }
+        } catch (err) {
+            console.error("Chat socket error:", err);
+        }
     });
 
     socket.on('disconnect',()=>{

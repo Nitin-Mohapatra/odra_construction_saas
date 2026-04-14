@@ -75,7 +75,7 @@ export default function ChatModal({projectId}) {
     socketRef.current = socket;
     
     socket.on("connect", () => {
-      socket.emit("join", { projectId });
+      socket.emit("join", { projectId});
     });
     
     socket.on("chat:new", async (data) => {
