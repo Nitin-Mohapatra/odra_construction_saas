@@ -94,7 +94,7 @@ io.on('connection',(socket)=>{
     socket.on("chat:new", async ({ projectId, senderId, message }) => {
         try {
             if (!projectId || !senderId || !message) return;
-
+            console.log("Can Access = ",socket.data.chatAccess)
             // ✅ Use cached validation
             if (!socket.data.chatAccess) {
                 socket.emit("subscription:error", {
