@@ -10,7 +10,6 @@ import ProjectChat from './ProjectChat';
 import { canAccess } from "../utils/subscription";
 import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import React from 'react';
 
 const style = {
   position: 'absolute',
