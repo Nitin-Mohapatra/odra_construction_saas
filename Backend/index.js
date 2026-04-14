@@ -44,7 +44,7 @@ io.on('connection',(socket)=>{
     console.log('A user connected:', socket.id);
 
     // listen for joining room events
-    socket.on('join',async ({contractorId , projectId, siteEngineerId, organizationId }) => {
+    socket.on('join',async ({contractorId , projectId, siteEngineerId, organizationId,isChat }) => {
         console.log('Join event received:', { contractorId, projectId, siteEngineerId });
         if(contractorId) {
             socket.join(`contractor-${contractorId}`);
@@ -53,29 +53,34 @@ io.on('connection',(socket)=>{
         if(projectId) {
             socket.join(`project-${projectId}`);
             console.log(`Socket ${socket.id} joined project-${projectId}`);
-            try {
-                // ✅ Check project ONCE
-                const project = await Project.findById(projectId).select("status");
 
-                // ✅ Check subscription ONCE
-                const subscription = await Subscription.findOne({ organizationId }).select("plan status");
+            socket.data.chatAccess = false; // ✅ default
+            if (isChat) {
+                try {
+                    // ✅ Check project ONCE
+                    const project = await Project.findById(projectId).select("status");
 
-                const canChat =
-                    project &&
-                    project.status !== "Completed" &&
-                    subscription &&
-                    subscription.plan === "business" &&
-                    subscription.status === "active";
+                    // ✅ Check subscription ONCE
+                    const subscription = await Subscription.findOne({ organizationId }).select("plan status");
 
-                // ✅ Store in socket (VERY IMPORTANT)
-                socket.data.chatAccess = canChat;
-                socket.data.projectId = projectId;
-                socket.data.organizationId = organizationId;
+                    const canChat =
+                        project &&
+                        project.status !== "Completed" &&
+                        subscription &&
+                        subscription.plan === "business" &&
+                        subscription.status === "active";
 
-            } catch (err) {
-                console.error("Join validation error:", err);
-                socket.data.chatAccess = false;
+                    // ✅ Store in socket (VERY IMPORTANT)
+                    socket.data.chatAccess = canChat;
+                    socket.data.projectId = projectId;
+                    socket.data.organizationId = organizationId;
+
+                } catch (err) {
+                    console.error("Join validation error:", err);
+                    socket.data.chatAccess = false;
+                }
             }
+            
         }
         if(siteEngineerId) {
             socket.join(`siteEngineer-${siteEngineerId}`);
@@ -95,7 +100,7 @@ io.on('connection',(socket)=>{
         try {
             if (!projectId || !senderId || !message) return;
             console.log("Can Access = ",socket.data.chatAccess)
-            // ✅ Use cached validation
+ 
             if (!socket.data.chatAccess) {
                 socket.emit("subscription:error", {
                     message: "Chat not allowed"

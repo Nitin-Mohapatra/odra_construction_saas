@@ -9,6 +9,8 @@ import { io } from 'socket.io-client';
 import ProjectChat from './ProjectChat';
 import { canAccess } from "../utils/subscription";
 import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React from 'react';
 
 const style = {
   position: 'absolute',
@@ -26,6 +28,11 @@ export default function ChatModal({projectId}) {
   const [open, setOpen] = React.useState(false);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const socketRef = React.useRef(null);
+
+  // 🔐 get current user id from JWT
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  const decoded = jwtDecode(token);
 
   useEffect(() => {
     if (!canAccess("chat")) {
@@ -75,7 +82,11 @@ export default function ChatModal({projectId}) {
     socketRef.current = socket;
     
     socket.on("connect", () => {
-      socket.emit("join", { projectId});
+      socket.emit("join", { 
+        projectId,
+        organizationId: decoded.organizationId,
+        isChat: true
+       });
     });
     
     socket.on("chat:new", async (data) => {

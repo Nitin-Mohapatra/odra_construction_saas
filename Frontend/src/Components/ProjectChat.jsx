@@ -63,7 +63,8 @@ export default function ProjectChat({ projectId, onMessageSent }) {
 
             socket.emit("join", {
                 projectId,
-                organizationId: decoded.organizationId
+                organizationId: decoded.organizationId,
+                isChat: true
             });
         });
 
@@ -94,8 +95,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
         socketRef.current.emit("chat:new", {
             projectId,
             senderId: currentUserId,
-            message: newMessage,
-            organizationId: decoded.organizationId
+            message: newMessage
         });
 
         setNewMessage("");
