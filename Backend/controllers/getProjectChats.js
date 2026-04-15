@@ -3,8 +3,11 @@ const messageModel = require('../models/chatMessage');
 exports.getProjectChats = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const chats = await messageModel.find({ projectId,organizationId: req.user.organizationId }).populate('senderId', 'name email').sort({ createdAt: 1 });
-        return res.status(200).json({ success: true, chats, message: "Chats fetched successfully" });
+        const {page = 0, limit = 20} = req.query;
+
+
+        const chats = await messageModel.find({ projectId,organizationId: req.user.organizationId }).sort({ createdAt: -1 }).skip(page*limit).limit(Number(limit)).populate('senderId', 'name email').lean();
+        return res.status(200).json({ success: true, chats:chats.reverse(), message: "Chats fetched successfully" });
     }
     catch (error) {
         console.error("Error getting project chats:", error);

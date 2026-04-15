@@ -37,7 +37,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
         const fetchChats = async () => {
             try {
                 const res = await axiosInstance.get(
-                    `/chat/${projectId}`
+                    `/chat/${projectId}?page=0&limit=20`
                 );
                 setMessages(res.data.chats);
                 console.log("Show prev mesg", res.data.chats);
