@@ -175,7 +175,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     }
                 }}
             >
-                {messages.length === 0 && (
+                {!loading && messages.length === 0 (
                     <Typography color="text.primary">
                         No messages yet.
                     </Typography>
