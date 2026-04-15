@@ -36,10 +36,11 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     /* -------------------------
        1️⃣ Load old chat messages
     -------------------------- */
-    const fetchChats = async (pageNumber = 0) => {
+    const fetchChats = async (pageNumber = 0,container = null) => {
         if (loading) return;
 
         try {
+            console.log("New load call hit");
             setLoading(true);
 
             let prevHeight = 0;
