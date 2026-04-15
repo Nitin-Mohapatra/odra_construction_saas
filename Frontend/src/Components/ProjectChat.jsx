@@ -12,6 +12,9 @@ import { useNavigate } from "react-router-dom";
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
     const socketRef = useRef(null);
     const messagesEndRef = useRef(null);
 
@@ -22,7 +25,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
             navigate("/site-engineer/projects")
             return;
         }
-      }, []);
+    }, []);
 
     // 🔐 get current user id from JWT
     const token = localStorage.getItem("token");
@@ -33,20 +36,52 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     /* -------------------------
        1️⃣ Load old chat messages
     -------------------------- */
-    useEffect(() => {
-        const fetchChats = async () => {
-            try {
-                const res = await axiosInstance.get(
-                    `/chat/${projectId}?page=0&limit=20`
-                );
-                setMessages(res.data.chats);
-                console.log("Show prev mesg", res.data.chats);
-            } catch (err) {
-                console.error("Failed to load chats:", err);
+    const fetchChats = async (pageNumber = 0) => {
+        if (loading) return;
+
+        try {
+            setLoading(true);
+
+            let prevHeight = 0;
+            if (container) {
+                prevHeight = container.scrollHeight;
             }
-        };
-        fetchChats();
-    }, [projectId, token]);
+
+            const res = await axiosInstance.get(
+                `/chat/${projectId}?page=${pageNumber}&limit=20`
+            );
+
+            const newChats = res.data.chats;
+
+            if (pageNumber === 0) {
+                setMessages(newChats) //initial load
+            } else {
+                setMessages(prev => [...newChats, ...prev]);
+            }
+
+            
+            // setMessages(res.data.chats);
+            if (newChats.length < 20) {
+                setHasMore(false);
+            }
+
+            if (container) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight - prevHeight;
+                }, 0);
+            }
+            console.log("Show prev mesg", newChats);
+        } catch (err) {
+            console.error("Failed to load chats:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        setPage(0);
+        setHasMore(true);
+        fetchChats(0);
+    }, [projectId]);
 
     /* -------------------------
        2️⃣ Setup socket connection
@@ -76,7 +111,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
             toast.info("Project has been deleted");
             navigate(`/site-engineer/projects`);
         });
-      
+
 
         return () => {
             socket.emit("leave", { projectId });
@@ -99,7 +134,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
         });
 
         setNewMessage("");
-        
+
         // Notify parent that a message was sent (mark as read)
         if (onMessageSent) {
             onMessageSent();
@@ -128,10 +163,26 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     mb: 2,
                     backgroundColor: "#ece5dd"
                 }}
+                onScroll={(e) => {
+                    const container = e.target;
+
+                    if (container.scrollTop === 0 && hasMore && !loading) {
+                        const nextPage = page + 1;
+                        setPage(nextPage);
+
+                        fetchChats(nextPage, container);
+                    }
+                }}
             >
                 {messages.length === 0 && (
                     <Typography color="text.primary">
                         No messages yet.
+                    </Typography>
+                )}
+
+                {loading && (
+                    <Typography align="center" fontSize={12}>
+                        Loading older messages...
                     </Typography>
                 )}
 
