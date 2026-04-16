@@ -9,7 +9,7 @@ const { default: mongoose } = require("mongoose");
 exports.addInventoryItem = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { name, unit, quantity, pricePerUnit,supplierName,companyName } = req.body;
+    const { name, unit, quantity, pricePerUnit, supplierName, companyName } = req.body;
 
     if (!name || !unit || quantity == null) {
       return res.status(400).json({
@@ -18,7 +18,7 @@ exports.addInventoryItem = async (req, res) => {
       });
     }
 
-    const project = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
+    const project = await Project.findOne({ _id: projectId, organizationId: req.user.organizationId });
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -75,7 +75,7 @@ exports.addInventoryItem = async (req, res) => {
         item
       });
 
-      
+
 
     }
 
@@ -99,19 +99,19 @@ exports.getProjectInventory = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const items = await InventoryItem.find({ projectId,organizationId: req.user.organizationId }).populate({
-      path:"projectId",
-      select:"title contractor",
-      populate:{
-        path:"contractor",
-        select:"name"
+    const items = await InventoryItem.find({ projectId, organizationId: req.user.organizationId }).populate({
+      path: "projectId",
+      select: "title contractor",
+      populate: {
+        path: "contractor",
+        select: "name"
       }
     });
 
     const itemsWithLowStock = items.map(item => {
       const lowStockThreshold = item.totalQuantity * 0.2;
       const isLowStock = item.availableQuantity <= lowStockThreshold;
-    
+
       return {
         ...item._doc,
         isLowStock
@@ -144,7 +144,7 @@ exports.logInventoryUsage = async (req, res) => {
       });
     }
 
-    const project = await Project.findOne({_id:projectId,organizationId: req.user.organizationId});
+    const project = await Project.findOne({ _id: projectId, organizationId: req.user.organizationId });
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -157,7 +157,7 @@ exports.logInventoryUsage = async (req, res) => {
     }
 
     const item = await InventoryItem.findOne({
-      _id:inventoryItemId,
+      _id: inventoryItemId,
       organizationId: req.user.organizationId
     });
     if (!item) {
@@ -195,7 +195,7 @@ exports.logInventoryUsage = async (req, res) => {
     const io = req.app.get("io");
 
     // 🔴 REAL-TIME UPDATE
-    if(io){
+    if (io) {
       io.to(`project-${projectId}`).emit("inventory:updated", {
         inventoryItemId,
         availableQuantity: item.availableQuantity,
@@ -224,7 +224,7 @@ exports.getInventoryUsageHistory = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const history = await InventoryUsage.find({ projectId,organizationId: req.user.organizationId })
+    const history = await InventoryUsage.find({ projectId, organizationId: req.user.organizationId })
       .populate("inventoryItemId", "name unit")
       .populate("usedBy", "name")
       .sort({ date: -1 });
@@ -252,15 +252,15 @@ exports.getInventorySummary = async (req, res) => {
     const inventoryAgg = await InventoryItem.aggregate([
       {
         $match: {
-          projectId: projectId,
-          organizationId: organizationId
+          projectId: new mongoose.Types.ObjectId(projectId),
+          organizationId: new mongoose.Types.ObjectId(organizationId)
         }
       },
       {
-        $group:{
-          _id:null,
-          totalPurchasedValue:{
-            $sum:{$multiply:["$totalQuantity", "$pricePerUnit"]}
+        $group: {
+          _id: null,
+          totalPurchasedValue: {
+            $sum: { $multiply: ["$totalQuantity", "$pricePerUnit"] }
           },
           remainingStockValue: {
             $sum: { $multiply: ["$availableQuantity", "$pricePerUnit"] }
@@ -273,8 +273,8 @@ exports.getInventorySummary = async (req, res) => {
     const usageAgg = await InventoryUsage.aggregate([
       {
         $match: {
-          projectId: projectId,
-          organizationId: organizationId
+          projectId: new mongoose.Types.ObjectId(projectId),
+          organizationId: new mongoose.Types.ObjectId(organizationId)
         }
       },
       {
@@ -285,14 +285,14 @@ exports.getInventorySummary = async (req, res) => {
       }
     ]);
 
-    console.log("inventoryAgg = ",inventoryAgg," usageAgg =",usageAgg);
+    console.log("inventoryAgg = ", inventoryAgg, " usageAgg =", usageAgg);
 
-      // 🔹 3️⃣ Safe fallback (if no data)
+    // 🔹 3️⃣ Safe fallback (if no data)
     const totalPurchasedValue = inventoryAgg[0]?.totalPurchasedValue || 0;
     const remainingStockValue = inventoryAgg[0]?.remainingStockValue || 0;
     const totalUsedCost = usageAgg[0]?.totalUsedCost || 0;
 
-     return res.status(200).json({
+    return res.status(200).json({
       success: true,
       totalPurchasedValue,
       totalUsedCost,
