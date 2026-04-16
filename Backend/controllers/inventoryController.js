@@ -1,6 +1,7 @@
 const InventoryItem = require("../models/inventoryItem");
 const Project = require("../models/project");
 const InventoryUsage = require("../models/InventoryUsage");
+const { default: mongoose } = require("mongoose");
 
 /* --------------------------------
    Add material to project
@@ -245,35 +246,88 @@ exports.getInventorySummary = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    // 1️⃣ Get all inventory items
-    const items = await InventoryItem.find({ projectId ,organizationId: req.user.organizationId});
+    const organizationId = req.user.organizationId;
 
-    // 2️⃣ Get all usage records
-    const usageRecords = await InventoryUsage.find({ projectId,organizationId: req.user.organizationId });
+    // inventory aggregation
+    const inventoryAgg = await InventoryItem.aggregate([
+      {
+        $match: {
+          projectId: projectId,
+          organizationId: organizationId
+        }
+      },
+      {
+        $group:{
+          _id:null,
+          totalPurchasedValue:{
+            $sum:{$multiply:["$totalQuantity", "$pricePerUnit"]}
+          },
+          remainingStockValue: {
+            $sum: { $multiply: ["$availableQuantity", "$pricePerUnit"] }
+          }
+        }
+      }
+    ]);
 
-    // 3️⃣ Calculate totals
+    // usage Aggregation
+    const usageAgg = await InventoryUsage.aggregate([
+      {
+        $match: {
+          projectId: projectId,
+          organizationId: organizationId
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalUsedCost: { $sum: "$costAtThatTime" }
+        }
+      }
+    ]);
 
-    // Total purchased value
-    const totalPurchasedValue = items.reduce((sum, item) => {
-      return sum + (item.totalQuantity * item.pricePerUnit);
-    }, 0);
+    console.log(inventoryAgg,usageAgg);
 
-    // Total used cost (already stored snapshot-safe)
-    const totalUsedCost = usageRecords.reduce((sum, record) => {
-      return sum + record.costAtThatTime;
-    }, 0);
+      // 🔹 3️⃣ Safe fallback (if no data)
+    const totalPurchasedValue = inventoryAgg[0]?.totalPurchasedValue || 0;
+    const remainingStockValue = inventoryAgg[0]?.remainingStockValue || 0;
+    const totalUsedCost = usageAgg[0]?.totalUsedCost || 0;
 
-    // Remaining stock value
-    const remainingStockValue = items.reduce((sum, item) => {
-      return sum + (item.availableQuantity * item.pricePerUnit);
-    }, 0);
-
-    return res.status(200).json({
+     return res.status(200).json({
       success: true,
       totalPurchasedValue,
       totalUsedCost,
       remainingStockValue
     });
+
+    // // 1️⃣ Get all inventory items
+    // const items = await InventoryItem.find({ projectId ,organizationId: req.user.organizationId});
+
+    // // 2️⃣ Get all usage records
+    // const usageRecords = await InventoryUsage.find({ projectId,organizationId: req.user.organizationId });
+
+    // // 3️⃣ Calculate totals
+
+    // // Total purchased value
+    // const totalPurchasedValue = items.reduce((sum, item) => {
+    //   return sum + (item.totalQuantity * item.pricePerUnit);
+    // }, 0);
+
+    // // Total used cost (already stored snapshot-safe)
+    // const totalUsedCost = usageRecords.reduce((sum, record) => {
+    //   return sum + record.costAtThatTime;
+    // }, 0);
+
+    // // Remaining stock value
+    // const remainingStockValue = items.reduce((sum, item) => {
+    //   return sum + (item.availableQuantity * item.pricePerUnit);
+    // }, 0);
+
+    // return res.status(200).json({
+    //   success: true,
+    //   totalPurchasedValue,
+    //   totalUsedCost,
+    //   remainingStockValue
+    // });
 
   } catch (err) {
     console.error(err);

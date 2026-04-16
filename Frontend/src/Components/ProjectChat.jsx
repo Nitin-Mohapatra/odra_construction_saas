@@ -162,7 +162,8 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     height: 300,
                     overflowY: "auto",
                     mb: 2,
-                    backgroundColor: "#ece5dd"
+                    backgroundColor: "#ece5dd",
+                    borderRadius:"2em"
                 }}
                 onScroll={(e) => {
                     const container = e.target;
