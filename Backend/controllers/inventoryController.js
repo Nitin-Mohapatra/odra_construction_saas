@@ -285,7 +285,7 @@ exports.getInventorySummary = async (req, res) => {
       }
     ]);
 
-    console.log(inventoryAgg,usageAgg);
+    console.log("inventoryAgg = ",inventoryAgg," usageAgg =",usageAgg);
 
       // 🔹 3️⃣ Safe fallback (if no data)
     const totalPurchasedValue = inventoryAgg[0]?.totalPurchasedValue || 0;
