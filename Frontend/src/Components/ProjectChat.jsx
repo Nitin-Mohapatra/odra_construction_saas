@@ -157,7 +157,6 @@ export default function ProjectChat({ projectId, onMessageSent }) {
             <Box
                 sx={{
                     border: "1px solid #ddd",
-                    borderRadius: 2,
                     p: 2,
                     height: 300,
                     overflowY: "auto",
