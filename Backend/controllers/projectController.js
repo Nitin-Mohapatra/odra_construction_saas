@@ -14,6 +14,7 @@ const InventoryUsage = require("../models/InventoryUsage");
 const Attendance = require("../models/Attendance");
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
+const mongoose = require("mongoose");
 
 // const transporter = nodemailer.createTransport({
 //     host: "smtp.gmail.com",   // ✅ correct hostname
