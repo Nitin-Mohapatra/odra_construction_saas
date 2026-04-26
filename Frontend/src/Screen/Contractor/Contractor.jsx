@@ -46,21 +46,17 @@ export default function ContractorDashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axiosInstance.get("/projects");
+      const res = await axiosInstance.get("/projects/dashboard");
       setProjects(res.data.projects);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const total = projects.length;
-  const ongoing = projects.filter(
-    p => p.status?.toLowerCase() === "ongoing"
-  ).length;
+  const total = projects.totalProjects;
+  const ongoing = projects.ongoingProjects;
   
-  const completed = projects.filter(
-    p => p.status?.toLowerCase() === "completed"
-  ).length;
+  const completed = projects.completedProjects;
   
   return (
     <>
@@ -184,7 +180,7 @@ export default function ContractorDashboard() {
               <Typography variant="body1" className="text-muted">{t("dashboard.contractor.no_projects")}</Typography>
             )}
   
-            {projects.slice(0, 5).map((project) => (
+            {projects.recentProjects.map((project) => (
               <div
                 key={project._id}
                 className="card border-0 mb-3"

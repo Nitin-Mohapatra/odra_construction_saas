@@ -45,21 +45,21 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 const sendEmail = async (to, subject, html, replyToEmail) => {
-  try {
-    const response = await resend.emails.send({
-      from: "OdraOps <noreply@odraops.com>",
-      to: to,
-      subject: subject,
-      html: html,
-      reply_to: replyToEmail,
-    });
+    try {
+        const response = await resend.emails.send({
+            from: "OdraOps <noreply@odraops.com>",
+            to: to,
+            subject: subject,
+            html: html,
+            reply_to: replyToEmail,
+        });
 
-    console.log("Email sent:", response);
-    return true;
-  } catch (error) {
-    console.error("RESEND ERROR:", error);
-    return false;
-  }
+        console.log("Email sent:", response);
+        return true;
+    } catch (error) {
+        console.error("RESEND ERROR:", error);
+        return false;
+    }
 };
 
 
@@ -180,7 +180,7 @@ exports.createProject = async (req, res) => {
             </p>
         </div>
     </div>
-`;          console.log("Sendign email")
+`; console.log("Sendign email")
             await sendEmail(
                 siteEngineerEmail,
                 `You’ve Been Assigned to Project "${title}"`,
@@ -527,5 +527,69 @@ exports.getProjectWages = async (req, res) => {
             error: "Internal Server Error"
         });
 
+    }
+};
+
+// contractor dashboard api
+exports.getContractorDashboard = async (req, res) => {
+    try {
+        const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+
+        const result = await Project.aggregate([
+            {
+                $match: { organizationId }
+            },
+            {
+                $facet: {
+                    stats: [
+                        {
+                            $group: {
+                                _id: null,
+                                totalProjects: { $sum: 1 },
+                                ongoingProjects: {
+                                    $sum: {
+                                        $cond: [{ $eq: ["$status", "Ongoing"] }, 1, 0]
+                                    }
+                                },
+                                completedProjects: {
+                                    $sum: {
+                                        $cond: [{ $eq: ["$status", "Completed"] }, 1, 0]
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    recentProjects: [
+                        { $sort: { createdAt: -1 } },
+                        { $limit: 5 },
+                        {
+                            $project: {
+                                title: 1,
+                                status: 1,
+                                createdAt: 1
+                            }
+                        }
+                    ]
+                }
+            }
+        ]);
+
+        const stats = result[0].stats[0] || {
+            totalProjects: 0,
+            ongoingProjects: 0,
+            completedProjects: 0
+        };
+
+        const recentProjects = result[0].recentProjects;
+
+        return res.status(200).json({
+            success: true,
+            ...stats,
+            recentProjects
+        });
+
+    } catch (error) {
+        console.error("Dashboard error:", error);
+        return res.status(500).json({ success: false });
     }
 };

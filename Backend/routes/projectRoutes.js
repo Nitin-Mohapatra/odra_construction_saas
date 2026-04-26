@@ -14,6 +14,9 @@ router.get('/',authen,validateRoles("manager"),projectController.getProject);
 // get all project for the siteEn
 router.get('/my-projects',authen,validateRoles("site engineer"),projectController.getProjectSE);
 
+// get dashboard summary for contractor
+router.get("/dashboard",authen, validateRoles("manager"),projectController.getContractorDashboard);
+
 // single project for contractor or site engineer
 router.get('/:id',authen,validateRoles(["manager","site engineer"]),projectController.getProjectById);
 
