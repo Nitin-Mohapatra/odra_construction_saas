@@ -176,7 +176,7 @@ export default function ContractorDashboard() {
               {t("dashboard.contractor.view_projects")}
             </Typography>
   
-            {projects.slice(0, 5).length === 0 && (
+            {projects?.recentProjects?.length === 0 && (
               <Typography variant="body1" className="text-muted">{t("dashboard.contractor.no_projects")}</Typography>
             )}
   
