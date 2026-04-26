@@ -15,7 +15,7 @@ import { getSubscription } from "../../utils/subscription";
 
 
 export default function ContractorDashboard() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState({});
   const navigate = useNavigate();
   const socketRef = useRef(null);
   const token = localStorage.getItem("token");
@@ -47,7 +47,8 @@ export default function ContractorDashboard() {
   const fetchProjects = async () => {
     try {
       const res = await axiosInstance.get("/projects/dashboard");
-      setProjects(res.data.projects);
+      setProjects(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -55,7 +56,6 @@ export default function ContractorDashboard() {
 
   const total = projects.totalProjects;
   const ongoing = projects.ongoingProjects;
-  
   const completed = projects.completedProjects;
   
   return (
@@ -180,7 +180,7 @@ export default function ContractorDashboard() {
               <Typography variant="body1" className="text-muted">{t("dashboard.contractor.no_projects")}</Typography>
             )}
   
-            {projects.recentProjects.map((project) => (
+            {projects?.recentProjects?.map((project) => (
               <div
                 key={project._id}
                 className="card border-0 mb-3"
