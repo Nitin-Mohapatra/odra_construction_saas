@@ -582,6 +582,8 @@ exports.getContractorDashboard = async (req, res) => {
 
         const recentProjects = result[0].recentProjects;
 
+        console.log("Stats = ",stats , "Recent Project = ", recentProjects);
+
         return res.status(200).json({
             success: true,
             ...stats,
