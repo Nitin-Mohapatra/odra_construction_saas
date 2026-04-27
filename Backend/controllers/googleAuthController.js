@@ -7,7 +7,7 @@ const User = require('../models/user');
 const client = new OAuth2Client({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: "https://odra-construction-saas.onrender.com"
+    flow: 'auth-code'
 })
 
 
