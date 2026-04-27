@@ -14,11 +14,11 @@ const client = new OAuth2Client({
 // google auth handler
 const googleAuthHandler = async(req , res)=>{
     try{
-        const {code} = req.body;
+        const {code, origin } = req.body;
         if(!code){return res.status(400).json({success:false,error:"Authorization code is required"})};
 
         // get the tokens from the google auth by exchanging the code for tokens
-        const {tokens} = await client.getToken(code);
+        const {tokens} = await client.getToken({code, redirect_uri: origin || "https://odraops.com"});
 
         // verify the tokens 
         const {id_token} = tokens;

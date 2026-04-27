@@ -14,7 +14,7 @@ export default function GoogleLoginButton() {
     onSuccess: async ({ code }) => {
       try {
         // Send the code to your backend for verification & token exchange
-        const res = await axiosInstance.post("/auth/google", { code });
+        const res = await axiosInstance.post("/auth/google", { code , origin: window.location.origin});
 
         // if the response is 200
         if(res.status === 200 && res.data.success){
