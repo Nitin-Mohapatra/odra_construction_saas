@@ -267,6 +267,7 @@ exports.getProjectSE = async (req, res) => {
         // The .lean() method in Mongoose tells the query to return plain JavaScript objects instead of full Mongoose documents.
         // This makes queries faster and uses less memory when you only need to read data (not use Mongoose document methods).
         const allProject = await Project.find({ siteEngineer: siteEngineerId, organizationId: req.user.organizationId })
+            .select("title status contractor")
             .populate('contractor', 'name')
             .lean();
 
