@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import { canAccess } from "../utils/subscription";
 import { useNavigate } from "react-router-dom";
 import MessageItem from "./MessageItem";
+import ChatInput from "./ChatInput";
 
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
@@ -33,6 +34,17 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     if (!token) return null;
     const decoded = jwtDecode(token);
     const currentUserId = decoded.User_id;
+
+    // handle scroll fun 
+    const handleScroll = useCallback((e) => {
+        const container = e.target;
+
+        if (container.scrollTop <= 10 && hasMore && !loading) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchChats(nextPage, container);
+        }
+    }, [page, hasMore, loading]);
 
     /* -------------------------
        1️⃣ Load old chat messages
@@ -126,23 +138,34 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     /* -------------------------
        3️⃣ Send message
     -------------------------- */
-    const sendMessage = () => {
-        if (!newMessage.trim()) return;
+    // const sendMessage = () => {
+    //     if (!newMessage.trim()) return;
 
-        socketRef.current.emit("chat:new", {
+    //     socketRef.current.emit("chat:new", {
+    //         projectId,
+    //         senderId: currentUserId,
+    //         message: newMessage
+    //     });
+
+    //     setNewMessage("");
+
+    //     // Notify parent that a message was sent (mark as read)
+    //     if (onMessageSent) {
+    //         onMessageSent();
+    //     }
+    // };
+
+    const handleSendMessage = useCallback((text) => {
+        socket.emit("chat:new", {
             projectId,
-            senderId: currentUserId,
-            message: newMessage
+            senderId: userId,
+            message: text
         });
-
-        setNewMessage("");
-
         // Notify parent that a message was sent (mark as read)
         if (onMessageSent) {
             onMessageSent();
         }
-    };
-
+    }, [projectId, userId]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -165,16 +188,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     backgroundColor: "#ece5dd",
                     borderRadius:"2em"
                 }}
-                onScroll={(e) => {
-                    const container = e.target;
-
-                    if (container.scrollTop === 0 && hasMore && !loading) {
-                        const nextPage = page + 1;
-                        setPage(nextPage);
-
-                        fetchChats(nextPage, container);
-                    }
-                }}
+                onScroll={handleScroll}
             >
                 {!loading && messages.length === 0 && (
                     <Typography color="text.primary">
@@ -188,20 +202,14 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     </Typography>
                 )}
 
-                {messages.map((msg) => (
-                    <MessageItem
-                        key={msg._id}
-                        message={msg}
-                        isOwn={msg.senderId === currentUserId}
-                    />
-                ))}
+               <MessageList messages={messages} userId={userId} />
 
 
                 <div ref={messagesEndRef}></div>
             </Box>
 
             <Box sx={{ display: "flex", gap: 1 }}>
-                <TextField
+                {/* <TextField
                     fullWidth
                     size="small"
                     placeholder="Type a message..."
@@ -211,8 +219,19 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                 />
                 <Button variant="contained" onClick={sendMessage}>
                     Send
-                </Button>
+                </Button> */}
+                <ChatInput onSend={handleSendMessage} />
             </Box>
         </Box>
     );
 }
+
+const MessageList = React.memo(({ messages, userId }) => {
+  return messages.map(msg => (
+    <MessageItem
+      key={msg._id}
+      message={msg}
+      isOwn={msg.senderId?._id === userId}
+    />
+  ));
+});
