@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback , memo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axiosInstance from "../utils/axiosInstance"
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
@@ -8,8 +8,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { canAccess } from "../utils/subscription";
 import { useNavigate } from "react-router-dom";
-import MessageItem from "./MessageItem";
-import ChatInput from "./ChatInput";
 
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
@@ -34,17 +32,6 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     if (!token) return null;
     const decoded = jwtDecode(token);
     const currentUserId = decoded.User_id;
-
-    // handle scroll fun 
-    const handleScroll = useCallback((e) => {
-        const container = e.target;
-
-        if (container.scrollTop <= 10 && hasMore && !loading) {
-            const nextPage = page + 1;
-            setPage(nextPage);
-            fetchChats(nextPage, container);
-        }
-    }, [page, hasMore, loading]);
 
     /* -------------------------
        1️⃣ Load old chat messages
@@ -138,34 +125,23 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     /* -------------------------
        3️⃣ Send message
     -------------------------- */
-    // const sendMessage = () => {
-    //     if (!newMessage.trim()) return;
+    const sendMessage = () => {
+        if (!newMessage.trim()) return;
 
-    //     socketRef.current.emit("chat:new", {
-    //         projectId,
-    //         senderId: currentUserId,
-    //         message: newMessage
-    //     });
-
-    //     setNewMessage("");
-
-    //     // Notify parent that a message was sent (mark as read)
-    //     if (onMessageSent) {
-    //         onMessageSent();
-    //     }
-    // };
-
-    const handleSendMessage = useCallback((text) => {
-        socket.emit("chat:new", {
+        socketRef.current.emit("chat:new", {
             projectId,
-            senderId: userId,
-            message: text
+            senderId: currentUserId,
+            message: newMessage
         });
+
+        setNewMessage("");
+
         // Notify parent that a message was sent (mark as read)
         if (onMessageSent) {
             onMessageSent();
         }
-    }, [projectId, userId]);
+    };
+
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -188,7 +164,16 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     backgroundColor: "#ece5dd",
                     borderRadius:"2em"
                 }}
-                onScroll={handleScroll}
+                onScroll={(e) => {
+                    const container = e.target;
+
+                    if (container.scrollTop === 0 && hasMore && !loading) {
+                        const nextPage = page + 1;
+                        setPage(nextPage);
+
+                        fetchChats(nextPage, container);
+                    }
+                }}
             >
                 {!loading && messages.length === 0 && (
                     <Typography color="text.primary">
@@ -202,14 +187,51 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     </Typography>
                 )}
 
-               <MessageList messages={messages} userId={userId} />
+                {messages.map((msg) => {
+                    const senderId =
+                        typeof msg.senderId === "string"
+                            ? msg.senderId
+                            : msg.senderId?._id;
+
+                    const isMine = senderId === currentUserId;
+
+                    return (
+                        <Box
+                            key={msg._id}
+                            sx={{
+                                display: "flex",
+                                justifyContent: isMine ? "flex-end" : "flex-start",
+                                mb: 1.5,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    maxWidth: "70%",
+                                    px: 2,
+                                    py: 1,
+                                    borderRadius: isMine
+                                        ? "16px 16px 4px 16px"   // right bubble
+                                        : "16px 16px 16px 4px",  // left bubble
+                                    backgroundColor: isMine ? "#dcf8c6" : "#ffffff",
+                                    color: "#111",
+                                    boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                                    wordBreak: "break-word",
+                                }}
+                            >
+                                <Typography sx={{ fontSize: 14, lineHeight: 1.4 }}>
+                                    {msg.message}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    );
+                })}
 
 
                 <div ref={messagesEndRef}></div>
             </Box>
 
             <Box sx={{ display: "flex", gap: 1 }}>
-                {/* <TextField
+                <TextField
                     fullWidth
                     size="small"
                     placeholder="Type a message..."
@@ -219,19 +241,8 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                 />
                 <Button variant="contained" onClick={sendMessage}>
                     Send
-                </Button> */}
-                <ChatInput onSend={handleSendMessage} />
+                </Button>
             </Box>
         </Box>
     );
 }
-
-const MessageList = React.memo(({ messages, userId }) => {
-  return messages.map(msg => (
-    <MessageItem
-      key={msg._id}
-      message={msg}
-      isOwn={msg.senderId?._id === userId}
-    />
-  ));
-});
