@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { canAccess } from "../utils/subscription";
 import { useNavigate } from "react-router-dom";
+import MessageItem from "./MessageItem";
 
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
@@ -187,44 +188,13 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     </Typography>
                 )}
 
-                {messages.map((msg) => {
-                    const senderId =
-                        typeof msg.senderId === "string"
-                            ? msg.senderId
-                            : msg.senderId?._id;
-
-                    const isMine = senderId === currentUserId;
-
-                    return (
-                        <Box
-                            key={msg._id}
-                            sx={{
-                                display: "flex",
-                                justifyContent: isMine ? "flex-end" : "flex-start",
-                                mb: 1.5,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    maxWidth: "70%",
-                                    px: 2,
-                                    py: 1,
-                                    borderRadius: isMine
-                                        ? "16px 16px 4px 16px"   // right bubble
-                                        : "16px 16px 16px 4px",  // left bubble
-                                    backgroundColor: isMine ? "#dcf8c6" : "#ffffff",
-                                    color: "#111",
-                                    boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
-                                    wordBreak: "break-word",
-                                }}
-                            >
-                                <Typography sx={{ fontSize: 14, lineHeight: 1.4 }}>
-                                    {msg.message}
-                                </Typography>
-                            </Box>
-                        </Box>
-                    );
-                })}
+                {messages.map((msg) => (
+                    <MessageItem
+                        key={msg._id}
+                        message={msg}
+                        isOwn={msg.senderId === userId}
+                    />
+                ))}
 
 
                 <div ref={messagesEndRef}></div>
