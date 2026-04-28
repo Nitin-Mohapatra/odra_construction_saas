@@ -192,7 +192,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     <MessageItem
                         key={msg._id}
                         message={msg}
-                        isOwn={msg.senderId === userId}
+                        isOwn={msg.senderId === currentUserId}
                     />
                 ))}
 
