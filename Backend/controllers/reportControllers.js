@@ -140,8 +140,8 @@ exports.getReportById = async (req,res)=>{
 // Ai summary report 
 exports.generateAISummary = async(req, res)=>{
     try{
-        const {id:reportId} = req.params;
-        const report = await Report.findOne({_id:reportId,organizationId: req.user.organizationId})
+        const {id} = req.params;
+        const report = await Report.findOne({_id:id,organizationId: req.user.organizationId})
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
