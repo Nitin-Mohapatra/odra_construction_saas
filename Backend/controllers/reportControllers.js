@@ -151,18 +151,23 @@ exports.generateAISummary = async(req, res)=>{
         }
 
         const prompt = `
-        You are a construction assistant.
+You are a construction assistant.
 
-        Work Done: ${report.workDone}
-        Issues: ${report.issuesFound || "None"}
+Work Done: ${report.workDone}
+Issues: ${report.issuesFound || "None"}
 
-        Give output in JSON:
-        {
-          "workCompletedSummary": "",
-          "issuesSummary": "",
-          "overallStatus": ""
-        }
-        `;
+STRICT RULES:
+- Return ONLY valid JSON
+- Do NOT use backticks
+- Do NOT add explanation
+
+Format:
+{
+  "workCompletedSummary": "",
+  "issuesSummary": "",
+  "overallStatus": ""
+}
+`;
 
         const response = await axios.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -181,6 +186,7 @@ exports.generateAISummary = async(req, res)=>{
             }
         );
 
+        console.log(response.data.choices[0].message.content)
         const aiText = JSON.parse(response.data.choices[0].message.content);
 
         //save to db
