@@ -141,7 +141,8 @@ exports.getReportById = async (req,res)=>{
 exports.generateAISummary = async(req, res)=>{
     try{
         const {id} = req.params;
-        const report = await Report.findOne({_id:id,organizationId: req.user.organizationId})
+        const report = await Report.findById({_id:id,organizationId: req.user.organizationId})
+        console.log(report)
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
