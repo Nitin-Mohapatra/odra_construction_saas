@@ -31,6 +31,10 @@ const reportSchema = new mongoose.Schema(
       enum: ["approved", "declined", "pending"],
       default: "pending"
     },
+    aiSummary: {
+      type: Object,
+      default: {}
+    }
   },
   { timestamps: true }
 );

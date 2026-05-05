@@ -1,6 +1,7 @@
 const Project = require('../models/project');
 const User = require('../models/user');
 const Report = require('../models/report');
+const axios = require("axios");
 
 exports.createReport = async (req,res)=>{
     try{
@@ -133,5 +134,62 @@ exports.getReportById = async (req,res)=>{
     }catch(error){
         console.error(err);
         res.status(500).json({ message: 'Server error' });
+    }
+}
+
+// Ai summary report 
+exports.generateAISummary = async(req, res)=>{
+    try{
+        const {reportId} = req.params;
+        const report = await Report.findOne({_id:reportId,organizationId: req.user.organizationId})
+
+        if (!report) {
+            return res.status(404).json({ message: "Report not found" });
+        }
+
+        const prompt = `
+        You are a construction assistant.
+
+        Work Done: ${report.workDone}
+        Issues: ${report.issuesFound || "None"}
+
+        Give output in JSON:
+        {
+          "workCompletedSummary": "",
+          "issuesSummary": "",
+          "overallStatus": ""
+        }
+        `;
+
+        const response = await axios.post(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                model: "gpt-4.1-mini",
+                messages: [{ role: "user", content: prompt }],
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                },
+            }
+        );
+
+        const aiText = JSON.parse(response.data.choices[0].message.content);
+
+        //save to db
+        report.aiSummary = aiText;
+        await report.save(); 
+
+        console.log(aiText);
+
+        return res.status(200).json({
+            message: "AI summary generated",
+            aiSummary: aiText
+        });
+
+
+    }catch(e){
+        console.error(error);
+        res.status(500).json({ message: "AI summarization failed" });
     }
 }

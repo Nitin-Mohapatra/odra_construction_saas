@@ -10,6 +10,14 @@ router.post('/',authen,checkBusinessPlan,validateRoles('site engineer'),reportCo
 
 router.post('/:reportId/review', authen, checkBusinessPlan,validateRoles('manager'), reportController.reviewReport);
 
+// ai summary
+router.post('/:reportId/ai-summary',
+    authen,
+    checkBusinessPlan,
+    validateRoles('manager'),
+    reportController.generateAISummary
+);
+
 // get report by id
 router.get('/:id',authen,checkBusinessPlan,validateRoles('manager'),reportController.getReportById);
 
