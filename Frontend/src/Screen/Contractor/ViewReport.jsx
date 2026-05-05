@@ -18,6 +18,7 @@ export default function ViewReport() {
   const [loading, setLoading] = useState(true);
   const [report, setReport] = useState({});
   const [comment, setComment] = useState("");
+  const [aiReport , setAiReport] = useState();
   const [reviewed, setReviewed] = useState(false);
   const socketRef = useRef(null);
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ export default function ViewReport() {
         }
       );
       console.log(res.data.aiSummary);
+      setAiReport(res.data.aiSummary)
     } catch (err) {
       console.error(err);
     }
@@ -231,19 +233,38 @@ export default function ViewReport() {
             </Typography>
           )}
         </Box>
-
-        {report?.aiSummary && (
-          <div>
-            <h4>AI Summary</h4>
-            <p>{report.aiSummary.workCompletedSummary}</p>
-            <p>{report.aiSummary.issuesSummary}</p>
-            <p>Status: {report.aiSummary.overallStatus}</p>
-          </div>
-        )}
-        <button onClick={generateSummary}>
-          Generate AI Summary
-        </button>
       </Box>
+
+      {/* Ai Summary */}
+      <Box className="container mb-4">
+        <Box
+           sx={{
+            backgroundColor: "#ffffff",
+            borderRadius: "16px",
+            p: 4,
+            boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+          }}
+        >
+          
+          {aiReport && (
+            <Box>
+              <Typography variant="h6" fontWeight={600} gutterBottom>
+                Ai Summary
+              </Typography>
+              <Typography variant="body1">{aiReport.workCompletedSummary}</Typography>
+              <Typography variant="body1">{aiReport.issuesSummary}</Typography>
+              <Typography variant="body1">Status: {aiReport.overallStatus}</Typography>
+            </Box>
+          )}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={generateSummary}>
+            Generate AI Summary
+          </Button>
+        </Box>
+      </Box>
+
 
       {/* ACTION SECTION */}
       <Box className="container mb-5">
