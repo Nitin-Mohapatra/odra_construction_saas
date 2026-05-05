@@ -140,7 +140,7 @@ exports.getReportById = async (req,res)=>{
 // Ai summary report 
 exports.generateAISummary = async(req, res)=>{
     try{
-        const {reportId} = req.params;
+        const {id:reportId} = req.params;
         const report = await Report.findOne({_id:reportId,organizationId: req.user.organizationId})
 
         if (!report) {

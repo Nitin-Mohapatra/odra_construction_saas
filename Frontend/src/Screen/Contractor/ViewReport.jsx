@@ -88,7 +88,7 @@ export default function ViewReport() {
 
   const generateSummary = async () => {
     try {
-      const res = await axiosInstance.post(`/reports/${reportId}/ai-summary`);
+      const res = await axiosInstance.post(`/reports/${id}/ai-summary`);
       console.log(res.data.aiSummary);
     } catch (err) {
       console.error(err);
