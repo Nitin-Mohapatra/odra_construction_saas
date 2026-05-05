@@ -165,14 +165,18 @@ exports.generateAISummary = async(req, res)=>{
         `;
 
         const response = await axios.post(
-            "https://api.openai.com/v1/chat/completions",
+            "https://openrouter.ai/api/v1/chat/completions",
             {
-                model: "gpt-4.1-mini",
-                messages: [{ role: "user", content: prompt }],
+                model: "openai/gpt-4o-mini",  
+                messages: [
+                    { role: "user", content: prompt }
+                ],
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    "HTTP-Referer": "https://odraops.com", // required
+                    "X-Title": "OdraOps SaaS"              // optional
                 },
             }
         );
