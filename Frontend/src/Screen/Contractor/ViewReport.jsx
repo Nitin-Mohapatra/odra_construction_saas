@@ -246,22 +246,23 @@ export default function ViewReport() {
           }}
         >
           
+          <Typography variant="h6" fontWeight={600} gutterBottom>
+            AI Overview
+          </Typography>
           {aiReport && (
-            <Box>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-                Ai Summary
-              </Typography>
+            <Box gutterBottom>
               <Typography variant="body1">{aiReport.workCompletedSummary}</Typography>
               <Typography variant="body1">{aiReport.issuesSummary}</Typography>
               <Typography variant="body1">Status: {aiReport.overallStatus}</Typography>
             </Box>
           )}
-          <Button
+          {!aiReport &&  <Button
             variant="contained"
             color="primary"
             onClick={generateSummary}>
-            Generate AI Summary
-          </Button>
+            Generate AI Overview
+          </Button>}
+          
         </Box>
       </Box>
 
