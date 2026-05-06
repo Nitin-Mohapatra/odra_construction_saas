@@ -99,6 +99,7 @@ export default function ViewReport() {
         }
       );
       console.log("Output = ",res.data.aiSummary);
+      setAiReport(res.data.aiSummary);
       setReport((prev) => ({
         ...prev,
         aiSummary: res.data.aiSummary

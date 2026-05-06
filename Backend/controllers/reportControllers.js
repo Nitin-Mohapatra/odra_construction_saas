@@ -193,7 +193,7 @@ Format:
             }
         );
 
-        console.log(response.data.choices[0].message.content)
+        console.log("Backend Output = ",response.data.choices[0].message.content)
         const aiText = JSON.parse(response.data.choices[0].message.content);
 
         //save to db
