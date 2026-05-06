@@ -91,7 +91,7 @@ export default function ViewReport() {
   const generateSummary = async () => {
     setAiLoading(true);
     try {
-      const res = await axiosInstance.post(`/reports/${id}/ai-summary`,
+      const res = await axiosInstance.post(`/reports/${id}/ai-summary`,{},
         {
           headers: {
             "Content-Type": "application/json"
@@ -269,7 +269,7 @@ export default function ViewReport() {
             onClick={generateSummary}
             disabled={aiLoading}
           >
-            {!aiLoading ? "Generating..." : "Generate AI Summary"}
+            {aiLoading ? "Generating..." : "Generate AI Summary"}
           </Button>}
 
         </Box>
