@@ -207,7 +207,7 @@ export default function ProjectWork() {
                         variant="subtitle1"
                         sx={{ fontWeight: 600, mb: 1 }}
                       >
-                        {rept.workDone}
+                        {rept.workDone.slice(0,10) + "...."}
                       </Typography>
 
                       <Typography

@@ -256,10 +256,26 @@ export default function ViewReport() {
             AI Overview
           </Typography>
           {report.aiSummary && (
-            <Box gutterBottom>
-              <Typography variant="body1">{report.aiSummary.workCompletedSummary}</Typography>
-              <Typography variant="body1">{report.aiSummary.issuesSummary}</Typography>
-              <Typography variant="body1">Status: {report.aiSummary.overallStatus}</Typography>
+            <Box sx={{ pl: 2 }} gutterBottom>
+              <ul style={{ margin: 0, paddingLeft: "18px" }}>
+                <li>
+                  <Typography variant="body1">
+                    {report.aiSummary.workCompletedSummary}
+                  </Typography>
+                </li>
+
+                <li>
+                  <Typography variant="body1">
+                    {report.aiSummary.issuesSummary}
+                  </Typography>
+                </li>
+
+                <li>
+                  <Typography variant="body1">
+                    Status: {report.aiSummary.overallStatus}
+                  </Typography>
+                </li>
+              </ul>
             </Box>
           )}
           {!report.aiSummary && <Button

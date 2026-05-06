@@ -438,7 +438,7 @@ export default function ProjectDetails() {
                   </Typography>
 
                   <Typography variant="body2" sx={{ mt: 1 }}>
-                    <strong>{t("project.work_done")}:</strong> {report.workDone}
+                    <strong>{t("project.work_done")}:</strong> {report.workDone.slice(0,20) + "...."}
                   </Typography>
 
                   <Typography variant="body2" sx={{ mt: 1 }}>
