@@ -16,6 +16,7 @@ import { canAccess } from "../../utils/subscription";
 export default function ViewReport() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
   const [report, setReport] = useState({});
   const [comment, setComment] = useState("");
   const [aiReport , setAiReport] = useState();
@@ -88,6 +89,7 @@ export default function ViewReport() {
   }
 
   const generateSummary = async () => {
+    setAiLoading(true);
     try {
       const res = await axiosInstance.post(`/reports/${id}/ai-summary`,
         {
@@ -100,6 +102,8 @@ export default function ViewReport() {
       setAiReport(res.data.aiSummary)
     } catch (err) {
       console.error(err);
+    }finally{
+      setAiLoading(false);
     }
   };
 
@@ -249,18 +253,20 @@ export default function ViewReport() {
           <Typography variant="h6" fontWeight={600} gutterBottom>
             AI Overview
           </Typography>
-          {aiReport && (
+          {report.aiSummary && (
             <Box gutterBottom>
-              <Typography variant="body1">{aiReport.workCompletedSummary}</Typography>
-              <Typography variant="body1">{aiReport.issuesSummary}</Typography>
-              <Typography variant="body1">Status: {aiReport.overallStatus}</Typography>
+              <Typography variant="body1">{report.aiSummary.workCompletedSummary}</Typography>
+              <Typography variant="body1">{report.aiSummary.issuesSummary}</Typography>
+              <Typography variant="body1">Status: {report.aiSummary.overallStatus}</Typography>
             </Box>
           )}
-          {!aiReport &&  <Button
+          {!report.aiSummary &&  <Button
             variant="contained"
             color="primary"
-            onClick={generateSummary}>
-            Generate AI Overview
+            onClick={generateSummary}
+            disabled={aiLoading}
+            >
+            {loading ? "Generating..." : "Generate AI Summary"}
           </Button>}
           
         </Box>
