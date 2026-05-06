@@ -52,7 +52,7 @@ export default function ViewReport() {
       try {
         const res = await axiosInstance.get(`/reports/${id}`);
         setReport(res.data.report);
-        console.log(res.data.report);
+        // console.log(res.data.report);
         setLoading(false);
       } catch (e) {
         console.error(e);
@@ -91,7 +91,7 @@ export default function ViewReport() {
   const generateSummary = async () => {
     setAiLoading(true);
     try {
-      const res = await axiosInstance.post(`/reports/${id}/ai-summary`,{},
+      const res = await axiosInstance.post(`/reports/${id}/ai-summary`,
         {
           headers: {
             "Content-Type": "application/json"
@@ -99,7 +99,7 @@ export default function ViewReport() {
         }
       );
       console.log("Output = ",res.data.aiSummary);
-      setAiReport(res.data.aiSummary);
+      // setAiReport(res.data.aiSummary);
       setReport((prev) => ({
         ...prev,
         aiSummary: res.data.aiSummary

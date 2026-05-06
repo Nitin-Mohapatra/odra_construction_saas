@@ -150,12 +150,12 @@ exports.generateAISummary = async (req, res) => {
             return res.status(404).json({ message: "Report not found" });
         }
 
-        if (report.aiSummary) {
-            return res.status(200).json({
-                message: "AI Summary already exists",
-                aiSummary: report.aiSummary
-            });
-        }
+        // if (report.aiSummary) {
+        //     return res.status(200).json({
+        //         message: "AI Summary already exists",
+        //         aiSummary: report.aiSummary
+        //     });
+        // }
 
         const prompt = `
 You are a construction assistant.
