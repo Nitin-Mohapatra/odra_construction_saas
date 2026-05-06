@@ -266,7 +266,7 @@ export default function ViewReport() {
             onClick={generateSummary}
             disabled={aiLoading}
             >
-            {loading ? "Generating..." : "Generate AI Summary"}
+            {!aiLoading ? "Generating..." : "Generate AI Summary"}
           </Button>}
           
         </Box>
