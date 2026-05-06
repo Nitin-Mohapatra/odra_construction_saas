@@ -19,7 +19,7 @@ export default function ViewReport() {
   const [aiLoading, setAiLoading] = useState(false);
   const [report, setReport] = useState({});
   const [comment, setComment] = useState("");
-  const [aiReport , setAiReport] = useState();
+  const [aiReport, setAiReport] = useState();
   const [reviewed, setReviewed] = useState(false);
   const socketRef = useRef(null);
   const navigate = useNavigate();
@@ -98,11 +98,14 @@ export default function ViewReport() {
           }
         }
       );
-      console.log(res.data.aiSummary);
-      setAiReport(res.data.aiSummary)
+      console.log("Output = ",res.data.aiSummary);
+      setReport((prev) => ({
+        ...prev,
+        aiSummary: res.data.aiSummary
+      }));
     } catch (err) {
       console.error(err);
-    }finally{
+    } finally {
       setAiLoading(false);
     }
   };
@@ -242,14 +245,14 @@ export default function ViewReport() {
       {/* Ai Summary */}
       <Box className="container mb-4">
         <Box
-           sx={{
+          sx={{
             backgroundColor: "#ffffff",
             borderRadius: "16px",
             p: 4,
             boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
           }}
         >
-          
+
           <Typography variant="h6" fontWeight={600} gutterBottom>
             AI Overview
           </Typography>
@@ -260,15 +263,15 @@ export default function ViewReport() {
               <Typography variant="body1">Status: {report.aiSummary.overallStatus}</Typography>
             </Box>
           )}
-          {!report.aiSummary &&  <Button
+          {!report.aiSummary && <Button
             variant="contained"
             color="primary"
             onClick={generateSummary}
             disabled={aiLoading}
-            >
+          >
             {!aiLoading ? "Generating..." : "Generate AI Summary"}
           </Button>}
-          
+
         </Box>
       </Box>
 
