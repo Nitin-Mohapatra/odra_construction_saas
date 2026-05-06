@@ -167,6 +167,7 @@ STRICT RULES:
 - Return ONLY valid JSON
 - Do NOT use backticks
 - Do NOT add explanation
+- Give short explanation not too long.
 
 Format:
 {

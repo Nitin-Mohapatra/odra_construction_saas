@@ -52,7 +52,6 @@ export default function ViewReport() {
       try {
         const res = await axiosInstance.get(`/reports/${id}`);
         setReport(res.data.report);
-        // console.log(res.data.report);
         setLoading(false);
       } catch (e) {
         console.error(e);
@@ -99,7 +98,6 @@ export default function ViewReport() {
         }
       );
       console.log("Output = ",res.data.aiSummary);
-      // setAiReport(res.data.aiSummary);
       setReport((prev) => ({
         ...prev,
         aiSummary: res.data.aiSummary
