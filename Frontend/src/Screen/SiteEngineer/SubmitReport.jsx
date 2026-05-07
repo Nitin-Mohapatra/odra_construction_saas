@@ -105,12 +105,29 @@ export default function SubmitReport() {
         });
 
         console.log("Audio Blob =", audioBlob);
+        const audioUrl = URL.createObjectURL(audioBlob);
 
-        // temporary testing
-        console.log(
-          "Audio URL =",
-          URL.createObjectURL(audioBlob)
-        );
+        const formData = new FormData();
+
+        formData.append("audio", audioBlob, "recording.webm");
+
+        try {
+
+          const response = await axiosInstance.post(
+            "/reports/voice-to-text",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          );
+
+          console.log("Backend Response =", response.data);
+
+        } catch (err) {
+          console.error(err);
+        }
       };
 
       mediaRecorder.start();

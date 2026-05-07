@@ -214,3 +214,34 @@ Format:
         res.status(500).json({ message: "AI summarization failed" });
     }
 }
+
+// voiceToText
+exports.voiceToTextTest = async (req, res) => {
+    try {
+
+        console.log("File = ", req.file);
+
+        if (!req.file) {
+            return res.status(400).json({
+                message: "No audio uploaded"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Audio received successfully",
+            fileDetails: {
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+                originalname: req.file.originalname
+            }
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Voice upload failed"
+        });
+    }
+};
