@@ -255,9 +255,64 @@ exports.voiceToTextTest = async (req, res) => {
 
         console.log("Sarvam Output = ", response.data);
 
+        const transcript = response.data.transcript;
+        const prompt = `
+You are a construction report assistant.
+
+From the following site engineer transcript:
+
+1. Extract completed work into "workDone"
+2. Extract problems, delays, damages, shortages, accidents, or pending work into "issuesFound"
+
+IMPORTANT RULES:
+- Return ONLY valid JSON
+- Do NOT use backticks
+- If no issue exists, set issuesFound to "No issues reported"
+- Keep responses short and professional
+
+Transcript:
+${transcript}
+
+Format:
+{
+  "workDone": "",
+  "issuesFound": ""
+}
+`;
+        const aiResponse = await axios.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            {
+                model: "openai/gpt-4o-mini",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    "HTTP-Referer": "https://odraops.com",
+                    "X-Title": "OdraOps SaaS"
+                }
+            }
+        );
+        
+        let structuredData;
+
+        try {
+            structuredData = JSON.parse(
+                aiResponse.data.choices[0].message.content
+            );
+        } catch {
+           return res.status(500).json({error:"Can not parse into json"});
+        }
+
         return res.status(200).json({
             success: true,
-            transcript: response.data.transcript
+            transcript,
+            structuredData
         });
 
     } catch (error) {

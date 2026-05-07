@@ -123,7 +123,10 @@ export default function SubmitReport() {
             }
           );
 
-          console.log("Transcript =", response.data.transcript);
+          console.log("Transcript =", response.data.transcript,response.data.structuredData);
+          setData(()=>{
+            response.data.structuredData
+          })
 
         } catch (err) {
           console.error(err);
