@@ -257,7 +257,7 @@ exports.voiceToTextTest = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            transcript: response.data
+            transcript: response.data.transcript
         });
 
     } catch (error) {
