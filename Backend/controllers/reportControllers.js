@@ -238,7 +238,7 @@ exports.voiceToTextTest = async (req, res) => {
             }
         );
 
-        formData.append("model", "saarika:v3");
+        formData.append("model", "saaras:v3");
         formData.append("mode", "translate");
         formData.append("language_code", "od-IN");
 
