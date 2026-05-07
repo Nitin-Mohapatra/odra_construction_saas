@@ -123,11 +123,11 @@ export default function SubmitReport() {
             }
           );
 
-          console.log("Transcript =", response.data.transcript,response.data.structuredData);
-          setData(()=>{
-            response.data.structuredData
-          })
-
+          console.log("Transcript =", response.data.transcript, response.data.structuredData);
+          setData({
+            workDone: response.data.structuredData.workDone,
+            issuesFound: response.data.structuredData.issuesFound
+          });
         } catch (err) {
           console.error(err);
         }
@@ -197,6 +197,7 @@ export default function SubmitReport() {
             <TextField
               label={t("project.work_done")}
               name="workDone"
+              value={data.workDone}
               fullWidth
               multiline
               rows={4}
@@ -226,6 +227,7 @@ export default function SubmitReport() {
             <TextField
               label={t("project.issues")}
               name="issuesFound"
+              value={data.issuesFound}
               fullWidth
               multiline
               rows={3}
