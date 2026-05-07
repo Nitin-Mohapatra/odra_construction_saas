@@ -240,7 +240,7 @@ exports.voiceToTextTest = async (req, res) => {
 
         formData.append("model", "saarika:v2.5");
         formData.append("mode", "translate");
-        formData.append("language_code", "unknown");
+        formData.append("language_code", "od-IN");
 
         const response = await axios.post(
             "https://api.sarvam.ai/speech-to-text",
@@ -253,11 +253,11 @@ exports.voiceToTextTest = async (req, res) => {
             }
         );
 
-        console.log("Sarvam Output = ", response.data,response.data.translate);
+        console.log("Sarvam Output = ", response.data);
 
         return res.status(200).json({
             success: true,
-            transcript: response.data.translate
+            transcript: response.data.transcript
         });
 
     } catch (err) {
