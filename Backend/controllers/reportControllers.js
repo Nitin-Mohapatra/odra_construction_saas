@@ -253,11 +253,11 @@ exports.voiceToTextTest = async (req, res) => {
             }
         );
 
-        console.log("Sarvam Output = ", response.data);
+        console.log("Sarvam Output = ", response.data,response.data.translate);
 
         return res.status(200).json({
             success: true,
-            transcript: response.data.transcript
+            transcript: response.data.translate
         });
 
     } catch (err) {
