@@ -2,6 +2,7 @@ const Project = require('../models/project');
 const User = require('../models/user');
 const Report = require('../models/report');
 const axios = require("axios");
+const FormData = require("form-data");
 
 exports.createReport = async (req, res) => {
     try {
@@ -217,9 +218,8 @@ Format:
 
 // voiceToText
 exports.voiceToTextTest = async (req, res) => {
-    try {
 
-        console.log("File = ", req.file);
+    try {
 
         if (!req.file) {
             return res.status(400).json({
@@ -227,21 +227,44 @@ exports.voiceToTextTest = async (req, res) => {
             });
         }
 
+        const formData = new FormData();
+
+        formData.append(
+            "file",
+            req.file.buffer,
+            {
+                filename: "recording.webm",
+                contentType: req.file.mimetype
+            }
+        );
+
+        formData.append("model", "saarika:v2");
+        formData.append("language_code", "unknown");
+
+        const response = await axios.post(
+            "https://api.sarvam.ai/speech-to-text",
+            formData,
+            {
+                headers: {
+                    ...formData.getHeaders(),
+                    "api-subscription-key": process.env.SARVAM_API_KEY
+                }
+            }
+        );
+
+        console.log("Sarvam Output = ", response.data);
+
         return res.status(200).json({
             success: true,
-            message: "Audio received successfully",
-            fileDetails: {
-                mimetype: req.file.mimetype,
-                size: req.file.size,
-                originalname: req.file.originalname
-            }
+            transcript: response.data.transcript
         });
 
     } catch (err) {
-        console.error(err);
+
+        console.error(err?.response?.data || err);
 
         return res.status(500).json({
-            message: "Voice upload failed"
+            message: "Voice transcription failed"
         });
     }
 };

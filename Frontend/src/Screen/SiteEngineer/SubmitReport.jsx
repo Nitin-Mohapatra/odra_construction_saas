@@ -123,7 +123,7 @@ export default function SubmitReport() {
             }
           );
 
-          console.log("Backend Response =", response.data);
+          console.log("Transcript =", response.data.transcript);
 
         } catch (err) {
           console.error(err);
