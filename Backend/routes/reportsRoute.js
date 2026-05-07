@@ -22,7 +22,7 @@ router.post('/:reportId/ai-summary',
 // voiceToText
 router.post(
     "/voice-to-text",
-    auth.authen,
+    authen,
     upload.single("audio"),
     reportController.voiceToTextTest
 );
