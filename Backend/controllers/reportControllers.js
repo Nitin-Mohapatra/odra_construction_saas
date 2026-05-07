@@ -239,6 +239,7 @@ exports.voiceToTextTest = async (req, res) => {
         );
 
         formData.append("model", "saarika:v2.5");
+        formData.append("mode", "translate");
         formData.append("language_code", "unknown");
 
         const response = await axios.post(
