@@ -195,7 +195,7 @@ Format:
             }
         );
 
-        console.log("Backend Output = ",response.data.choices[0].message.content)
+        console.log("Backend Output = ", response.data.choices[0].message.content)
         const aiText = JSON.parse(response.data.choices[0].message.content);
 
         //save to db
@@ -238,7 +238,7 @@ exports.voiceToTextTest = async (req, res) => {
             }
         );
 
-        formData.append("model", "saarika:v2");
+        formData.append("model", "saarika:v2.5");
         formData.append("language_code", "unknown");
 
         const response = await axios.post(
@@ -261,10 +261,14 @@ exports.voiceToTextTest = async (req, res) => {
 
     } catch (err) {
 
-        console.error(err?.response?.data || err);
+        console.log(error.response?.data || error.message);
 
-        return res.status(500).json({
-            message: "Voice transcription failed"
+        res.status(500).json({
+            success: false,
+            message:
+                error.response?.data?.detail ||
+                error.message ||
+                "Voice to text failed",
         });
     }
 };
