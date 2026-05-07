@@ -82,11 +82,11 @@ export default function SubmitReport() {
   };
 
   // recording function
-  const startrecording = async () => {
+  const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-      })
+      });
 
       const mediaRecorder = new MediaRecorder(stream);
 
@@ -102,8 +102,9 @@ export default function SubmitReport() {
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/webm",
-        })
-        console.log("Audio Blob = ", audioBlob);
+        });
+
+        console.log("Audio Blob =", audioBlob);
 
         // temporary testing
         console.log(
@@ -115,11 +116,10 @@ export default function SubmitReport() {
       mediaRecorder.start();
       setIsRecording(true);
 
-
     } catch (error) {
       console.error("Mic Error =", error);
     }
-  }
+  };
 
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
