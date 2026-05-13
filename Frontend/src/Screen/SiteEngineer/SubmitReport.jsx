@@ -21,6 +21,7 @@ export default function SubmitReport() {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const [isRecording, setIsRecording] = useState(false);
+  const streamRef = useRef(null);
 
   const [data, setData] = useState({
     workDone: "",
@@ -88,7 +89,9 @@ export default function SubmitReport() {
         audio: true,
       });
 
-      const mediaRecorder = new MediaRecorder(stream);
+      streamRef.current = stream;
+      
+      const mediaRecorder = new MediaRecorder(streamRef.current);
 
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
@@ -105,7 +108,7 @@ export default function SubmitReport() {
         });
 
         console.log("Audio Blob =", audioBlob);
-        const audioUrl = URL.createObjectURL(audioBlob);
+        // const audioUrl = URL.createObjectURL(audioBlob);
 
         const formData = new FormData();
 
@@ -145,6 +148,15 @@ export default function SubmitReport() {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+    }
+
+    // stop microphone completely
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+
+      streamRef.current = null;
     }
   };
 
