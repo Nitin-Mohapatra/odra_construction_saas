@@ -203,6 +203,22 @@ export default function SubmitReport() {
               rows={4}
               margin="normal"
               onChange={handleChange}
+              disabled={isRecording}
+              placeholder={isRecording?"Recording...":"workDone"}
+            />
+
+            
+            <TextField
+              label={t("project.issues")}
+              name="issuesFound"
+              value={data.issuesFound}
+              fullWidth
+              multiline
+              rows={3}
+              margin="normal"
+              onChange={handleChange}
+              disabled={isRecording}
+              placeholder={isRecording?"Recording...":"Issues"}
             />
 
             <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
@@ -223,18 +239,6 @@ export default function SubmitReport() {
                 </Button>
               )}
             </Box>
-
-            <TextField
-              label={t("project.issues")}
-              name="issuesFound"
-              value={data.issuesFound}
-              fullWidth
-              multiline
-              rows={3}
-              margin="normal"
-              onChange={handleChange}
-            />
-
 
 
             <Box
