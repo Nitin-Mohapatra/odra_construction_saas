@@ -195,7 +195,7 @@ export default function SubmitReport() {
           {/* FORM */}
           <form onSubmit={handleSubmit}>
             <TextField
-              label={t("project.work_done")}
+              label={isRecording ? "Recording..." : t("project.work_done")}
               name="workDone"
               value={data.workDone}
               fullWidth
@@ -204,12 +204,11 @@ export default function SubmitReport() {
               margin="normal"
               onChange={handleChange}
               disabled={isRecording}
-              placeholder={isRecording?"Recording...":"workDone"}
             />
 
             
             <TextField
-              label={t("project.issues")}
+              label={isRecording ? "Recording..." : t("project.issues")}
               name="issuesFound"
               value={data.issuesFound}
               fullWidth
@@ -218,7 +217,6 @@ export default function SubmitReport() {
               margin="normal"
               onChange={handleChange}
               disabled={isRecording}
-              placeholder={isRecording?"Recording...":"Issues"}
             />
 
             <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
