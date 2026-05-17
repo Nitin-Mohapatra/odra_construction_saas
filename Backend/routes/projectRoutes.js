@@ -29,4 +29,20 @@ router.get( "/:projectId/wages", authen, checkBusinessPlan,validateRoles(["manag
 // delete project 
 router.delete("/:id", authen, validateRoles("manager"), projectController.deleteProject);
 
+// add miscellaneous item
+router.post(
+    "/:projectId/miscellaneous",
+    authen,
+    validateRoles("site engineer"),
+    projectController.addMiscellaneousItem
+);
+
+// approve/reject miscellaneous item
+router.patch(
+    "/:projectId/miscellaneous/:itemId/status",
+    authen,
+    validateRoles("manager"),
+    projectController.updateMiscellaneousStatus
+);
+
 module.exports = router;

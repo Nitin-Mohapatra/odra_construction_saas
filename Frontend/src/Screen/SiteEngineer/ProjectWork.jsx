@@ -19,9 +19,11 @@ import { useTranslation } from "react-i18next";
 import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
 import { Button } from "@mui/material";
+import AddMiscExpenseModal from "../../Components/AddMiscExpenseModal";
 
 export default function ProjectWork() {
   const { id } = useParams();
+  const [openMiscModal, setOpenMiscModal] = useState(false);
   const [project, setProjects] = useState({ reports: [] });
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -83,12 +85,21 @@ export default function ProjectWork() {
       toast.info("Project has been deleted");
       navigate(`/site-engineer/projects`);
     })
+
+    socketRef.current.on("misc:updated", (data) => {
+
+      toast.info(
+        `Expense ${data.itemName} was ${data.status}`
+      );
+
+    });
     
 
     return () => {
       if (socketRef.current) {
         socketRef.current.off("report:reviewed", handler);
         socketRef.current.off("project:completed");
+        socketRef.current.off("misc:updated");
         socketRef.current.disconnect();
       }
     };
@@ -351,6 +362,13 @@ export default function ProjectWork() {
                   >
                     {t("project.log_inventory")}
                   </Button>
+
+                  <button
+                    className="btn btn-sm btn-warning"
+                    onClick={() => setOpenMiscModal(true)}
+                  >
+                    Add Misc Expense
+                  </button>
                 </>
               ) : (
                 <Typography color="error">
@@ -384,6 +402,13 @@ export default function ProjectWork() {
           </Paper>
         </Box>
       </Box>
+
+      <AddMiscExpenseModal
+        open={openMiscModal}
+        onClose={() => setOpenMiscModal(false)}
+        projectId={id}
+        onSuccess={fetchProject}
+      />
 
       <Footer />
     </div>

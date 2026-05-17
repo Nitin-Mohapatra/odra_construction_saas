@@ -11,8 +11,10 @@ import axiosInstance from '../../utils/axiosInstance';
 import { useTranslation } from "react-i18next";
 import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
+import MiscExpenseModal from "../../Components/MiscExpenseModal";
 
 export default function ProjectDetails() {
+  const [openMiscModal, setOpenMiscModal] = useState(false);
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openWageModal, setOpenWageModal] = useState(false);
@@ -39,22 +41,22 @@ export default function ProjectDetails() {
     }
   };
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const res = await axiosInstance.get(`/projects/${id}`);
-        console.log(res);
+  const fetchProject = async () => {
+    try {
+      const res = await axiosInstance.get(`/projects/${id}`);
+      console.log(res);
 
-        if (res.status === 200) {
-          setProject(res.data.project);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Error fetching project");
+      if (res.status === 200) {
+        setProject(res.data.project);
         setLoading(false);
       }
-    };
+    } catch (err) {
+      console.error(err);
+      toast.error("Error fetching project");
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchProject();
 
     // set the socket connection
@@ -95,6 +97,15 @@ export default function ProjectDetails() {
 
       });
       toast.info(`New report received: ${data.projectTitle}`);
+    });
+
+    socketRef.current.on("misc:new", (data) => {
+
+      toast.info(
+        `New misc expense added: ${data.itemName}`
+      );
+      fetchProject();
+
     });
 
     return () => {
@@ -348,6 +359,14 @@ export default function ProjectDetails() {
               {t("project.view_inventory")}
             </Button>
 
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={() => setOpenMiscModal(true)}
+            >
+              View Misc Expenses
+            </Button>
+
             {project.status === "Completed" && (
               <Typography color="error" variant="body2">
                 {t("project.project_locked")}
@@ -501,6 +520,13 @@ export default function ProjectDetails() {
         open={openWageModal}
         onClose={() => setOpenWageModal(false)}
         projectId={id}
+      />
+
+      <MiscExpenseModal
+        open={openMiscModal}
+        onClose={() => setOpenMiscModal(false)}
+        project={project}
+        refreshProject={fetchProject}
       />
 
       <Footer />

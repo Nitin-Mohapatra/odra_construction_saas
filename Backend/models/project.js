@@ -7,7 +7,7 @@ const projectSchema = new Schema({
   status: { type: String, enum: ['Ongoing', 'Completed'] },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-  
+
   contractor: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -25,13 +25,64 @@ const projectSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Report"
     }
-  ], 
+  ],
+
+  miscellaneousItems: [
+    {
+      itemName: {
+        type: String,
+        required: true
+      },
+
+      purchaseDate: {
+        type: Date,
+        required: true
+      },
+
+      unit: {
+        type: String,
+        required: true
+      },
+
+      quantity: {
+        type: Number,
+        required: true
+      },
+
+      pricePerUnit: {
+        type: Number,
+        required: true
+      },
+
+      totalCost: {
+        type: Number,
+        required: true
+      },
+
+      status: {
+        type: String,
+        enum: ["Pending", "Approved","Rejected"],
+        default: "Pending"
+      },
+
+      rejectionReason: {
+        type: String,
+        default: ""
+      },
+
+      createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    }
+  ],
+
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Organization",
     required: true
   }
 },
-{ timestamps: true });
+  { timestamps: true });
 
 module.exports = mongoose.model('Project', projectSchema);

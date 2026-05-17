@@ -1,0 +1,271 @@
+import React, { useMemo, useState } from "react";
+
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Box,
+  Chip,
+  Divider,
+  TextField
+} from "@mui/material";
+
+import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-toastify";
+
+export default function MiscExpenseModal({
+  open,
+  onClose,
+  project,
+  refreshProject
+}) {
+
+  const [rejectingId, setRejectingId] = useState(null);
+  const [reason, setReason] = useState("");
+
+  const approvedTotal = useMemo(() => {
+
+    return (
+      project?.miscellaneousItems
+        ?.filter(item => item.status === "Approved")
+        ?.reduce((sum, item) => sum + item.totalCost, 0)
+    );
+
+  }, [project]);
+
+  const updateStatus = async (itemId, status) => {
+
+    try {
+
+      await axiosInstance.patch(
+        `/projects/${project._id}/miscellaneous/${itemId}/status`,
+        {
+          status,
+          rejectionReason: reason
+        }
+      );
+
+      toast.success(`Item ${status.toLowerCase()} successfully`);
+
+      setRejectingId(null);
+      setReason("");
+
+      refreshProject();
+
+    } catch (error) {
+
+      console.log(error);
+
+      toast.error("Failed to update item");
+
+    }
+
+  };
+
+  return (
+
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+    >
+
+      <DialogTitle>
+        Miscellaneous Expenses
+      </DialogTitle>
+
+      <DialogContent>
+
+        {project?.miscellaneousItems?.length === 0 ? (
+
+          <Typography>
+            No miscellaneous expenses added.
+          </Typography>
+
+        ) : (
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2
+            }}
+          >
+
+            {project?.miscellaneousItems?.map(item => (
+
+              <Box
+                key={item._id}
+                sx={{
+                  border: "1px solid #ddd",
+                  borderRadius: 2,
+                  p: 2
+                }}
+              >
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}
+                >
+
+                  <Typography fontWeight={600}>
+                    {item.itemName}
+                  </Typography>
+
+                  <Chip
+                    label={item.status}
+                    color={
+                      item.status === "Approved"
+                        ? "success"
+                        : item.status === "Rejected"
+                        ? "error"
+                        : "warning"
+                    }
+                  />
+
+                </Box>
+
+                <Typography variant="body2" mt={1}>
+                  Quantity: {item.quantity} {item.unit}
+                </Typography>
+
+                <Typography variant="body2">
+                  Price Per Unit: ₹{item.pricePerUnit}
+                </Typography>
+
+                <Typography variant="body2">
+                  Total Cost: ₹{item.totalCost}
+                </Typography>
+
+                <Typography variant="body2">
+                  Purchase Date: {
+                    new Date(item.purchaseDate)
+                      .toLocaleDateString()
+                  }
+                </Typography>
+
+                {item.status === "Rejected" &&
+                  item.rejectionReason && (
+
+                  <Typography
+                    variant="body2"
+                    color="error"
+                    mt={1}
+                  >
+                    Reason: {item.rejectionReason}
+                  </Typography>
+
+                )}
+
+                {item.status === "Pending" && (
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      mt: 2,
+                      alignItems: "center"
+                    }}
+                  >
+
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() =>
+                        updateStatus(item._id, "Approved")
+                      }
+                    >
+                      Approve
+                    </Button>
+
+                    {rejectingId === item._id ? (
+
+                      <>
+                        <TextField
+                          size="small"
+                          label="Reason"
+                          value={reason}
+                          onChange={(e) =>
+                            setReason(e.target.value)
+                          }
+                        />
+
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() =>
+                            updateStatus(item._id, "Rejected")
+                          }
+                        >
+                          Confirm Reject
+                        </Button>
+                      </>
+
+                    ) : (
+
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() =>
+                          setRejectingId(item._id)
+                        }
+                      >
+                        Reject
+                      </Button>
+
+                    )}
+
+                  </Box>
+
+                )}
+
+              </Box>
+
+            ))}
+
+            <Divider />
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mt: 2
+              }}
+            >
+
+              <Typography fontWeight={700}>
+                Approved Total Cost
+              </Typography>
+
+              <Typography fontWeight={700}>
+                ₹{approvedTotal}
+              </Typography>
+
+            </Box>
+
+          </Box>
+
+        )}
+
+      </DialogContent>
+
+      <DialogActions>
+
+        <Button onClick={onClose}>
+          Close
+        </Button>
+
+      </DialogActions>
+
+    </Dialog>
+
+  );
+
+}

@@ -584,7 +584,7 @@ exports.getContractorDashboard = async (req, res) => {
 
         const recentProjects = result[0].recentProjects;
 
-        console.log("Stats = ",stats , "Recent Project = ", recentProjects);
+        console.log("Stats = ", stats, "Recent Project = ", recentProjects);
 
         return res.status(200).json({
             success: true,
@@ -596,4 +596,144 @@ exports.getContractorDashboard = async (req, res) => {
         console.error("Dashboard error:", error);
         return res.status(500).json({ success: false });
     }
+};
+
+// add mislaneous items
+exports.addMiscellaneousItem = async (req, res) => {
+
+    try {
+
+        const { projectId } = req.params;
+
+        const {
+            itemName,
+            purchaseDate,
+            unit,
+            quantity,
+            pricePerUnit
+        } = req.body;
+
+        const project = await Project.findById(projectId)
+            .populate("contractor", "_id name")
+            .populate("siteEngineer", "_id name");
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found"
+            });
+        }
+
+        const totalCost = Number(quantity) * Number(pricePerUnit);
+
+        const newItem = {
+            itemName,
+            purchaseDate,
+            unit,
+            quantity,
+            pricePerUnit,
+            totalCost,
+            status: "Pending",
+            createdBy: req.user.id
+        };
+
+        project.miscellaneousItems.push(newItem);
+
+        await project.save();
+
+        // SOCKET NOTIFICATION PLACE
+        const io = req.app.get("io");
+
+        io.to(`project-${projectId}`)
+            .emit("misc:new", {
+                projectId,
+                itemName,
+                totalCost,
+                projectTitle: project.title
+            });
+
+        return res.status(201).json({
+            success: true,
+            message: "Miscellaneous item added successfully",
+            data: project.miscellaneousItems
+        });
+
+    } catch (error) {
+
+        console.log("Add miscellaneous item error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+
+    }
+
+};
+
+// Approve/Reject Misc item
+exports.updateMiscellaneousStatus = async (req, res) => {
+
+    try {
+
+        const { projectId, itemId } = req.params;
+
+        const { status, rejectionReason } = req.body;
+
+        const project = await Project.findById(projectId)
+            .populate("contractor", "_id name")
+            .populate("siteEngineer", "_id name");
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found"
+            });
+        }
+
+        const item = project.miscellaneousItems.id(itemId);
+
+        if (!item) {
+            return res.status(404).json({
+                success: false,
+                message: "Item not found"
+            });
+        }
+
+        item.status = status;
+
+        if (status === "Rejected") {
+            item.rejectionReason = rejectionReason || "";
+        }
+
+        await project.save();
+
+        // SOCKET NOTIFICATION PLACE
+        const io = req.app.get("io");
+
+        io.to(`siteEngineer-${project.siteEngineer._id}`)
+            .emit("misc:updated", {
+                projectId,
+                itemName: item.itemName,
+                status,
+                rejectionReason
+            });
+
+        return res.status(200).json({
+            success: true,
+            message: `Item ${status.toLowerCase()} successfully`,
+            data: item
+        });
+
+    } catch (error) {
+
+        console.log("Update miscellaneous status error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+
+    }
+
 };
