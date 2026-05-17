@@ -23,7 +23,7 @@ const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://odraopssaas.netlify.app",
+  "https://odraopssaass.netlify.app",
   "https://odraops.com",
   "https://www.odraops.com"
 ];
