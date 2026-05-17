@@ -711,7 +711,7 @@ exports.updateMiscellaneousStatus = async (req, res) => {
         // SOCKET NOTIFICATION PLACE
         const io = req.app.get("io");
 
-        io.to(`siteEngineer-${project.siteEngineer._id}`)
+        io.to(`project-${projectId}`)
             .emit("misc:updated", {
                 projectId,
                 itemName: item.itemName,

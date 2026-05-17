@@ -123,10 +123,10 @@ export default function MiscExpenseModal({
                     label={item.status}
                     color={
                       item.status === "Approved"
-                        ? "success"
+                        ? "dark"
                         : item.status === "Rejected"
-                        ? "error"
-                        : "warning"
+                          ? "error"
+                          : "warning"
                     }
                   />
 
@@ -154,43 +154,73 @@ export default function MiscExpenseModal({
                 {item.status === "Rejected" &&
                   item.rejectionReason && (
 
-                  <Typography
-                    variant="body2"
-                    color="error"
-                    mt={1}
-                  >
-                    Reason: {item.rejectionReason}
-                  </Typography>
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      mt={1}
+                    >
+                      Reason: {item.rejectionReason}
+                    </Typography>
 
-                )}
+                  )}
 
                 {item.status === "Pending" && (
 
                   <Box
                     sx={{
                       display: "flex",
+                      flexDirection: "column",
                       gap: 2,
                       mt: 2,
-                      alignItems: "center"
                     }}
                   >
-
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() =>
-                        updateStatus(item._id, "Approved")
-                      }
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 2,
+                        alignItems: "center",
+                        flexWrap: "wrap"
+                      }}
                     >
-                      Approve
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() =>
+                          updateStatus(item._id, "Approved")
+                        }
+                      >
+                        Approve
+                      </Button>
 
-                    {rejectingId === item._id ? (
+                      {!rejectingId || rejectingId !== item._id ? (
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() =>
+                            setRejectingId(item._id)
+                          }
+                        >
+                          Reject
+                        </Button>
+                      ) : null}
+                    </Box>
 
-                      <>
+                    {rejectingId === item._id && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: {
+                            xs: "column",
+                            sm: "row"
+                          },
+                          gap: 2,
+                          width: "100%"
+                        }}
+                      >
                         <TextField
                           size="small"
                           label="Reason"
+                          fullWidth
                           value={reason}
                           onChange={(e) =>
                             setReason(e.target.value)
@@ -206,22 +236,8 @@ export default function MiscExpenseModal({
                         >
                           Confirm Reject
                         </Button>
-                      </>
-
-                    ) : (
-
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() =>
-                          setRejectingId(item._id)
-                        }
-                      >
-                        Reject
-                      </Button>
-
+                      </Box>
                     )}
-
                   </Box>
 
                 )}
