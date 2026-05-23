@@ -33,6 +33,7 @@ router.delete("/:id", authen, validateRoles("manager"), projectController.delete
 router.post(
     "/:projectId/miscellaneous",
     authen,
+    checkBusinessPlan,
     validateRoles("site engineer"),
     projectController.addMiscellaneousItem
 );
@@ -41,6 +42,7 @@ router.post(
 router.patch(
     "/:projectId/miscellaneous/:itemId/status",
     authen,
+    checkBusinessPlan,
     validateRoles("manager"),
     projectController.updateMiscellaneousStatus
 );
