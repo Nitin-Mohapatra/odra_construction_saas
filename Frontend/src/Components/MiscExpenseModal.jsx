@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-
+import React, { useMemo, useState,useEffect } from "react";
+import { canAccess } from "../utils/subscription";
 import {
   Dialog,
   DialogTitle,
@@ -12,9 +12,10 @@ import {
   Divider,
   TextField
 } from "@mui/material";
-
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function MiscExpenseModal({
   open,
@@ -25,6 +26,16 @@ export default function MiscExpenseModal({
 
   const [rejectingId, setRejectingId] = useState(null);
   const [reason, setReason] = useState("");
+  const navigate = useNavigate();
+
+  // checking access and making the connection 
+  useEffect(() => {
+    if (!canAccess("chat")) {
+      toast.error("Upgrade to Business Plan to unlock Attendance.");
+      navigate("/site-engineer/projects")
+      return;
+    }
+  }, []);
 
   const approvedTotal = useMemo(() => {
 

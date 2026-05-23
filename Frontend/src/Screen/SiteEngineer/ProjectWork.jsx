@@ -363,12 +363,38 @@ export default function ProjectWork() {
                     {t("project.log_inventory")}
                   </Button>
 
-                  <button
-                    className="btn btn-sm btn-warning"
-                    onClick={() => setOpenMiscModal(true)}
+                  <Button
+                    // className="btn btn-sm btn-warning"
+                    variant="outlined"
+                    onClick={() => {
+                      if (!canAccess("MiscModal")) {
+                        toast.error("Upgrade to Business Plan to unlock Misc Items Feature.");
+                        return;
+                      }
+                      setOpenMiscModal(true)
+                    }}
+                    sx={{
+                      opacity: canAccess("MiscModal") ? 1 : 0.6,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      color: "black",
+                      borderColor: "white",
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                      },
+                    }}
                   >
                     Add Misc Expense
-                  </button>
+                    {!canAccess("attendance") && (
+                      <LockIcon
+                        fontSize="small"
+                        sx={{ fontSize: 16, color: "#ff9800" }}
+                      />
+                    )}
+                  </Button>
                 </>
               ) : (
                 <Typography color="error">

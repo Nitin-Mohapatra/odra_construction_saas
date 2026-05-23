@@ -362,9 +362,36 @@ export default function ProjectDetails() {
             <Button
               variant="contained"
               color="warning"
-              onClick={() => setOpenMiscModal(true)}
+              onClick={() => {
+                if (!canAccess("MiscModal")) {
+                  toast.error("Upgrade to Business Plan to unlock Misc Item Feature.");
+                  return;
+                }
+                setOpenMiscModal(true)
+              }}
+              sx={{
+                position: "relative",
+                opacity: canAccess("MiscModal") ? 1 : 0.6,
+                color: "primary.main",
+                borderColor: "primary.main",
+                fontWeight: 600,
+                "&:hover": {
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                },
+              }}
             >
               View Misc Expenses
+              {!canAccess("MiscModal") && (
+                <LockIcon
+                  fontSize="small"
+                  sx={{
+                    ml: 1,
+                    fontSize: 18,
+                    color: "#ff9800"
+                  }}
+                />
+              )}
             </Button>
 
             {project.status === "Completed" && (

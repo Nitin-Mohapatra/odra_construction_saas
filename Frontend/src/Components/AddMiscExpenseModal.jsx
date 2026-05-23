@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { canAccess } from "../utils/subscription";
+import { useNavigate } from "react-router-dom";
+
 import {
   Dialog,
   DialogTitle,
@@ -18,6 +21,16 @@ export default function AddMiscExpenseModal({
   projectId,
   onSuccess
 }) {
+
+  const navigate = useNavigate();
+  // checking access and making the connection 
+  useEffect(() => {
+    if (!canAccess("chat")) {
+      toast.error("Upgrade to Business Plan to unlock Attendance.");
+      navigate("/site-engineer/projects")
+      return;
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     itemName: "",

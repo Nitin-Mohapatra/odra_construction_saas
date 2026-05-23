@@ -17,6 +17,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     const [loading, setLoading] = useState(false);
     const socketRef = useRef(null);
     const messagesEndRef = useRef(null);
+    const navigate = useNavigate();
 
     // checking access and making the connection 
     useEffect(() => {
