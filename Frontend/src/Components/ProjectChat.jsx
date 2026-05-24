@@ -23,7 +23,7 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     useEffect(() => {
         if (!canAccess("chat")) {
             toast.error("Upgrade to Business Plan to unlock Chat.");
-            // navigate("/site-engineer/projects");
+            navigate("/site-engineer/projects");
             return;
         }
     }, []);

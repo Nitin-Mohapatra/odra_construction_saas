@@ -28,14 +28,7 @@ export default function MiscExpenseModal({
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
 
-  // checking access and making the connection 
-  useEffect(() => {
-    if (!canAccess("MiscModal")) {
-      toast.error("Upgrade to Business Plan to unlock Attendance.");
-      navigate("/site-engineer/projects")
-      return;
-    }
-  }, []);
+
 
   const approvedTotal = useMemo(() => {
 
