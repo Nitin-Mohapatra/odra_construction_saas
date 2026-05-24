@@ -30,7 +30,7 @@ export default function MiscExpenseModal({
 
   // checking access and making the connection 
   useEffect(() => {
-    if (!canAccess("chat")) {
+    if (!canAccess("MiscModal")) {
       toast.error("Upgrade to Business Plan to unlock Attendance.");
       navigate("/site-engineer/projects")
       return;

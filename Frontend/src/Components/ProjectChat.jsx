@@ -19,14 +19,14 @@ export default function ProjectChat({ projectId, onMessageSent }) {
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
 
-    // checking access and making the connection 
-    useEffect(() => {
-        if (!canAccess("chat")) {
-            toast.error("Upgrade to Business Plan to unlock Attendance.");
-            navigate("/site-engineer/projects")
-            return;
-        }
-    }, []);
+    // // checking access and making the connection 
+    // useEffect(() => {
+    //     if (!canAccess("chat")) {
+    //         toast.error("Upgrade to Business Plan to unlock Attendance.");
+    //         navigate("/site-engineer/projects")
+    //         return;
+    //     }
+    // }, []);
 
     // 🔐 get current user id from JWT
     const token = localStorage.getItem("token");
