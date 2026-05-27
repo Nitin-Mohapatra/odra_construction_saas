@@ -55,6 +55,7 @@ export default function ProjectInventory() {
     }
   };
 
+  // socket connection
   useEffect(() => {
     const socket = io(import.meta.env.VITE_API_URL, {
       transports: ["websocket"]
@@ -73,6 +74,11 @@ export default function ProjectInventory() {
 
       refreshSummary();
 
+    });
+
+    socket.on("inventory:item-added", () => {
+      fetchInventory();
+      fetchSummary();
     });
 
     return () => socket.disconnect();

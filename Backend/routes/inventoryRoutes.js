@@ -34,7 +34,7 @@ router.post(
 router.post(
   "/:projectId",
   authen,
-  validateRoles(["manager"]),
+  validateRoles(["manager","site engineer"]),
   inventoryController.addInventoryItem
 );
 

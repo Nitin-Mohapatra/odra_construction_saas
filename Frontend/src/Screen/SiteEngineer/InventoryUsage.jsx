@@ -55,7 +55,7 @@ export default function InventoryUsage() {
 
     socket.emit("join", { projectId });
 
-    // 🔴 When stock is consumed
+    // When stock is consumed
     socket.on("inventory:updated", (data) => {
 
       // Prevent double update for sender

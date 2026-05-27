@@ -23,10 +23,10 @@ exports.addInventoryItem = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // 🔐 Only contractor who owns project
-    if (project.contractor.toString() !== req.user.User_id.toString()) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
+    //  Only contractor who owns project
+    // if (project.contractor.toString() !== req.user.User_id.toString()) {
+    //   return res.status(403).json({ message: "Not authorized" });
+    // }
 
     // 🔒 Lock inventory if project completed
     if (project.status === "Completed") {

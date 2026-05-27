@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from '../../Components/Footer';
 import SiteEngineerNavbar from '../../Components/SiteEngineerNavbar';
-import { Link,useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -20,8 +20,19 @@ import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
 import { Button } from "@mui/material";
 import AddMiscExpenseModal from "../../Components/AddMiscExpenseModal";
+import Dialog from '@mui/material/Dialog';
 
 export default function ProjectWork() {
+  const [openInventoryModal, setOpenInventoryModal] = useState(false);
+  const [inventoryForm, setInventoryForm] = useState({
+    name: "",
+    unit: "",
+    supplierName: "",
+    companyName: "",
+    quantity: "",
+    pricePerUnit: ""
+  });
+
   const { id } = useParams();
   const [openMiscModal, setOpenMiscModal] = useState(false);
   const [project, setProjects] = useState({ reports: [] });
@@ -93,7 +104,7 @@ export default function ProjectWork() {
       );
 
     });
-    
+
 
     return () => {
       if (socketRef.current) {
@@ -104,6 +115,47 @@ export default function ProjectWork() {
       }
     };
   }, [id])
+
+  const handleInventoryChange = (e) => {
+    setInventoryForm({
+      ...inventoryForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleAddInventory = async () => {
+
+    try {
+
+      await axiosInstance.post(
+        `/inventory/${projectId}`,
+        inventoryForm
+      );
+
+      toast.success("Inventory added");
+
+      setOpenInventoryModal(false);
+
+      setInventoryForm({
+        name: "",
+        unit: "",
+        supplierName: "",
+        companyName: "",
+        quantity: "",
+        pricePerUnit: ""
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      toast.error(
+        error?.response?.data?.message || "Failed to add inventory"
+      );
+
+    }
+
+  };
 
   const fetchProject = async () => {
     try {
@@ -134,7 +186,7 @@ export default function ProjectWork() {
         <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
           <Typography
             variant="h1"
-            sx={{  mb: 1 }}
+            sx={{ mb: 1 }}
           >
             {project.title}
           </Typography>
@@ -218,7 +270,7 @@ export default function ProjectWork() {
                         variant="subtitle1"
                         sx={{ fontWeight: 600, mb: 1 }}
                       >
-                        {rept.workDone.slice(0,10) + "...."}
+                        {rept.workDone.slice(0, 10) + "...."}
                       </Typography>
 
                       <Typography
@@ -233,7 +285,7 @@ export default function ProjectWork() {
                           sx={{
                             mt: 1,
                             fontStyle: "italic",
-                          
+
                           }}
                         >
                           {t("project.comment")}: {rept.contractorComment}
@@ -299,7 +351,7 @@ export default function ProjectWork() {
                         toast.error("Upgrade to Business Plan to unlock Report Submission.");
                         return;
                       }
-                      
+
                     }}
                   >
                     {t("project.submit_report_btn")}
@@ -395,6 +447,15 @@ export default function ProjectWork() {
                       />
                     )}
                   </Button>
+
+                  {/* Add Inventory */}
+                  <Button
+                    variant="outlined"
+                    onClick={() => setOpenInventoryModal(true)}
+                  >
+                    ADD INVENTORY
+                  </Button>
+
                 </>
               ) : (
                 <Typography color="error">
@@ -404,7 +465,7 @@ export default function ProjectWork() {
 
               {!canAccess("chat") ? (
                 <Button
-                  
+
                   style={{
                     opacity: 0.6,
                     display: "flex",
@@ -435,6 +496,94 @@ export default function ProjectWork() {
         projectId={id}
         onSuccess={fetchProject}
       />
+
+      {/* Add Inventory Dia */}
+
+      <Dialog
+        open={openInventoryModal}
+        onClose={() => setOpenInventoryModal(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Add Inventory</DialogTitle>
+
+        <DialogContent>
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Material Name"
+            name="name"
+            value={inventoryForm.name}
+            onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Unit"
+            name="unit"
+            value={inventoryForm.unit}
+            onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Supplier Name"
+            name="supplierName"
+            value={inventoryForm.supplierName}
+            onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Company Name"
+            name="companyName"
+            value={inventoryForm.companyName}
+            onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            type="number"
+            label="Quantity"
+            name="quantity"
+            value={inventoryForm.quantity}
+            onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            type="number"
+            label="Price Per Unit"
+            name="pricePerUnit"
+            value={inventoryForm.pricePerUnit}
+            onChange={handleInventoryChange}
+          />
+
+        </DialogContent>
+
+        <DialogActions>
+
+          <Button
+            onClick={() => setOpenInventoryModal(false)}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleAddInventory}
+          >
+            Add
+          </Button>
+
+        </DialogActions>
+      </Dialog>
 
       <Footer />
     </div>
