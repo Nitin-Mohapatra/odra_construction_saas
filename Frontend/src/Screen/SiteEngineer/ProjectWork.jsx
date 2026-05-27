@@ -136,7 +136,6 @@ export default function ProjectWork() {
       );
 
       toast.success("Inventory added");
-
       setOpenInventoryModal(false);
 
       setInventoryForm({
