@@ -129,9 +129,9 @@ export default function ProjectWork() {
   const handleAddInventory = async () => {
 
     try {
-      let projectId = id;
+      // let projectId = id;
       await axiosInstance.post(
-        `/inventory/${projectId}`,
+        `/inventory/${id}`,
         inventoryForm
       );
 
