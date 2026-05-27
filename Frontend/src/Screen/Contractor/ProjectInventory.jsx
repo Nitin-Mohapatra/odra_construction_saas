@@ -126,8 +126,8 @@ export default function ProjectInventory() {
       setUnit("");
       setQuantity("");
       setPricePerUnit("");
-      fetchInventory();
-      refreshSummary();
+      // fetchInventory();
+      // refreshSummary();
       setSupplierName("");
       setCompanyName("");
 
