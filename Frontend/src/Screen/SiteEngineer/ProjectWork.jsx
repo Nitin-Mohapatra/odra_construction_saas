@@ -129,7 +129,7 @@ export default function ProjectWork() {
   const handleAddInventory = async () => {
 
     try {
-
+      let projectId = id;
       await axiosInstance.post(
         `/inventory/${projectId}`,
         inventoryForm
