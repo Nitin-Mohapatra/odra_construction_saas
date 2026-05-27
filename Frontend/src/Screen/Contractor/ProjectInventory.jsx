@@ -77,8 +77,9 @@ export default function ProjectInventory() {
     });
 
     socket.on("inventory:item-added", () => {
+      // console.log("Called added");
       fetchInventory();
-      fetchSummary();
+      refreshSummary();
     });
 
     return () => socket.disconnect();
