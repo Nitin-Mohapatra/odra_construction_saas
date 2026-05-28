@@ -47,4 +47,12 @@ router.patch(
     projectController.updateMiscellaneousStatus
 );
 
+// patch request to update title
+router.patch(
+    "/:projectId/title",
+    authen,
+    validateRoles("manager"),
+    projectController.updateProjectTitle
+)
+
 module.exports = router;

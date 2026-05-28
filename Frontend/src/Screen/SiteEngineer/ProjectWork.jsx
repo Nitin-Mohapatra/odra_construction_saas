@@ -100,6 +100,19 @@ export default function ProjectWork() {
       navigate(`/site-engineer/projects`);
     })
 
+     socketRef.current.on("project:titleUpdated", (data) => {
+
+      setProject((prev) => ({
+        ...prev,
+        title: data.title
+      }));
+
+      toast.info(
+        "Title Updated"
+      );
+
+    });
+
     socketRef.current.on("misc:updated", (data) => {
 
       toast.info(
@@ -114,6 +127,7 @@ export default function ProjectWork() {
         socketRef.current.off("report:reviewed", handler);
         socketRef.current.off("project:completed");
         socketRef.current.off("misc:updated");
+        socketRef.current.off("project:titleUpdated");
         socketRef.current.disconnect();
       }
     };
@@ -332,6 +346,7 @@ export default function ProjectWork() {
             >
               {project.status !== "Completed" ? (
                 <>
+                {/* reports */}
                   <Button
                     component={Link}
                     to={`/site-engineer/projects/${id}/report`}
@@ -366,6 +381,7 @@ export default function ProjectWork() {
                     )}
                   </Button>
 
+                {/* Mark Attendance */}
                   <Button
                     component={Link}
                     to={`/site-engineer/projects/${id}/attendance`}
@@ -399,7 +415,8 @@ export default function ProjectWork() {
                       />
                     )}
                   </Button>
-
+                  
+                  {/* Log inventory Usages */}
                   <Button
                     component={Link}
                     variant="outlined"
@@ -417,6 +434,24 @@ export default function ProjectWork() {
                     {t("project.log_inventory")}
                   </Button>
 
+                  {/* Add Inventory */}
+                  <Button
+                    variant="outlined"
+                    onClick={() => setOpenInventoryModal(true)}
+                    sx={{
+                      color: "black",
+                      borderColor: "text.primary",
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                      },
+                    }}
+                  >
+                    ADD INVENTORY
+                  </Button>
+
+                  {/* Misc */}
                   <Button
                     // className="btn btn-sm btn-warning"
                     variant="outlined"
@@ -450,14 +485,7 @@ export default function ProjectWork() {
                     )}
                   </Button>
 
-                  {/* Add Inventory */}
-                  <Button
-                    variant="outlined"
-                    onClick={() => setOpenInventoryModal(true)}
-                  >
-                    ADD INVENTORY
-                  </Button>
-
+                  
                 </>
               ) : (
                 <Typography color="error">

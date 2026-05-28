@@ -68,8 +68,22 @@ export default function MyProjects() {
       setProjects((prev) =>
         prev.filter((pro) => pro._id !== data.project_id)
       );
-    
+
       toast.info(`Contractor deleted the project ${data.project_name}`);
+    });
+
+    socketRef.current.on("project:titleUpdated", (data) => {
+
+      setProjects((prev) => {
+        prev.map((project) =>
+          project._id == data.projectId ? { ...project, title: data.title } : project
+        )
+      })
+
+      toast.info(
+        "Title Updated"
+      );
+
     });
 
 
@@ -102,7 +116,7 @@ export default function MyProjects() {
         <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
           <Typography
             variant="h1"
-            sx={{  mb: 1 }}
+            sx={{ mb: 1 }}
           >
             {t("project.my_projects")}
           </Typography>
@@ -165,42 +179,42 @@ export default function MyProjects() {
                   },
                 }}
               >
-                
+
                 {/* TOP RIGHT ACTIONS */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      display: "flex",
-                      gap: 1,
-                    }}
-                  >
-                    <Tooltip title={t("project.open_project")}>
-                      <IconButton
-                        size="small"
-                        onClick={() =>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    display: "flex",
+                    gap: 1,
+                  }}
+                >
+                  <Tooltip title={t("project.open_project")}>
+                    <IconButton
+                      size="small"
+                      onClick={() =>
                         navigate(
                           `/site-engineer/projects/${project._id}`
                         )
                       }
-                        sx={{
-                          backgroundColor: "primary.main",
-                          color: "text.primary",
-                          width: 34,
-                          height: 34,
-                          "&:hover": {
-                            backgroundColor: "secondary.main",
-                            color:"text.secondary"
-                          },
-                        }}
-                      >
-                        <OpenInNewIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                      sx={{
+                        backgroundColor: "primary.main",
+                        color: "text.primary",
+                        width: 34,
+                        height: 34,
+                        "&:hover": {
+                          backgroundColor: "secondary.main",
+                          color: "text.secondary"
+                        },
+                      }}
+                    >
+                      <OpenInNewIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
 
-                  </Box>
-                
+                </Box>
+
                 <CardContent sx={{ p: 3 }}>
                   <Typography
                     variant="h6"

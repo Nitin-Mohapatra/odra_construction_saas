@@ -12,16 +12,28 @@ import { useTranslation } from "react-i18next";
 import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
 import MiscExpenseModal from "../../Components/MiscExpenseModal";
+import EditIcon from "@mui/icons-material/Edit";
+import { toast } from 'react-toastify';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField
+} from "@mui/material";
 
 export default function ProjectDetails() {
   const [openMiscModal, setOpenMiscModal] = useState(false);
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openWageModal, setOpenWageModal] = useState(false);
+  const [openEditModal , setOpenEditModal] = useState(false);
+  const [newTitle , setNewTitle] = useState("");
   const { id } = useParams();
   const socketRef = useRef(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
   const handleCompleteProject = async () => {
     const confirm = window.confirm(
       "Are you sure? This will free all workers and lock attendance."
@@ -56,6 +68,33 @@ export default function ProjectDetails() {
       setLoading(false);
     }
   };
+
+  // handle open edit modal function
+  const handleOpenEdit = ()=>{
+    setNewTitle(project?.title || "");
+    setOpenEditModal(true);
+  }
+
+  // update title function
+  const updateProjectTitle = async ()=>{
+    try{
+      const response = await axiosInstance.patch(
+        `/projects/${projectId}/title`,
+        {
+          title: newTitle
+        }
+      );
+      setProject((prev)=>({
+        ...prev,
+        title:newTitle
+      }))
+        setOpenEditModal(false);
+    }catch(e){
+      console.error(e);
+      toast.error("Unable to edit the title.");
+    }
+  }
+
   useEffect(() => {
     fetchProject();
 
@@ -174,9 +213,22 @@ export default function ProjectDetails() {
               boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
             }}
           >
-            <Typography variant="h5" >
-              {project.title}
-            </Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+
+              <Typography variant="h4">
+                {project.title}
+              </Typography>
+
+              <EditIcon
+                sx={{
+                  cursor: "pointer",
+                  fontSize: 22,
+                  color: "#666"
+                }}
+                onClick={handleOpenEdit}
+              />
+
+            </Box>
 
             <Typography variant="body2" sx={{ mb: 3,mt:1 }}>
               {project.description}
@@ -556,6 +608,45 @@ export default function ProjectDetails() {
         project={project}
         refreshProject={fetchProject}
       />
+
+      <Dialog
+        open={openEditModal}
+        onClose={() => setOpenEditModal(false)}
+      >
+
+        <DialogTitle>
+          Edit Project Title
+        </DialogTitle>
+
+        <DialogContent>
+
+          <TextField
+            fullWidth
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            sx={{ mt: 1 }}
+          />
+
+        </DialogContent>
+
+        <DialogActions>
+
+          <Button
+            onClick={() => setOpenEditModal(false)}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={updateProjectTitle}
+          >
+            Update
+          </Button>
+
+        </DialogActions>
+
+      </Dialog>
 
       <Footer />
     </Box>

@@ -737,3 +737,75 @@ exports.updateMiscellaneousStatus = async (req, res) => {
     }
 
 };
+
+// edit title
+exports.updateProjectTitle = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const { title } = req.body;
+
+
+        if (!title || title.trim() == "") {
+            return res.status(400).json({
+                success: false,
+                message: "Project title is required"
+            });
+        };
+
+        const project = await Project.findOne({
+            _id: projectId,
+            organizationId: req.user.organizationId
+        });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found"
+            });
+        }
+
+        // only contractor can edit
+        if (project.contractor.toString() !== req.user.User_id) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized"
+            });
+        }
+
+        project.title = title;
+        await project.save();
+
+        // socket realtime update
+        const io = req.app.get("io");
+
+        const siteEng_id = project.siteEngineer;
+        const roomName = `siteEngineer-${siteEng_id.toString()}`;
+
+        // broadcast to project room
+        io.to(`project-${projectId}`).emit("project:titleUpdated", {
+            projectId,
+            title
+        });
+
+        // broadcast to site eng room
+        io.to(roomName).emit("project:titleUpdated", {
+            projectId,
+            title
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Project title updated",
+            project
+        });
+
+
+    } catch (e) {
+        console.log("Update project title error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+}
