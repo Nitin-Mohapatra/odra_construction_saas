@@ -79,7 +79,7 @@ export default function ProjectDetails() {
   const updateProjectTitle = async ()=>{
     try{
       const response = await axiosInstance.patch(
-        `/projects/${projectId}/title`,
+        `/projects/${id}/title`,
         {
           title: newTitle
         }
