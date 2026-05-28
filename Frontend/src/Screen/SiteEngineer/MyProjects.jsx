@@ -74,15 +74,15 @@ export default function MyProjects() {
 
     socketRef.current.on("project:titleUpdated", (data) => {
 
-      setProjects((prev) => {
+      setProjects((prev) =>
         prev.map((project) =>
-          project._id == data.projectId ? { ...project, title: data.title } : project
+          project._id === data.projectId
+            ? { ...project, title: data.title }
+            : project
         )
-      })
-
-      toast.info(
-        "Title Updated"
       );
+
+      toast.info("Title Updated");
 
     });
 

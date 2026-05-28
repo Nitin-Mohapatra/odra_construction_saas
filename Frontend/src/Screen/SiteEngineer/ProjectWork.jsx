@@ -102,7 +102,7 @@ export default function ProjectWork() {
 
      socketRef.current.on("project:titleUpdated", (data) => {
 
-      setProject((prev) => ({
+      setProjects((prev) => ({
         ...prev,
         title: data.title
       }));
