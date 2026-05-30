@@ -5,6 +5,8 @@ import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { registerFCM }
+from "../utils/fcm";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -46,9 +48,12 @@ export default function Login() {
         localStorage.setItem("User_id", response.data.User_id);
         localStorage.setItem("IsLogin", true);
         localStorage.setItem("name", response.data.name);
+
         // set the subscription in local storage
         const subRes = await axiosInstance.get("/subscription/me");
         localStorage.setItem("subscription", JSON.stringify(subRes.data));
+
+        await registerFCM();
 
         toast.success("Logged in successfully!");
 
