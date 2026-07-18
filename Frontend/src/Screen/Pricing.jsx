@@ -9,7 +9,7 @@ export default function Pricing() {
   const navigate = useNavigate();
   const sub = getSubscription();
 
-  const currentPlan = sub?.plan ;
+  const currentPlan = sub?.plan;
   const currentStatus = sub?.status;
   const currentTenure = sub?.tenure;
 
@@ -30,9 +30,9 @@ export default function Pricing() {
         "/subscription/create-order",
         { tenure }
       );
-  
+
       const { order, key } = res.data;
-  
+
       const options = {
         key,
         amount: order.amount,
@@ -48,7 +48,7 @@ export default function Pricing() {
               tenure
             }
           );
-  
+
           // refresh subscription
           const subRes = await axiosInstance.get("/subscription/me");
           localStorage.setItem(
@@ -62,200 +62,361 @@ export default function Pricing() {
           color: "#1976d2"
         }
       };
-  
+
       const rzp = new window.Razorpay(options);
       rzp.open();
-  
+
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.error || "Something went wrong. Please try again.");
     }
   };
-
+  
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f9fafb",
-        py: 6,
-        px: 3
+        background: "linear-gradient(180deg, #f8fafc 0%, #eef5ff 100%)",
+        py: 8,
+        px: { xs: 2, md: 6 },
       }}
     >
       <Typography
         variant="h3"
         align="center"
-        fontWeight={700}
-        gutterBottom
+        fontWeight={800}
+        sx={{ mb: 1 }}
       >
         Choose Your Plan
       </Typography>
 
       <Typography
         align="center"
-        color="white"
-        sx={{ mb: 6 }}
+        color="text.secondary"
+        sx={{ mb: 7, fontSize: "1.05rem" }}
       >
-        Unlock powerful tools to manage unlimited construction projects.
+        Choose the perfect plan for your construction business.
       </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          gap: 4,
-          justifyContent: "center",
-          flexWrap: "wrap"
-        }}
-      >
-        {/* FREE PLAN */}
-        <Card sx={{ width: 320, borderRadius: "16px" }}>
-          <CardContent>
-            <Typography variant="h5" fontWeight={600}>
-              Free Plan
-            </Typography>
+      <div className="container">
+        <div className="row g-4 justify-content-center">
 
-            <Typography variant="h4" sx={{ my: 2 }}>
-              ₹0
-            </Typography>
+          {/* FREE PLAN */}
+          <div className="col-12 col-md-6 col-xl-4 d-flex">
+            <Card
+              elevation={3}
+              sx={{
+                width: "100%",
+                borderRadius: 4,
+                transition: "0.35s",
+                "&:hover": {
+                  transform: "translateY(-12px)",
+                  boxShadow: 10,
+                },
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography
+                  variant="h5"
+                  fontWeight={700}
+                  gutterBottom
+                >
+                  Free Plan
+                </Typography>
 
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ 1 Project
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Inventory Access
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✖ Attendance
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✖ Reports
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              ✖ Chat
-            </Typography>
+                <Typography
+                  variant="h3"
+                  color="primary"
+                  fontWeight={800}
+                  sx={{ my: 3 }}
+                >
+                  ₹0
+                </Typography>
 
-            {currentPlan === "free" ? (
-              <Button
-                variant="outlined"
-                fullWidth
-                disabled
-              >
-                Current Plan
-              </Button>
-            ) : (
-              <Button
-                variant="outlined"
-                fullWidth
-              >
-                Free Plan
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+                <Box sx={{ mb: 4 }}>
+                  <Typography sx={{ mb: 1 }}>✅ 1 Active Project</Typography>
+                  <Typography sx={{ mb: 1 }}>✅ Inventory Management</Typography>
+                  <Typography sx={{ mb: 1, color: "text.secondary" }}>
+                    ❌ Worker Attendance
+                  </Typography>
+                  <Typography sx={{ mb: 1, color: "text.secondary" }}>
+                    ❌ Worker Wages
+                  </Typography>
+                  <Typography sx={{ mb: 1, color: "text.secondary" }}>
+                    ❌ Site Engineer Reports
+                  </Typography>
+                  <Typography sx={{ mb: 1, color: "text.secondary" }}>
+                    ❌ Misc Expenses
+                  </Typography>
+                  <Typography sx={{ mb: 1, color: "text.secondary" }}>
+                    ❌ Team Chat
+                  </Typography>
+                  <Typography sx={{mb:1, color: "text.secondary" }}>
+                    ❌ Export Reports as PDF
+                  </Typography>
+                  <Typography sx={{ mb: 1 }} className="fw-bold">
+                    ❌ AI-Powered Report Analysis
+                  </Typography>
+                  <Typography className="fw-bold">
+                    ❌ AI Voice Report Generator
+                  </Typography>
+                </Box>
+
+                {currentPlan === "free" ? (
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    disabled
+                    sx={{ py: 1.3 }}
+                  >
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    sx={{ py: 1.3 }}
+                  >
+                    Continue Free
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </div>
 
         {/* BUSINESS 6 MONTH */}
-        <Card
-          sx={{
-            width: 320,
-            borderRadius: "16px",
-            border: "2px solid #1976d2"
-          }}
-        >
-          <CardContent>
-            <Typography variant="h5" fontWeight={600}>
-              Business – 6 Months
-            </Typography>
-
-            <Typography variant="h4" sx={{ my: 2 }}>
-              ₹15,000
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Unlimited Projects
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Attendance
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Reports
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              ✔ Chat
-            </Typography>
-
-            {currentPlan === "business" && currentStatus === "active" && currentTenure === "6m" ? (
-              <Button
-                variant="contained"
-                fullWidth
-                disabled
+          <div className="col-12 col-md-6 col-xl-4 d-flex">
+            <Card
+              elevation={8}
+              sx={{
+                width: "100%",
+                borderRadius: 4,
+                border: "2px solid #1976d2",
+                position: "relative",
+                transition: "0.35s",
+                "&:hover": {
+                  transform: "translateY(-14px)",
+                  boxShadow: 14,
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  bgcolor: "primary.main",
+                  color: "#fff",
+                  px: 2,
+                  py: 0.5,
+                  borderRadius: 5,
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
               >
-                Active Plan
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() =>
-                  handlePayment(6)
-                }
-              >
-                Upgrade
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+                MOST POPULAR
+              </Box>
+
+              <CardContent sx={{ p: 4 }}>
+                <Typography
+                  variant="h5"
+                  fontWeight={700}
+                  gutterBottom
+                >
+                  Business
+                </Typography>
+
+                <Typography
+                  color="text.secondary"
+                  sx={{ mb: 2 }}
+                >
+                  6 Months
+                </Typography>
+
+                <Typography
+                  variant="h3"
+                  color="primary"
+                  fontWeight={800}
+                  sx={{ my: 3 }}
+                >
+                  ₹15,000
+                </Typography>
+
+                <Box sx={{ mb: 4 }}>
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Unlimited Projects
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Inventory Management
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Worker Attendance
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Worker Wages
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Site Engineer Reports
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Misc Expenses
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Team Chat
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Export Reports as PDF
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }} className="fw-bold">
+                    🤖 AI-Powered Report Analysis
+                  </Typography>
+
+                  <Typography className="fw-bold">
+                    🎤 AI Voice Report Generator
+                  </Typography>
+                </Box>
+
+                {currentPlan === "business" &&
+                  currentStatus === "active" &&
+                  currentTenure === "6m" ? (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    disabled
+                    sx={{ py: 1.4 }}
+                  >
+                    Active Plan
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ py: 1.4 }}
+                    onClick={() => handlePayment(6)}
+                  >
+                    Upgrade Now
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </div>
 
         {/* BUSINESS 1 YEAR */}
-        <Card
-          sx={{
-            width: 320,
-            borderRadius: "16px",
-            backgroundColor: "#f0f7ff"
-          }}
-        >
-          <CardContent>
-            <Typography variant="h5" fontWeight={600}>
-              Business – 1 Year
-            </Typography>
+          <div className="col-12 col-md-6 col-xl-4 d-flex">
+            <Card
+              elevation={3}
+              sx={{
+                width: "100%",
+                borderRadius: 4,
+                transition: "0.35s",
+                "&:hover": {
+                  transform: "translateY(-12px)",
+                  boxShadow: 10,
+                },
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography
+                  variant="h5"
+                  fontWeight={700}
+                  gutterBottom
+                >
+                  Business
+                </Typography>
 
-            <Typography variant="h4" sx={{ my: 2 }}>
-              ₹34,000
-            </Typography>
+                <Typography
+                  color="text.secondary"
+                  sx={{ mb: 2 }}
+                >
+                  1 Year
+                </Typography>
 
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Unlimited Projects
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Attendance
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              ✔ Reports
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              ✔ Chat
-            </Typography>
+                <Typography
+                  variant="h3"
+                  color="primary"
+                  fontWeight={800}
+                  sx={{ my: 3 }}
+                >
+                  ₹34,000
+                </Typography>
 
-            {currentPlan === "business" && currentStatus === "active" && currentTenure === "12m" ? (
-              <Button
-                variant="contained"
-                fullWidth
-                disabled
-              >
-                Active Plan
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() =>
-                  handlePayment(12)
-                }
-              >
-                Upgrade
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
+                <Box sx={{ mb: 4 }}>
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Unlimited Projects
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Inventory Management
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Worker Attendance
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Worker Wages
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Site Engineer Reports
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Misc Expenses
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Team Chat
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }}>
+                    ✅ Export Reports as PDF
+                  </Typography>
+
+                  <Typography sx={{ mb: 1 }} className="fw-bold">
+                    🤖 AI-Powered Report Analysis
+                  </Typography>
+
+                  <Typography className="fw-bold">
+                    🎤 AI Voice Report Generator
+                  </Typography>
+                </Box>
+
+
+                {currentPlan === "business" &&
+                  currentStatus === "active" &&
+                  currentTenure === "12m" ? (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    disabled
+                    sx={{ py: 1.4 }}
+                  >
+                    Active Plan
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ py: 1.4 }}
+                    onClick={() => handlePayment(12)}
+                  >
+                    Upgrade Now
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+      </div>
+      </div>
     </Box>
   );
 }
