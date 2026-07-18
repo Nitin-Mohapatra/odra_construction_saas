@@ -30,6 +30,7 @@ export default function ProjectInventory() {
   const [unit, setUnit] = useState("");
   const [quantity, setQuantity] = useState("");
   const [pricePerUnit, setPricePerUnit] = useState("");
+  const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().split("T")[0]);
   const [summary, setSummary] = useState({
     totalPurchasedValue: 0,
     totalUsedCost: 0,
@@ -118,7 +119,8 @@ export default function ProjectInventory() {
         supplierName,
         companyName,
         quantity: Number(quantity),
-        pricePerUnit: Number(pricePerUnit)
+        pricePerUnit: Number(pricePerUnit),
+        purchaseDate
       });
 
       toast.success("Material added");
@@ -130,6 +132,7 @@ export default function ProjectInventory() {
       // refreshSummary();
       setSupplierName("");
       setCompanyName("");
+      setPurchaseDate(new Date().toISOString().split("T")[0]);
 
     } catch (err) {
       console.log(err);
@@ -316,6 +319,18 @@ export default function ProjectInventory() {
                 sx={{ mb: 3 }}
                 value={pricePerUnit}
                 onChange={(e) => setPricePerUnit(e.target.value)}
+              />
+
+              <TextField
+                label="Purchase Date"
+                type="date"
+                fullWidth
+                sx={{ mb: 2 }}
+                value={purchaseDate}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                onChange={(e) => setPurchaseDate(e.target.value)}
               />
 
               <Button

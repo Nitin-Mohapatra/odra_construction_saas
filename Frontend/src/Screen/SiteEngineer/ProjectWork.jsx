@@ -33,7 +33,8 @@ export default function ProjectWork() {
     supplierName: "",
     companyName: "",
     quantity: "",
-    pricePerUnit: ""
+    pricePerUnit: "",
+    purchaseDate: new Date().toISOString().split("T")[0],
   });
 
   const { id } = useParams();
@@ -158,7 +159,8 @@ export default function ProjectWork() {
         supplierName: "",
         companyName: "",
         quantity: "",
-        pricePerUnit: ""
+        pricePerUnit: "",
+        purchaseDate: new Date().toISOString().split("T")[0]
       });
 
     } catch (error) {
@@ -593,6 +595,19 @@ export default function ProjectWork() {
             name="pricePerUnit"
             value={inventoryForm.pricePerUnit}
             onChange={handleInventoryChange}
+          />
+
+          <TextField
+            fullWidth
+            margin="normal"
+            type="date"
+            label="Purchase Date"
+            name="purchaseDate"
+            value={inventoryForm.purchaseDate}
+            onChange={handleInventoryChange}
+            InputLabelProps={{
+              shrink: true
+            }}
           />
 
         </DialogContent>

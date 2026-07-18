@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { lazy, Suspense } from "react";
 import Navbar from './Components/Navbar'
 import Caroucell from './Components/Caroucell'
 import { Routes, Route, BrowserRouter } from "react-router-dom"
-import Home from './Screen/Home'
+import Home from "./Screen/Home";
 import Signup from './Screen/Signup'
 import Login from './Screen/Login'
 import Contact from './Screen/Contact'
@@ -51,51 +51,51 @@ function App() {
       />
 
       {/* ✅ Your routes below */}
-      <Routes>
-        <Route path='/Contact-Us' element={<Contact />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/Signup" element={<Signup />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/GoogleLogin" element={<GoogleLoginButton />} />
-        <Route path="/contractor/home" element={<Contractor />} />
-        <Route path="/engineer/home" element={<SiteEngineer />} />
-        <Route path="/contractor/project" element={<Project />} />
-        <Route path="/contractor/project/:id" element={<ProjectDetails />} />
-        <Route path="/contractor/add-project" element={<AddProject />} />
-        <Route path="/contractor/view-report/:id" element={<ViewReport />} />
-        <Route path="/contractor/projects/:id/inventory" element={<ProjectInventory />} />
-        <Route path="/contractor/projects/:id/inventory-history" element={<InventoryHistory />} />
-        {/* site engineer routes */}
-        <Route path="/site-engineer/projects" element={<MyProjects></MyProjects>}/>
-        <Route path='/site-engineer/projects/:id' element={<ProjectWork/>}></Route>
-        <Route path='/site-engineer/projects/:id/report' element={<SubmitReport/>}></Route>
-        <Route path="/site-engineer/projects/:id/attendance" element={<Attendance />} />
-        <Route path="/site-engineer/projects/:id/inventory" element={<InventoryUsage />} />
-        {/* common pages routes */}
-        <Route path="/services" element={<Services />} />
+        <Routes>
+          <Route path='/Contact-Us' element={<Contact />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/Signup" element={<Signup />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/GoogleLogin" element={<GoogleLoginButton />} />
+          <Route path="/contractor/home" element={<Contractor />} />
+          <Route path="/engineer/home" element={<SiteEngineer />} />
+          <Route path="/contractor/project" element={<Project />} />
+          <Route path="/contractor/project/:id" element={<ProjectDetails />} />
+          <Route path="/contractor/add-project" element={<AddProject />} />
+          <Route path="/contractor/view-report/:id" element={<ViewReport />} />
+          <Route path="/contractor/projects/:id/inventory" element={<ProjectInventory />} />
+          <Route path="/contractor/projects/:id/inventory-history" element={<InventoryHistory />} />
+          {/* site engineer routes */}
+          <Route path="/site-engineer/projects" element={<MyProjects></MyProjects>} />
+          <Route path='/site-engineer/projects/:id' element={<ProjectWork />}></Route>
+          <Route path='/site-engineer/projects/:id/report' element={<SubmitReport />}></Route>
+          <Route path="/site-engineer/projects/:id/attendance" element={<Attendance />} />
+          <Route path="/site-engineer/projects/:id/inventory" element={<InventoryUsage />} />
+          {/* common pages routes */}
+          <Route path="/services" element={<Services />} />
 
-        {/* Attendance Route */}
-        <Route path="/contractor/projects/:id/attendance" element={<ContractorAttendance/>} />
-        <Route path="/contractor/workers" element={<ContractorWorkers/>} />
-        <Route path="/contractor/add-worker" element={<AddWorker/>} />
-        <Route path="/contractor/projects/:id/assign-workers" element={<AssignWorker/>} />
-        <Route path="/pricing" element={<Pricing />} />
+          {/* Attendance Route */}
+          <Route path="/contractor/projects/:id/attendance" element={<ContractorAttendance />} />
+          <Route path="/contractor/workers" element={<ContractorWorkers />} />
+          <Route path="/contractor/add-worker" element={<AddWorker />} />
+          <Route path="/contractor/projects/:id/assign-workers" element={<AssignWorker />} />
+          <Route path="/pricing" element={<Pricing />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<SignInSide />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<SignInSide />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
 
-        {/* 404 page */}
-        <Route path="*" element={<NotFound />} />
-        
+          {/* 404 page */}
+          <Route path="*" element={<NotFound />} />
+
         </Routes>
     </BrowserRouter>
   )

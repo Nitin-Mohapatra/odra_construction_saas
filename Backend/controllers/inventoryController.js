@@ -1,6 +1,7 @@
 const InventoryItem = require("../models/inventoryItem");
 const Project = require("../models/project");
 const InventoryUsage = require("../models/InventoryUsage");
+const InventoryPurchase = require("../models/InventoryPurchase");
 const { default: mongoose } = require("mongoose");
 
 /* --------------------------------
@@ -9,9 +10,9 @@ const { default: mongoose } = require("mongoose");
 exports.addInventoryItem = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { name, unit, quantity, pricePerUnit, supplierName, companyName } = req.body;
+    const { name, unit, quantity, pricePerUnit, supplierName, companyName ,purchaseDate} = req.body;
 
-    if (!name || !unit || quantity == null) {
+    if (!name || !unit || quantity == null || !purchaseDate) {
       return res.status(400).json({
         success: false,
         message: "All fields are required"
@@ -68,15 +69,25 @@ exports.addInventoryItem = async (req, res) => {
       });
     }
 
+    // for refill or new item always create inventory purchase. 
+    await InventoryPurchase.create({
+      projectId,
+      organizationId: req.user.organizationId,
+      inventoryItemId: item._id,
+      purchaseDate,
+      quantity: qty,
+      pricePerUnit: price,
+      supplierName,
+      companyName,
+      createdBy: req.user.User_id
+    });
+
     // 🔔 Emit socket event (both add & renew)
     const io = req.app.get("io");
     if (io) {
       io.to(`project-${projectId}`).emit("inventory:item-added", {
         item
       });
-
-
-
     }
 
     return res.status(200).json({
@@ -92,6 +103,7 @@ exports.addInventoryItem = async (req, res) => {
     });
   }
 };
+
 /* --------------------------------
    Get project inventory
 --------------------------------- */
@@ -338,3 +350,37 @@ exports.getInventorySummary = async (req, res) => {
   }
 };
 
+/* --------------------------------
+   Get inventory purchase history
+--------------------------------- */
+exports.getInventoryPurchaseHistory = async (req, res) => {
+
+  try {
+
+    const { projectId } = req.params;
+
+    const history = await InventoryPurchase.find({
+      projectId,
+      organizationId: req.user.organizationId
+    })
+      .populate("inventoryItemId", "name unit")
+      .populate("createdBy", "name")
+      .sort({ purchaseDate: -1 });
+
+    return res.status(200).json({
+      success: true,
+      history
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+
+  }
+
+};
