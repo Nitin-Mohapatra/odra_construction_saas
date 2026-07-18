@@ -30,6 +30,14 @@ router.post(
   inventoryController.logInventoryUsage
 );
 
+// Get inventory purchase history
+router.get(
+  "/purchase-history/:projectId",
+  authen,
+  validateRoles(["manager"]),
+  inventoryController.getInventoryPurchaseHistory
+);
+
 // Add material to project
 router.post(
   "/:projectId",
@@ -45,6 +53,7 @@ router.get(
   validateRoles(["manager","site engineer"]),
   inventoryController.getProjectInventory
 );
+
 
 
 
