@@ -204,7 +204,7 @@ app.use('/token', tokenValidation);
 
 // using the notification routes
 app.use("/notification", notificationRoutes);
-app.use("/notification", testNotificationRoute);
+// app.use("/notification", testNotificationRoute);
 
 // for testing porpose
 app.get("/ping", (req, res) => {
