@@ -5,6 +5,7 @@ import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getFCMToken } from "../services/notificationService";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -51,9 +52,15 @@ export default function Login() {
         const subRes = await axiosInstance.get("/subscription/me");
         localStorage.setItem("subscription", JSON.stringify(subRes.data));
 
-       
-
         toast.success("Logged in successfully!");
+
+        // generating fcm token
+        const fcmToken = await getFCMToken();
+        if (fcmToken) {
+          await axiosInstance.post("/notification/fcm-token", {
+            fcmToken
+          });
+        }
 
         switch (response.data.role) {
           case "site engineer":

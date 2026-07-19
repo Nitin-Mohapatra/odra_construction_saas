@@ -20,6 +20,10 @@ const userSchema = new Schema({
     }, totalProjects: {
         type: Number,
         default: 0
+    },
+    fcmToken: {
+        type: String,
+        default: null
     }
 
 },

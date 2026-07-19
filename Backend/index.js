@@ -20,6 +20,7 @@ const subscriptionRoutes = require("./routes/subscriptionRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const tokenValidation = require('./routes/tokenValiditiCheaker');
 const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
+const notificationRoutes = require("./routes/notification");
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -168,6 +169,9 @@ app.use("/subscription", subscriptionRoutes);
 
 // requiring tokenValidatorChecker
 app.use('/token', tokenValidation);
+
+// using the notification routes
+app.use("/notification", notificationRoutes);
 
 // for testing porpose
 app.get("/ping", (req, res) => {

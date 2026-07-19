@@ -17,3 +17,10 @@ createRoot(document.getElementById('root')).render(
     </GoogleOAuthProvider>
   </StrictMode>,
 )
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/firebase-messaging-sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch((err) => console.error(err));
+}

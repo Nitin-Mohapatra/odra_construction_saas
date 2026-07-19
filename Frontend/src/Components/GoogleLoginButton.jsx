@@ -3,6 +3,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axiosInstance from "../utils/axiosInstance"
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getFCMToken } from "../services/notificationService";
 
 export default function GoogleLoginButton() {
   const navigate = useNavigate();
@@ -23,6 +24,15 @@ export default function GoogleLoginButton() {
           localStorage.setItem("User_id",res.data.User_id);
           localStorage.setItem("IsLogin", true);
           localStorage.setItem("name",res.data.name);
+          
+          // generate token
+          const fcmToken = await getFCMToken();
+          if (fcmToken) {
+            await axiosInstance.post("/notification/fcm-token", {
+              fcmToken
+            });
+          }
+
           toast.success("Logged in with Google successfully!");
 
           // check for subscription
