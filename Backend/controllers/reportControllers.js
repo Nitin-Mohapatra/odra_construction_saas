@@ -4,6 +4,8 @@ const Report = require('../models/report');
 const axios = require("axios");
 const FormData = require("form-data");
 
+const { sendToUser } = require("../services/notification.service");
+
 exports.createReport = async (req, res) => {
     try {
         const { projectId, workDone, issuesFound, images = [] } = req.body;
@@ -63,6 +65,22 @@ exports.createReport = async (req, res) => {
             })
         }
 
+        // Fetch contractor's FCM token
+        const contractor = await User.findById(
+            projectDetails.contractor
+        ).select("fcmToken");
+
+        // Send Push Notification
+        await sendToUser({
+            token: contractor.fcmToken,
+            title: projectDetails.title,
+            body: `${siteEngName} submitted today's DPR`,
+            data: {
+                type: "dpr",
+                projectId: projectDetails._id,
+                reportId: newReport._id
+            }
+        });
 
         return res.status(201).json({ "report": newReport, "message": "Report Created Successfully" });
 
