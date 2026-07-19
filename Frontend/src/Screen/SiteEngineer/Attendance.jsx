@@ -18,6 +18,7 @@ import { canAccess } from "../../utils/subscription";
 import { io } from "socket.io-client";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import FullScreenLoader from "../../Components/FullScreenLoader";
 
 export default function Attendance() {
   const navigate = useNavigate();
@@ -118,8 +119,6 @@ export default function Attendance() {
     }));
   };
 
-  
-
   /* --------------------------------
      Submit attendance
   --------------------------------- */
@@ -145,7 +144,7 @@ export default function Attendance() {
     }
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <FullScreenLoader />;
 
   return (
     <>

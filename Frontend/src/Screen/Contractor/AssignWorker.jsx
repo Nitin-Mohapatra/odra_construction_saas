@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { canAccess } from "../../utils/subscription";
+import FullScreenLoader from "../../Components/FullScreenLoader";
 
 export default function AssignWorkers() {
   const { t } = useTranslation();
@@ -78,7 +79,7 @@ export default function AssignWorkers() {
     }
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <FullScreenLoader />;
 
   return (
     <>

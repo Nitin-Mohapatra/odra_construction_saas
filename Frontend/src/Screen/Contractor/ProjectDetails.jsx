@@ -21,6 +21,7 @@ import {
   DialogActions,
   TextField
 } from "@mui/material";
+import FullScreenLoader from "../../Components/FullScreenLoader"
 
 export default function ProjectDetails() {
   const [openMiscModal, setOpenMiscModal] = useState(false);
@@ -156,7 +157,7 @@ export default function ProjectDetails() {
 
   console.log(project)
   
-  if (loading) return <CircularProgress />;
+  if (loading) return <FullScreenLoader />;
 
   // Safe checks for when project is not loaded due to error
   if (!project) {

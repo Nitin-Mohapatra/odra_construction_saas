@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useTranslation } from "react-i18next";
 import { canAccess } from "../../utils/subscription";
+import FullScreenLoader from "../../Components/FullScreenLoader";
 
 export default function ViewReport() {
   const { id } = useParams();
@@ -109,7 +110,7 @@ export default function ViewReport() {
     }
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <FullScreenLoader />;
   return (
     <Box
       sx={{

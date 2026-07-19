@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "@mui/material/Tooltip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import IconButton from "@mui/material/IconButton";
+import FullScreenLoader from "../../Components/FullScreenLoader";
 
 export default function MyProjects() {
   const [projects, setProjects] = useState([]);
@@ -98,7 +99,7 @@ export default function MyProjects() {
 
 
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <FullScreenLoader />;
 
   return (
     <>

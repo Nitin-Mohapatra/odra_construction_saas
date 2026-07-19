@@ -24,6 +24,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import FullScreenLoader from "../../Components/FullScreenLoader";
 
 export default function ProjectWork() {
   const [openInventoryModal, setOpenInventoryModal] = useState(false);
@@ -186,7 +187,7 @@ export default function ProjectWork() {
     }
   }
 
-  if (loading) return <CircularProgress />
+  if (loading) return <FullScreenLoader />
 
   return (
     <div>
