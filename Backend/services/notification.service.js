@@ -25,6 +25,7 @@ const sendToUser = async ({
             },
             data: buildDataPayload(data)
         };
+        console.log("FCM Not sent")
         return await admin.messaging().send(message);
     } catch (err) {
         console.error("FCM sendToUser Error:", err);
