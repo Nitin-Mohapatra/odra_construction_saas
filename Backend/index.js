@@ -21,6 +21,9 @@ const adminRoutes = require("./routes/adminRoutes");
 const tokenValidation = require('./routes/tokenValiditiCheaker');
 const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 const notificationRoutes = require("./routes/notification");
+const testNotificationRoute = require("./routes/testNotification");
+const { sendToUser } = require("./services/notification.service");
+const User = require("./models/user");
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -119,6 +122,35 @@ io.on('connection',(socket)=>{
 
             io.to(`project-${projectId}`).emit("chat:new", chat);
 
+            // sendign the fcm message
+            // Find project
+            const project = await Project.findById(projectId)
+                .select("contractor siteEngineer");
+
+            // Determine receiver
+            const receiverId =
+                senderId.toString() === project.contractor.toString()
+                    ? project.siteEngineer
+                    : project.contractor;
+
+            // Fetch receiver's FCM token
+            const receiver = await User.findById(receiverId)
+                .select("fcmToken name");
+
+            // Send push notification
+            const sender = await User.findById(senderId).select("name");
+            await sendToUser({
+                token: receiver.fcmToken,
+                title: sender.name,
+                body: message,
+                data: {
+                    type: "chat",
+                    projectId,
+                    senderId,
+                    receiverId
+                }
+            });
+
         } catch (err) {
             console.error("Chat socket error:", err);
         }
@@ -172,6 +204,7 @@ app.use('/token', tokenValidation);
 
 // using the notification routes
 app.use("/notification", notificationRoutes);
+app.use("/notification", testNotificationRoute);
 
 // for testing porpose
 app.get("/ping", (req, res) => {
