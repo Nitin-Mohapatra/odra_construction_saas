@@ -52,7 +52,7 @@ export default function ContractorAttendance() {
 
     // make the socket connection one time
     useEffect(()=>{
-        socketRef.current = io(import.meta.env.VITE_API_URL,{
+        socketRef.current = io(import.meta.env.VITE_SOCKET_URL,{
             transports:["websocket"]
         })
         return ()=> socketRef.current.disconnect();

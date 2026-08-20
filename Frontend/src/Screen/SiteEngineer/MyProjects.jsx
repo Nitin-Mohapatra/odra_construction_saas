@@ -51,7 +51,7 @@ export default function MyProjects() {
     fetchData();
 
     // socket connection
-    socketRef.current = io(import.meta.env.VITE_API_URL, {
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"]
     });
 

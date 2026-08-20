@@ -45,7 +45,9 @@ app.set('io', io); // attaching io to app for easy access in routes
 
 // listening for socket connection & client 
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+     console.log('🔥🔥 SOCKET CONNECTED 🔥🔥');
+    console.log('Socket ID:', socket.id);
+    console.log('Transport:', socket.conn.transport.name);
 
     // listen for joining room events
     socket.on('join', async ({ contractorId, projectId, siteEngineerId, organizationId, isChat }) => {

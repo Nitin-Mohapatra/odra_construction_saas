@@ -27,9 +27,27 @@ export default function ContractorDashboard() {
   useEffect(() => {
     fetchProjects();
 
-    socketRef.current = io(import.meta.env.VITE_API_URL, {
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"]
     });
+
+	socketRef.current.on("connect", () => {
+  console.log("🔥🔥 SOCKET CONNECTED 🔥🔥");
+  console.log("Socket ID:", socketRef.current.id);
+  console.log(
+    "Transport:",
+    socketRef.current.io.engine.transport.name
+  );
+});
+
+socketRef.current.on("connect_error", (error) => {
+  console.error("❌ SOCKET CONNECTION ERROR:", error);
+});
+
+socketRef.current.on("disconnect", (reason) => {
+  console.log("❌ SOCKET DISCONNECTED:", reason);
+});
+
     if (!socketRef.current) return;
     socketRef.current.emit("join", {
       contractorId

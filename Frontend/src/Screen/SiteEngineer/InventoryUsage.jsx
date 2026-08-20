@@ -49,7 +49,7 @@ export default function InventoryUsage() {
      Socket logic 
   --------------------------- */
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL, {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"]
     });
 

@@ -58,7 +58,7 @@ export default function ProjectInventory() {
 
   // socket connection
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL, {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"]
     });
 

@@ -29,7 +29,7 @@ export default function SiteEngineer() {
     const decoded = jwtDecode(token);
     const siteEngineerId = decoded.User_id; // IMPORTANT
 
-    const socket = io(import.meta.env.VITE_API_URL, {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"]
     });
 
