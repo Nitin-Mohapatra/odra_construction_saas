@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const app = express();
 const port = 8080;
@@ -24,6 +25,7 @@ const notificationRoutes = require("./routes/notification");
 const testNotificationRoute = require("./routes/testNotification");
 const { sendToUser } = require("./services/notification.service");
 const User = require("./models/user");
+const waitlistRoute = require('./routes/waitlistRoute');
 
 const allowedOrigins = [
     "http://localhost:5173",
@@ -210,6 +212,9 @@ app.use('/token', tokenValidation);
 // using the notification routes
 app.use("/notification", notificationRoutes);
 // app.use("/notification", testNotificationRoute);
+
+// using the waitlist route
+app.use("/waitlist", waitlistRoute);
 
 // for testing porpose
 app.get("/ping", (req, res) => {
