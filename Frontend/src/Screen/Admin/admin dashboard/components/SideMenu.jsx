@@ -24,10 +24,14 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
-export default function SideMenu() {
+export default function SideMenu({ selectedTab, onTabSelect }) {
   const token = localStorage.getItem("token");
-  const decoded = jwtDecode(token);
-
+  let decoded = null;
+  try {
+    if (token) decoded = jwtDecode(token);
+  } catch (e) {
+    console.error("Token decode error:", e);
+  }
 
   return (
     <Drawer
@@ -57,7 +61,7 @@ export default function SideMenu() {
           flexDirection: 'column',
         }}
       >
-        <MenuContent />
+        <MenuContent selectedTab={selectedTab} onTabSelect={onTabSelect} />
       </Box>
       <Stack
         direction="row"
@@ -73,13 +77,13 @@ export default function SideMenu() {
           sizes="small"
           alt="Name"
           sx={{ width: 36, height: 36 }}
-        >{ decoded?.email?.charAt(0).toUpperCase()}</Avatar>
+        >{ decoded?.email?.charAt(0).toUpperCase() || 'A'}</Avatar>
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            {decoded.name}
+            {decoded?.name || 'Admin'}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'white' }}>
-            {decoded.email}
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            {decoded?.email || 'admin@odraops.com'}
           </Typography>
         </Box>
         <OptionsMenu />

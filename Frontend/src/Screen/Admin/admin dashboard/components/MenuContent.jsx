@@ -6,20 +6,24 @@ import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Add Admins', icon: <PeopleRoundedIcon /> },
+  { id: 'home', text: 'Home', icon: <HomeRoundedIcon /> },
+  { id: 'waitlist', text: 'Waitlist', icon: <FormatListBulletedRoundedIcon /> },
+  { id: 'admins', text: 'Add Admins', icon: <PeopleRoundedIcon /> },
 ];
 
-
-export default function MenuContent() {
+export default function MenuContent({ selectedTab = 'home', onTabSelect }) {
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
+        {mainListItems.map((item) => (
+          <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              selected={selectedTab === item.id}
+              onClick={() => onTabSelect && onTabSelect(item.id)}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

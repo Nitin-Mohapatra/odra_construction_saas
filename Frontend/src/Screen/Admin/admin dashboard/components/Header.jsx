@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import Date from './Date';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 
-export default function Header() {
+export default function Header({ selectedTab }) {
   return (
     <Stack
       direction="row"
@@ -16,7 +16,7 @@ export default function Header() {
       }}
       spacing={2}
     >
-      <NavbarBreadcrumbs />
+      <NavbarBreadcrumbs selectedTab={selectedTab} />
       <Stack direction="row" sx={{ gap: 1 }}>
         <Date />
       </Stack>

@@ -33,6 +33,7 @@ const InventoryUsage = lazy(() => import("./Screen/SiteEngineer/InventoryUsage")
 
 const Services = lazy(() => import("./Screen/Services"));
 const Pricing = lazy(() => import("./Screen/Pricing"));
+const Waitlist = lazy(() => import("./Screen/Waitlist"));
 
 const AdminDashboard = lazy(() =>
   import("./Screen/Admin/admin dashboard/Dashboard")
@@ -88,6 +89,7 @@ function App() {
             <Route path="/site-engineer/projects/:id/inventory" element={<InventoryUsage />} />
             {/* common pages routes */}
             <Route path="/services" element={<Services />} />
+            <Route path="/waitlist" element={<Waitlist />} />
 
             {/* Attendance Route */}
             <Route path="/contractor/projects/:id/attendance" element={<ContractorAttendance />} />

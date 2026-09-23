@@ -9,14 +9,19 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MenuContent from './MenuContent';
 import { jwtDecode } from "jwt-decode";
 
-function SideMenuMobile({ open, toggleDrawer }) {
+function SideMenuMobile({ open, toggleDrawer, selectedTab, onTabSelect }) {
   const token = localStorage.getItem("token");
-  const decoded = jwtDecode(token);
+  let decoded = null;
+  try {
+    if (token) decoded = jwtDecode(token);
+  } catch (e) {
+    console.error("Token decode error:", e);
+  }
 
   const handleLogout = () => {
-        localStorage.clear();
-        window.location.href = "/admin/login";
-    };
+    localStorage.clear();
+    window.location.href = "/admin/login";
+  };
 
   return (
     <Drawer
@@ -46,21 +51,23 @@ function SideMenuMobile({ open, toggleDrawer }) {
               sizes="small"
               alt="name"
               sx={{ width: 24, height: 24 }}
-            >{ decoded?.email?.charAt(0).toUpperCase()}</Avatar>
+            >{ decoded?.email?.charAt(0).toUpperCase() || 'A'}</Avatar>
             <Typography component="p" variant="h6">
-              {decoded.name}
+              {decoded?.name || 'Admin'}
             </Typography>
           </Stack>
-          {/* <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton> */}
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>
-          <MenuContent />
+          <MenuContent
+            selectedTab={selectedTab}
+            onTabSelect={(tab) => {
+              if (onTabSelect) onTabSelect(tab);
+              toggleDrawer(false)();
+            }}
+          />
           <Divider />
         </Stack>
-        {/* <CardAlert /> */}
         <Stack sx={{ p: 2 }}>
           <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />} onClick={handleLogout}>
             Logout
@@ -74,6 +81,8 @@ function SideMenuMobile({ open, toggleDrawer }) {
 SideMenuMobile.propTypes = {
   open: PropTypes.bool,
   toggleDrawer: PropTypes.func.isRequired,
+  selectedTab: PropTypes.string,
+  onTabSelect: PropTypes.func,
 };
 
 export default SideMenuMobile;

@@ -21,7 +21,7 @@ export default function SiteEngineer() {
   const { t } = useTranslation();
 
  
-  useEffect(() => {
+  useEffect(() => {  
     // decode token to get REAL MongoDB user id
     const token = localStorage.getItem("token");
     if (!token) return;

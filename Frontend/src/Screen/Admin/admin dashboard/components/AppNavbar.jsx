@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import MuiToolbar from '@mui/material/Toolbar';
 import { tabsClasses } from '@mui/material/Tabs';
@@ -9,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
-// import logo from "../../../../assets/Logo/lg-1.png"
 import SiteLogo from './SiteLogo';
 
 const Toolbar = styled(MuiToolbar)({
@@ -28,7 +26,7 @@ const Toolbar = styled(MuiToolbar)({
   },
 });
 
-export default function AppNavbar() {
+export default function AppNavbar({ selectedTab, onTabSelect }) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -71,7 +69,12 @@ export default function AppNavbar() {
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />
           </MenuButton>
-          <SideMenuMobile open={open} toggleDrawer={toggleDrawer} />
+          <SideMenuMobile
+            open={open}
+            toggleDrawer={toggleDrawer}
+            selectedTab={selectedTab}
+            onTabSelect={onTabSelect}
+          />
         </Stack>
       </Toolbar>
     </AppBar>
