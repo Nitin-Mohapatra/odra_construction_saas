@@ -1,3 +1,7 @@
+// MUST be first — overrides DNS before any module (including MongoDB driver) makes DNS calls
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
 require('dotenv').config();
 const express = require('express')
 const app = express();
@@ -211,7 +215,7 @@ app.use('/token', tokenValidation);
 
 // using the notification routes
 app.use("/notification", notificationRoutes);
-// app.use("/notification", testNotificationRoute);
+app.use("/notification", testNotificationRoute);
 
 // using the waitlist route
 app.use("/waitlist", waitlistRoute);
