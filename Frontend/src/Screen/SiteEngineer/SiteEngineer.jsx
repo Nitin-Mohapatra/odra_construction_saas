@@ -47,7 +47,15 @@ export default function SiteEngineer() {
 
     socket.on("project:assigned", (data) => {
       console.log("Project assigned event received:", data);
-      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`);
+      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`, {
+        onClick: () => {
+          if (data.newProject?._id) {
+            navigate(`/site-engineer/projects/${data.newProject._id}`);
+          } else {
+            navigate("/site-engineer/projects");
+          }
+        }
+      });
     });
 
     return () => {

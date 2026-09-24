@@ -35,7 +35,16 @@ export default function ContractorDashboard() {
       contractorId
     });
     socketRef.current.on("report:new", (data) => {
-      toast.info(`New report received: ${data.projectTitle}`);
+      const reportId = data.newReport?._id || data.reportId;
+      toast.info(`New report received: ${data.projectTitle}`, {
+        onClick: () => {
+          if (reportId) {
+            navigate(`/contractor/view-report/${reportId}`);
+          } else if (data.projectId) {
+            navigate(`/contractor/project/${data.projectId}`);
+          }
+        }
+      });
     });
     return () => {
       if (socketRef.current) {

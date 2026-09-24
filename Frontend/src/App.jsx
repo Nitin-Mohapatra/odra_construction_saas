@@ -1,11 +1,12 @@
 
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import AdminRoute from "./utils/AdminRoute";
+import { onForegroundMessage, resolveNotificationUrl } from "./services/notificationService";
 
 const Home = lazy(() => import("./Screen/Home"));
 const Signup = lazy(() => import("./Screen/Signup"));
@@ -49,9 +50,71 @@ const NotFound = lazy(() => import("./Components/NotFound"));
 import FullScreenLoader from "./Components/FullScreenLoader";
 import ErrorBoundary from "./Components/ErrorBoundary";
 
+function NotificationHandler() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 1. Listen for background notification clicks sent via postMessage from Service Worker
+    const handleServiceWorkerMessage = (event) => {
+      if (event.data && event.data.type === "NOTIFICATION_CLICK") {
+        const url = event.data.url;
+        if (url) {
+          try {
+            const parsed = new URL(url, window.location.origin);
+            if (parsed.origin === window.location.origin) {
+              navigate(parsed.pathname + parsed.search + parsed.hash);
+            } else {
+              window.location.href = url;
+            }
+          } catch {
+            navigate(url);
+          }
+        }
+      }
+    };
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("message", handleServiceWorkerMessage);
+    }
+
+    // 2. Listen for push notifications while the app is in the foreground
+    const unsubscribe = onForegroundMessage((payload) => {
+      const title = payload.notification?.title || payload.data?.title || "ODRAOPS Notification";
+      const body = payload.notification?.body || payload.data?.body || "";
+      const targetUrl = resolveNotificationUrl(payload.data);
+
+      toast.info(
+        <div style={{ cursor: "pointer" }}>
+          <strong style={{ display: "block", marginBottom: 4 }}>{title}</strong>
+          <div>{body}</div>
+        </div>,
+        {
+          onClick: () => {
+            if (targetUrl) {
+              navigate(targetUrl);
+            }
+          }
+        }
+      );
+    });
+
+    return () => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.removeEventListener("message", handleServiceWorkerMessage);
+      }
+      if (unsubscribe) unsubscribe();
+    };
+  }, [navigate]);
+
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      {/* Handles notification click events and foreground messages */}
+      <NotificationHandler />
+
       {/* ✅ ToastContainer should be here, once, globally */}
       <ToastContainer
         position="top-right"

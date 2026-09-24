@@ -62,7 +62,13 @@ export default function MyProjects() {
 
     socketRef.current.on("project:assigned", (data) => {
       setProjects((prev) => [...prev, data.newProject])
-      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`);
+      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`, {
+        onClick: () => {
+          if (data.newProject?._id) {
+            navigate(`/site-engineer/projects/${data.newProject._id}`);
+          }
+        }
+      });
     })
 
     socketRef.current.on("project:deleted", (data) => {

@@ -136,7 +136,13 @@ export default function ProjectDetails() {
         };
 
       });
-      toast.info(`New report received: ${data.projectTitle}`);
+      toast.info(`New report received: ${data.projectTitle}`, {
+        onClick: () => {
+          if (data.newReport?._id) {
+            navigate(`/contractor/view-report/${data.newReport._id}`);
+          }
+        }
+      });
     });
 
     socketRef.current.on("misc:new", (data) => {
