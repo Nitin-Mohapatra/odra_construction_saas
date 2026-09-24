@@ -24,9 +24,10 @@ const sendToUser = async ({
                 title,
                 body
             },
-            data: buildDataPayload(data)
+            data: buildDataPayload(data),
+            webpush: data.url ? { fcmOptions: { link: data.url } } : undefined
         };
-        console.log("FCM Not sent")
+        console.log("FCM Notification sent")
         return await admin.messaging().send(message);
     } catch (err) {
         console.error("FCM sendToUser Error:", err.code);
