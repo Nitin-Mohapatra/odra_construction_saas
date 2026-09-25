@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
-  Box,
   Typography,
   Paper,
   TextField,
@@ -143,303 +142,51 @@ export default function ProjectInventory() {
   return (
     <>
       <ContractorNavbar />
-
-      <Box
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#f9fafb",
-          py: { xs: 3, md: 5 },
-        }}
-      >
-        <Box className="container">
-
-          {/* HEADER */}
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h1" gutterBottom>
-              {t("inventory.project_inventory")}
-            </Typography>
-            <Typography variant="body1">
-              {t("inventory.manage_inventory")}
-            </Typography>
-          </Box>
-
-          {/* ===================== COST SUMMARY ===================== */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                md: "1fr 1fr 1fr",
-              },
-              gap: 3,
-              mb: 5,
-            }}
-          >
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                borderRadius: "16px",
-                background: "white",
-                border:"1px solid black",
-                boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-              }}
-            >
-              <Typography variant="body1" >
-                {t("inventory.total_purchased_value")}
-              </Typography>
-              <Typography variant="h5"  sx={{ mt: 1 }}>
-                ₹ {summary.totalPurchasedValue}
-              </Typography>
+      <main className="project-inventory-page">
+        <div className="project-inventory-main">
+          <header className="project-inventory-heading">
+            <Typography component="h1" className="project-inventory-title">{t("inventory.project_inventory")}</Typography>
+            <Typography>{t("inventory.manage_inventory")}</Typography>
+          </header>
+          <section className="inventory-summary-grid">
+            {[
+              { title: t("inventory.total_purchased_value"), value: summary.totalPurchasedValue, icon: "🛒" },
+              { title: t("inventory.total_used_cost"), value: summary.totalUsedCost, icon: "⬡" },
+              { title: t("inventory.remaining_stock_value"), value: summary.remainingStockValue, icon: "▱" },
+            ].map(({ title, value, icon }) => (
+              <Paper className="inventory-summary-card" elevation={0} key={title}>
+                <span className="inventory-summary-icon">{icon}</span>
+                <span className="inventory-summary-copy"><Typography>{title}</Typography><Typography className="inventory-summary-value">₹ {Number(value || 0).toLocaleString("en-IN")}</Typography></span>
+              </Paper>
+            ))}
+          </section>
+          <Button className="inventory-breakdown-button" variant="outlined" disabled={!items.length} onClick={() => setBreakdownOpen(true)}>{t("inventory.view_cost_breakdown")}</Button>
+          <section className="project-inventory-grid">
+            <Paper className="inventory-form-card" elevation={0}>
+              <Typography component="h2" className="inventory-section-title">{t("inventory.add_material")}</Typography>
+              <div className="inventory-material-form">
+                {[
+                  { label: t("inventory.material_name"), value: name, change: setName, icon: "⬡" },
+                  { label: t("inventory.unit"), value: unit, change: setUnit, icon: "▱" },
+                  { label: "Supplier Name", value: supplierName, change: setSupplierName, icon: "♙" },
+                  { label: "Company Name", value: companyName, change: setCompanyName, icon: "▥" },
+                  { label: t("inventory.quantity"), value: quantity, change: setQuantity, icon: "▤", type: "number" },
+                  { label: t("inventory.price_per_unit"), value: pricePerUnit, change: setPricePerUnit, icon: "₹", type: "number" },
+                  { label: "Purchase Date", value: purchaseDate, change: setPurchaseDate, icon: "▣", type: "date" },
+                ].map(({ label, value, change, icon, type }) => (
+                  <div className="inventory-input-row" key={label}><span className="inventory-input-icon">{icon}</span><TextField label={label} type={type || "text"} value={value} onChange={(e) => change(e.target.value)} fullWidth size="small" InputLabelProps={type === "date" ? { shrink: true } : undefined} inputProps={type === "number" ? { min: 0 } : undefined} /></div>
+                ))}
+                <Button className="inventory-submit-button" fullWidth variant="contained" onClick={addItem}>{t("inventory.add_material")}</Button>
+              </div>
             </Paper>
-
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                borderRadius: "16px",
-                background: "white",
-                border:"1px solid black",
-                boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-              }}
-            >
-              <Typography variant="body1" >
-                {t("inventory.total_used_cost")}
-              </Typography>
-              <Typography variant="h5"  sx={{ mt: 1 }}>
-                ₹ {summary.totalUsedCost}
-              </Typography>
+            <Paper className="inventory-list-card" elevation={0}>
+              <div className="inventory-list-heading"><Typography component="h2" className="inventory-section-title">{t("inventory.current_inventory")}</Typography><Button className="inventory-history-button" variant="outlined" component={Link} to={`/contractor/projects/${projectId}/inventory-history`}>{t("inventory.view_history")}</Button></div>
+              {!items.length && <Typography color="text.secondary">{t("inventory.no_materials")}</Typography>}
+              <div className="inventory-items">{items.map((item) => <div className="inventory-item-row" key={item._id}><span className="inventory-item-icon">⬡</span><div className="inventory-item-name"><Typography>{item.name}</Typography><Typography>{item.unit}</Typography></div><div className="inventory-item-quantity"><Typography>{item.availableQuantity} / {item.totalQuantity}</Typography>{item.isLowStock && <Typography className="inventory-low-stock">⚠ {t("inventory.low_stock")}</Typography>}</div></div>)}</div>
             </Paper>
-
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                borderRadius: "16px",
-                background: "white",
-                border:"1px solid black",
-                boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-              }}
-            >
-              <Typography variant="body1" >
-                {t("inventory.remaining_stock_value")}
-              </Typography>
-              <Typography variant="h5"  sx={{ mt: 1 }}>
-                ₹ {summary.remainingStockValue}
-              </Typography>
-            </Paper>
-
-            <Button
-              variant="outlined"
-              disabled={items.length === 0}
-              sx={{
-                borderColor: "#5FA32D",
-                color: "#000",
-                fontWeight: 600,
-                mb: 3
-              }}
-              onClick={() => setBreakdownOpen(true)}
-            >
-              {t("inventory.view_cost_breakdown")}
-            </Button>
-
-          </Box>
-
-          {/* ===================== GRID ===================== */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                md: "1fr 1.2fr",
-              },
-              gap: 4,
-            }}
-          >
-            {/* ADD MATERIAL */}
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, md: 4 },
-                borderRadius: "16px",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-                height: "fit-content",
-              }}
-            >
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-              {t("inventory.add_material")}
-              </Typography>
-
-              <TextField
-                label={t("inventory.material_name")}
-                fullWidth
-                sx={{ mb: 2 }}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-
-              <TextField
-                label={t("inventory.unit")}
-                fullWidth
-                sx={{ mb: 2 }}
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-              />
-
-              <TextField
-                label="Supplier Name"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={supplierName}
-                onChange={(e) => setSupplierName(e.target.value)}
-              />
-
-              <TextField
-                label="Company Name"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
-
-              <TextField
-                label={t("inventory.quantity")}
-                type="number"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-
-              <TextField
-                label={t("inventory.price_per_unit")}
-                type="number"
-                fullWidth
-                inputProps={{ min: 0 }}
-                sx={{ mb: 3 }}
-                value={pricePerUnit}
-                onChange={(e) => setPricePerUnit(e.target.value)}
-              />
-
-              <TextField
-                label="Purchase Date"
-                type="date"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={purchaseDate}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                onChange={(e) => setPurchaseDate(e.target.value)}
-              />
-
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{
-                  backgroundColor: "primary.main",
-                    color: "#000",
-                    fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: "white",
-                      border:"1px solid #5FA32D"
-                    },
-                }}
-                onClick={addItem}
-              >
-                {t("inventory.add_material")}
-              </Button>
-            </Paper>
-
-            {/* INVENTORY LIST */}
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, md: 4 },
-                borderRadius: "16px",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 3,
-                }}
-              >
-                <Typography variant="h6" >
-                  {t("inventory.current_inventory")}
-                </Typography>
-
-                <Button
-                  variant="outlined"
-                  component={Link}
-                  to={`/contractor/projects/${projectId}/inventory-history`}
-                  sx={{
-                    color: "primary.main",
-                    borderColor: "primary.main",
-                    fontWeight: 600,
-                    "&:hover": {
-                      borderColor: "primary.main",
-                      color: "primary.main",
-                    },
-                  }}
-                >
-                  {t("inventory.view_history")}
-                </Button>
-              </Box>
-
-              {items.length === 0 && (
-                <Typography color="text.secondary">
-                 {t("inventory.no_materials")}
-                </Typography>
-              )}
-
-              {items.map((item) => (
-                <Box
-                  key={item._id}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    py: 2,
-                    borderBottom: "1px solid #f0f0f0",
-                  }}
-                >
-                  <Box>
-                    <Typography fontWeight={600}>
-                      {item.name}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {item.unit}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ textAlign: "right" }}>
-                    <Typography fontWeight={600}>
-                      {item.availableQuantity} / {item.totalQuantity}
-                    </Typography>
-
-                    {item.isLowStock && (
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: "#dc2626",
-                          fontWeight: 600,
-                        }}
-                      >
-                        ⚠ {t("inventory.low_stock")}
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              ))}
-            </Paper>
-          </Box>
-        </Box>
-      </Box>
-
+          </section>
+        </div>
+      </main>
       <InventoryBreakdownModal
         open={breakdownOpen}
         handleClose={() => setBreakdownOpen(false)}

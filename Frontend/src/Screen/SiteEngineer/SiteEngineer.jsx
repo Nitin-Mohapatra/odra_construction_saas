@@ -20,8 +20,8 @@ export default function SiteEngineer() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
- 
-  useEffect(() => {  
+
+  useEffect(() => {
     // decode token to get REAL MongoDB user id
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -78,7 +78,7 @@ export default function SiteEngineer() {
           minHeight: "100vh",
         }}
       >
-        <Caroucell customStyles = {{"border-bottom":"1px dashed black"}}/>
+        <Caroucell customStyles={{ "border-bottom": "1px dashed black" }} />
 
         {/* FEATURES SECTION */}
         <div className="container py-5">
@@ -102,7 +102,7 @@ export default function SiteEngineer() {
                 }}
               >
                 <div className="card-body p-4">
-                  <Typography  variant="h6" className="fw-semibold mb-3">
+                  <Typography variant="h6" className="fw-semibold mb-3">
                     {t("dashboard.engineer.real_time_title")}
                   </Typography>
                   <Typography className="text-muted small">
@@ -129,7 +129,7 @@ export default function SiteEngineer() {
                     <li className="mb-2">{t("dashboard.engineer.pm_3")}</li>
                   </ul>
                 </div>
-                
+
               </div>
             </div>
 

@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "../assets/Logo/lg-1.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
@@ -83,7 +82,7 @@ export default function Navbar() {
     <>
       {/* TOP BAR */}
       <AppBar position="static" elevation={0} sx={{ backgroundColor: "#fff", color: "#17191c", borderBottom: "1px solid #f0f0f0" }}>
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: { xs: 60, md: 66 }, px: { xs: 2, md: 4 } }}>
+        <Toolbar sx={{ position: "relative", justifyContent: 'space-between', minHeight: { xs: 58, md: 46 }, px: { xs: 1.5, md: 1.25 } }}>
           {/* Mobile Menu Icon */}
           <IconButton
             edge="start"
@@ -95,22 +94,23 @@ export default function Navbar() {
           </IconButton>
 
           {/* Logo */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}>
-            <img src={logo} alt="logo" style={{ width: "10em", cursor: "pointer" }} onClick={() => navigate("/home")} />
+          <Box onClick={() => navigate("/home")} sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", cursor: "pointer", fontFamily: '"IBM Plex Sans", Arial, sans-serif', fontSize: 20, lineHeight: 1, fontWeight: 800, letterSpacing: "-.045em" }} aria-label="ODRAOPS home">
+            <span>ODRA</span><span style={{ color: "#F97316" }}>OPS</span>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", ml: "auto" }}>
             {/* Desktop Menu */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3, mr: 3 }}>
+            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 4, mr: 3, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
               {menuItems.map((item) => (
                 <Typography
                   key={item.label}
                   component={Link}
                   to={item.path}
                   sx={{
-                    color: "#282b2e",
+                    color: "#202124",
                     textDecoration: "none",
                     fontWeight: 500,
+                    fontSize: 12,
                   }}
                 >
                   {item.label}
@@ -127,7 +127,13 @@ export default function Navbar() {
                   variant="contained"
                   sx={{
                     color: "white",
-                    backgroundColor: "#ff6418",
+                    backgroundColor: "#F97316",
+                    boxShadow: "none",
+                    borderRadius: "3px",
+                    px: 1.7,
+                    py: 0.15,
+                    minWidth: 70,
+                    fontSize: 12,
                     fontWeight: 600,
                     "&:hover": {
                       backgroundColor: "#e9540c",
@@ -137,22 +143,6 @@ export default function Navbar() {
                   {t("navbar.login")}
                 </Button>
 
-                <Button
-                  component={Link}
-                  to="/signup"
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#fff",
-                    color: "#292929",
-                    border: "1px solid #ddd",
-                    fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                  }}
-                >
-                  {t("navbar.signup")}
-                </Button>
               </Box>
             )}
 
@@ -164,7 +154,11 @@ export default function Navbar() {
                 ml: 2,
                 backgroundColor: "#fff",
                 borderRadius: 1,
-                height: 35
+                height: 35,
+                border: "1px solid #F97316",
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
               }}
             >
               <MenuItem value="en">EN</MenuItem>
@@ -197,15 +191,9 @@ export default function Navbar() {
           <Box>
             {/* LOGO */}
             <Box sx={{ textAlign: "center", mb: 2 }}>
-              <img
-                src={logo}
-                alt="logo"
-                style={{ width: 70, cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/contractor/home");
-                  setOpenDrawer(false);
-                }}
-              />
+              <Box onClick={() => { navigate("/home"); setOpenDrawer(false); }} sx={{ cursor: "pointer", fontFamily: '"IBM Plex Sans", Arial, sans-serif', fontSize: 21, fontWeight: 800, letterSpacing: "-.045em" }}>
+                <span>ODRA</span><span style={{ color: "#F97316" }}>OPS</span>
+              </Box>
             </Box>
 
             {/* DIVIDER */}
@@ -253,18 +241,6 @@ export default function Navbar() {
                   {t("navbar.login")}
                 </Button>
 
-                <Button
-                  
-                  component={Link}
-                  to="/signup"
-                  variant="contained"
-                  sx={{
-                    fontWeight: 600,
-                    color:"text.primary"
-                  }}
-                >
-                  {t("navbar.signup")}
-                </Button>
               </Box>
             )}
 

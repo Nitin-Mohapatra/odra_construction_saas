@@ -1,6 +1,5 @@
 import React from "react";
-import logo from "../assets/Logo/lg-1.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
@@ -26,7 +25,10 @@ import {
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-import { deepOrange } from "@mui/material/colors";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 
 export default function ContractorNavbar() {
   const { t } = useTranslation();
@@ -45,17 +47,17 @@ export default function ContractorNavbar() {
   };
 
   const menuItems = [
-    { label: t("navbar.add_project"), path: "/contractor/add-project" },
-    { label: t("navbar.all_projects"), path: "/contractor/project" },
-    { label: t("navbar.workers"), path: "/contractor/workers" },
-    { label: t("navbar.add_worker"), path: "/contractor/add-worker" },
+    { label: t("navbar.add_project"), path: "/contractor/add-project", icon: AddCircleOutlineIcon },
+    { label: t("navbar.all_projects"), path: "/contractor/project", icon: FolderOpenOutlinedIcon },
+    { label: t("navbar.workers"), path: "/contractor/workers", icon: GroupsOutlinedIcon },
+    { label: t("navbar.add_worker"), path: "/contractor/add-worker", icon: PersonAddAltOutlinedIcon },
   ];
 
   return (
     <>
       {/* TOP BAR */}
-      <AppBar position="static" sx={{ backgroundColor: "#1e1e1e" }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <AppBar position="static" className="contractor-appbar" sx={{ backgroundColor: "#fff", color: "#202326" }}>
+        <Toolbar className="contractor-toolbar" sx={{ justifyContent: 'space-between' }}>
           {/* Mobile Menu Icon */}
           <IconButton
             edge="start"
@@ -67,13 +69,8 @@ export default function ContractorNavbar() {
           </IconButton>
 
           {/* Logo */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}>
-            <img
-              src={logo}
-              alt="logo"
-              style={{ width: "10em", cursor: "pointer" }}
-              onClick={() => navigate("/contractor/home")}
-            />
+          <Box className="contractor-wordmark" sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }} onClick={() => navigate("/contractor/home")}>
+            ODRA<span>OPS</span>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -81,7 +78,7 @@ export default function ContractorNavbar() {
 
 
             {/* Desktop Menu */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
+            <Box className="contractor-desktop-menu" sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
               {menuItems.map((item) => {
                 const isAddWorker = item.path === "/contractor/add-worker" || item.path === "/contractor/workers";
                 const allowed = !isAddWorker || canAccess("addWorker") || canAccess("viewWorkers");
@@ -97,7 +94,7 @@ export default function ContractorNavbar() {
                       navigate(item.path);
                     }}
                     sx={{
-                      color: "white",
+                      color: "#26323d",
                       textDecoration: "none",
                       fontWeight: 500,
                       cursor: "pointer",
@@ -106,7 +103,7 @@ export default function ContractorNavbar() {
                       opacity: allowed ? 1 : 0.6,
                     }}
                   >
-                    {item.label}
+                    <item.icon sx={{ mr: 1, fontSize: 18, color: "#F97316" }} />{item.label}
 
                     {!allowed && (
                       <LockIcon
@@ -122,12 +119,12 @@ export default function ContractorNavbar() {
             {/* Avatar */}
             <Avatar
               sx={{
-                bgcolor: deepOrange[500],
-                ml: 3,
-                mr: 2,
-                width: 36,
-                height: 36,
-                fontSize: 16,
+                bgcolor: "#F97316",
+                ml: 2.5,
+                mr: 1.5,
+                width: 28,
+                height: 28,
+                fontSize: 13,
               }}
             >
               {localStorage.getItem("name")?.charAt(0)}
@@ -138,11 +135,11 @@ export default function ContractorNavbar() {
               variant="contained"
               onClick={logout}
               sx={{
-                backgroundColor: "primary.main",
-                color: "#000",
+                backgroundColor: "#F97316",
+                color: "#fff",
                 fontWeight: 600,
                 "&:hover": {
-                  backgroundColor: "white",
+                  backgroundColor: "#e9650e",
                 },
               }}
             >
@@ -153,11 +150,20 @@ export default function ContractorNavbar() {
               size="small"
               value={i18n.language}
               onChange={(e) => i18n.changeLanguage(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    "& .MuiMenuItem-root:hover": { backgroundColor: "rgba(249, 115, 22, .12)" },
+                    "& .MuiMenuItem-root.Mui-selected": { backgroundColor: "rgba(249, 115, 22, .16)", color: "#F97316" },
+                    "& .MuiMenuItem-root.Mui-selected:hover": { backgroundColor: "rgba(249, 115, 22, .2)" },
+                  },
+                },
+              }}
               sx={{
-                ml: 2,
+                ml: 1.5,
                 backgroundColor: "#fff",
                 borderRadius: 1,
-                height: 35
+                height: 32
               }}
             >
               <MenuItem value="en">EN</MenuItem>
@@ -188,15 +194,12 @@ export default function ContractorNavbar() {
           <Box>
             {/* LOGO */}
             <Box sx={{ textAlign: "start", mb: 2 }}>
-              <img
-                src={logo}
-                alt="logo"
-                style={{ width: 70, cursor: "pointer" }}
+              <div className="contractor-wordmark drawer-wordmark"
                 onClick={() => {
                   navigate("/contractor/home");
                   setOpenDrawer(false);
                 }}
-              />
+              >ODRA<span>OPS</span></div>
             </Box>
 
             {/* DIVIDER */}
@@ -269,7 +272,7 @@ export default function ContractorNavbar() {
                 mb: 2,
               }}
             >
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>
+              <Avatar sx={{ bgcolor: "#F97316" }}>
                 {localStorage.getItem("name")?.charAt(0)}
               </Avatar>
 

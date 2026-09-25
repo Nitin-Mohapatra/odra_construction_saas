@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import ContractorNavbar from "../../Components/ContractorNavbar";
-import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
-import { Box, Typography, Button } from "@mui/material";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { Button, Typography } from "@mui/material";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import ContractorNavbar from "../../Components/ContractorNavbar";
+import axiosInstance from "../../utils/axiosInstance";
+import projectArtwork from "../../assets/Add New Project (2).png";
 
 export default function AddProject() {
   const [title, setTitle] = useState("");
@@ -15,168 +18,63 @@ export default function AddProject() {
   const [siteEngineerName, setSiteEngineerName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
-
     try {
-      await axiosInstance.post(
-        "/projects",
-        { title, description, siteEngineerEmail,siteEngineerName }
-      );
-
+      await axiosInstance.post("/projects", { title, description, siteEngineerEmail, siteEngineerName });
       toast.success("Project created successfully");
       navigate("/contractor/home");
     } catch (err) {
-      console.error(err)
+      console.error(err);
       toast.error(err.response?.data?.error || "Error creating project");
     } finally {
       setLoading(false);
     }
   };
 
+  const fields = [
+    { id: "project-title", label: t("project.project_title"), placeholder: t("project.enter_title"), value: title, setValue: setTitle, icon: DescriptionOutlinedIcon, type: "text" },
+    { id: "project-description", label: t("project.project_description"), placeholder: t("project.enter_description"), value: description, setValue: setDescription, icon: TextSnippetOutlinedIcon, multiline: true },
+    { id: "engineer-email", label: t("project.assign_engineer"), placeholder: t("project.enter_engineer_email"), value: siteEngineerEmail, setValue: setSiteEngineerEmail, icon: MailOutlineIcon, type: "email" },
+    { id: "engineer-name", label: "SiteEngineer name", placeholder: "SiteEngineer name", value: siteEngineerName, setValue: setSiteEngineerName, icon: PersonOutlineIcon, type: "text" },
+  ];
+
   return (
-    <>
+    <div className="add-project-page" style={{ "--project-art": `url("${projectArtwork}")` }}>
       <ContractorNavbar />
-  
-      <div
-        style={{
-          minHeight: "100vh",
-          backgroundColor: "#f9fafb",
-          padding: "3rem 1rem",
-        }}
-      >
-        <div className="container">
-          {/* HEADER */}
-          <div className="mb-5">
-            <Typography variant="h1" >
-            {t("project.add_project")}
-            </Typography>
-            <Typography variant="body1" className="text-muted">
-            {t("project.add_project_desc")}
-            </Typography>
+      <main className="add-project-main">
+        <section className="add-project-card">
+          <div className="add-project-form-panel">
+            <header className="add-project-heading">
+              <Typography component="h1" className="add-project-title">Add New <span>Project</span></Typography>
+              <Typography component="p" className="add-project-subtitle">Create a new project and assign it to a site engineer.</Typography>
+            </header>
+            <form className="add-project-form" onSubmit={handleSubmit}>
+              {fields.map(({ id, label, placeholder, value, setValue, icon: Icon, multiline, type }) => (
+                <div className="add-project-field" key={id}>
+                  <span className="add-project-field-icon"><Icon /></span>
+                  <div className="add-project-control">
+                    <label htmlFor={id}>{label}</label>
+                    {multiline ? (
+                      <textarea id={id} rows="4" placeholder={placeholder} required value={value} onChange={(e) => setValue(e.target.value)} />
+                    ) : (
+                      <input id={id} type={type} placeholder={placeholder} required value={value} onChange={(e) => setValue(e.target.value)} />
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div className="add-project-actions">
+                <Button type="submit" variant="contained" disabled={loading}>{loading ? t("project.creating") : t("project.create_project")}</Button>
+                <Button type="button" variant="outlined" onClick={() => navigate(-1)}>{t("project.cancel")}</Button>
+              </div>
+            </form>
           </div>
-  
-          {/* FORM CARD */}
-          <div
-            className="card border-0"
-            style={{
-              maxWidth: "720px",
-              borderRadius: "16px",
-              boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-            }}
-          >
-            <div className="card-body p-4 p-md-5">
-              <form onSubmit={handleSubmit}>
-                {/* PROJECT TITLE */}
-                <div className="mb-4">
-                  <label className="form-label fw-semibold">
-                    {t("project.project_title")}
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={t("project.enter_title")}
-                    required
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-  
-                {/* PROJECT DESCRIPTION */}
-                <div className="mb-4">
-                  <label className="form-label fw-semibold">
-                  {t("project.project_description")}
-                  </label>
-                  <textarea
-                    className="form-control"
-                    rows="4"
-                    placeholder={t("project.enter_description")}
-                    required
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
-  
-                {/* SITE ENGINEER EMAIL */}
-                <div className="mb-4">
-                  <label className="form-label fw-semibold">
-                    {t("project.assign_engineer")}
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder={t("project.enter_engineer_email")}
-                    required
-                    value={siteEngineerEmail}
-                    onChange={(e) =>
-                      setSiteEngineerEmail(e.target.value)
-                    }
-                  />
-                </div>
-
-
-                {/* site eng name */}
-                <div className="mb-4">
-                  <label className="form-label fw-semibold">
-                    SiteEngineer name 
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={t("SiteEngineer name")}
-                    required
-                    value={siteEngineerName}
-                    onChange={(e) => setSiteEngineerName(e.target.value)}
-                  />
-                </div>
-  
-                {/* ACTIONS */}
-                <div className="d-flex gap-3">
-                  <Button
-                    variant="contained"
-                    color="success"
-                    disabled={loading}
-                    onClick={handleSubmit}
-                    sx={{
-                      backgroundColor: "primary.main",
-                      color: "#000",
-                      fontWeight: 600,
-                      "&:hover": {
-                        backgroundColor: "white",
-                      },
-                    }}
-                  >
-                      {loading ? t("project.creating") : t("project.create_project")}
-                    </Button>
-  
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => navigate(-1)}
-                    sx={{
-                      backgroundColor: "#fff",
-                      color: "#000",
-                      borderColor: "primary.main",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {t("project.cancel")}
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <Footer />
-    </>
+          <aside className="add-project-art" aria-label="Construction site with a tower crane" />
+        </section>
+      </main>
+    </div>
   );
-  
-  
-  
 }

@@ -66,13 +66,13 @@ export default function ContractorDashboard() {
   const total = projects.totalProjects;
   const ongoing = projects.ongoingProjects;
   const completed = projects.completedProjects;
-  
+
   return (
     <>
       {getSubscription().plan === "free" && <UpgradeBanner />}
       <ContractorNavbar />
 
-      
+
       <Box
         style={{
           minHeight: "100vh",
@@ -90,7 +90,7 @@ export default function ContractorDashboard() {
               {t("dashboard.contractor.subtitle")}
             </Typography>
           </div>
-  
+
           {/* SUMMARY CARDS */}
           <div className="row g-4 mb-5">
             <div className="col-12 col-md-4">
@@ -103,11 +103,11 @@ export default function ContractorDashboard() {
               >
                 <div className="card-body">
                   <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.total_projects")}</Typography>
-                  <Typography variant="h2" sx={{color:"primary.dark"}}>{total}</Typography>
+                  <Typography variant="h2" sx={{ color: "primary.dark" }}>{total}</Typography>
                 </div>
               </div>
             </div>
-  
+
             <div className="col-12 col-md-4">
               <div
                 className="card border-0 h-100"
@@ -118,13 +118,13 @@ export default function ContractorDashboard() {
               >
                 <div className="card-body">
                   <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.ongoing_projects")}</Typography>
-                  <Typography variant="h2" sx={{color:"primary.dark"}}>
+                  <Typography variant="h2" sx={{ color: "primary.dark" }}>
                     {ongoing}
                   </Typography>
                 </div>
               </div>
             </div>
-  
+
             <div className="col-12 col-md-4">
               <div
                 className="card border-0 h-100"
@@ -135,14 +135,14 @@ export default function ContractorDashboard() {
               >
                 <div className="card-body">
                   <Typography variant="h6" className=" mb-2">{t("dashboard.contractor.completed_projects")}</Typography>
-                  <Typography variant="h2" sx={{color:"primary.dark"}}>
+                  <Typography variant="h2" sx={{ color: "primary.dark" }}>
                     {completed}
                   </Typography>
                 </div>
               </div>
             </div>
           </div>
-  
+
           {/* QUICK ACTIONS */}
           <div className="mb-5 d-flex flex-wrap gap-3">
             <Button
@@ -160,35 +160,35 @@ export default function ContractorDashboard() {
             >
               {t("dashboard.contractor.add_project")}
             </Button>
-  
+
             <Button
               variant="outlined"
               color="primary"
               component={Link} to="/contractor/project"
               sx={{
-                    color: "text.primary",
-                    borderColor: "text.primary",
-                    fontWeight: 600,
-                    "&:hover": {
-                      borderColor: "primary.main",
-                      color: "primary.main",
-                    },
-                  }}
+                color: "text.primary",
+                borderColor: "text.primary",
+                fontWeight: 600,
+                "&:hover": {
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                },
+              }}
             >
               {t("dashboard.contractor.view_projects")}
             </Button>
           </div>
-  
+
           {/* RECENT PROJECTS */}
           <div>
-            <Typography variant="h5"  className="mb-3">
+            <Typography variant="h5" className="mb-3">
               {t("dashboard.contractor.view_projects")}
             </Typography>
-  
+
             {projects?.recentProjects?.length === 0 && (
               <Typography variant="body1" className="text-muted">{t("dashboard.contractor.no_projects")}</Typography>
             )}
-  
+
             {projects?.recentProjects?.map((project) => (
               <div
                 key={project._id}
@@ -213,13 +213,12 @@ export default function ContractorDashboard() {
                   <span style={{ fontWeight: 500 }}>
                     {project.title}
                   </span>
-  
+
                   <span
-                    className={`badge ${
-                      project.status?.toLowerCase() === "completed"
+                    className={`badge ${project.status?.toLowerCase() === "completed"
                         ? "bg-success"
                         : "bg-warning text-dark"
-                    }`}
+                      }`}
                   >
                     {project.status}
                   </span>
@@ -229,9 +228,9 @@ export default function ContractorDashboard() {
           </div>
         </div>
       </Box>
-  
+
       <Footer />
     </>
   );
-  
+
 }

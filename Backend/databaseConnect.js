@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 const dns = require('dns');
 
 // Fix: Force Node.js to use reliable DNS servers (Google & Cloudflare) to bypass Windows/c-ares ECONNREFUSED SRV errors

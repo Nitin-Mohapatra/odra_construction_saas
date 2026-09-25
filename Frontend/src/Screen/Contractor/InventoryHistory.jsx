@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../utils/axiosInstance";
 import ContractorNavbar from "../../Components/ContractorNavbar";
-import Footer from "../../Components/Footer";
-import {
-  Box,
-  Typography,
-  Paper,
-  TextField,
-  MenuItem
-} from "@mui/material";
+import { Box, Typography, Paper, TextField, MenuItem, Tabs, Tab, IconButton } from "@mui/material";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import { useTranslation } from "react-i18next";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+
+function MaterialIcon({ name = "" }) {
+  const material = name.toLowerCase();
+  if (material.includes("wire") || material.includes("cable")) {
+    return <svg viewBox="0 0 48 48" aria-hidden="true"><ellipse cx="24" cy="9" rx="14" ry="5"/><path d="M10 9v25c0 3 6 5 14 5s14-2 14-5V9M10 16c0 3 6 5 14 5s14-2 14-5M10 22c0 3 6 5 14 5s14-2 14-5M10 28c0 3 6 5 14 5s14-2 14-5"/><ellipse cx="24" cy="39" rx="14" ry="5"/></svg>;
+  }
+  if (material.includes("pipe")) {
+    return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m9 35 21-21a8 8 0 0 1 11 11L29 37H15"/><path d="m28 12 9 9M12 32l5 5M15 37a6 6 0 1 1-8 8 6 6 0 0 1 8-8ZM31 14l5-5 8 8-5 5"/></svg>;
+  }
+  if (material.includes("wood") || material.includes("timber")) {
+    return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m7 28 16-16h17L24 28H7ZM24 28v8H7v-8M24 28h16l-16 16H7l7-7M23 12v8M30 12 14 28M40 28v8L24 48"/><path d="M11 33h9M12 40h10"/></svg>;
+  }
+  return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m24 5 18 9v20l-18 9-18-9V14l18-9Z"/><path d="m6 14 18 10 18-10M24 24v19"/></svg>;
+}
+
+const formatDate = (value) => {
+  if (!value) return "—";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("en-GB");
+};
 
 export default function InventoryHistory() {
   const { t } = useTranslation();
@@ -20,315 +32,132 @@ export default function InventoryHistory() {
   const [history, setHistory] = useState([]);
   const [tab, setTab] = useState(0);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
-
-  // ✅ UI-only filter states
+  const [inventoryItems, setInventoryItems] = useState([]);
   const [filterDate, setFilterDate] = useState("");
   const [filterItem, setFilterItem] = useState("");
 
-  //fetch purchase history and usage history
   useEffect(() => {
-
+    let active = true;
     const fetchHistory = async () => {
       try {
-        const [usageRes, purchaseRes] = await Promise.all([
+        const [usageRes, purchaseRes, inventoryRes] = await Promise.all([
           axios.get(`/inventory/history/${projectId}`),
-          axios.get(`/inventory/purchase-history/${projectId}`)
+          axios.get(`/inventory/purchase-history/${projectId}`),
+          axios.get(`/inventory/${projectId}`),
         ]);
+        if (!active) return;
         setHistory(usageRes.data.history || []);
         setPurchaseHistory(purchaseRes.data.history || []);
+        setInventoryItems(inventoryRes.data.items || []);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
     fetchHistory();
+    return () => { active = false; };
   }, [projectId]);
 
-  // ✅ Derived filtered data (NO mutation)
-  const filteredHistory = history.filter((h) => {
-    const matchDate = filterDate
-      ? new Date(h.date).toISOString().split("T")[0] === filterDate
-      : true;
+  const inventoryById = useMemo(() => new Map(inventoryItems.map((item) => [String(item._id), item])), [inventoryItems]);
+  const purchaseByItem = useMemo(() => {
+    const map = new Map();
+    purchaseHistory.forEach((purchase) => {
+      const key = String(purchase.inventoryItemId?._id || purchase.inventoryItemId);
+      if (!map.has(key)) map.set(key, purchase);
+    });
+    return map;
+  }, [purchaseHistory]);
 
-    const matchItem = filterItem
-      ? h.inventoryItemId.name === filterItem
-      : true;
+  const materialOptions = [...new Set([
+    ...history.map((entry) => entry.inventoryItemId?.name).filter(Boolean),
+    ...purchaseHistory.map((entry) => entry.inventoryItemId?.name).filter(Boolean),
+  ])];
 
+  const filteredHistory = history.filter((entry) => {
+    const item = entry.inventoryItemId;
+    const matchDate = !filterDate || new Date(entry.date).toISOString().slice(0, 10) === filterDate;
+    const matchItem = !filterItem || item?.name === filterItem;
+    return matchDate && matchItem;
+  });
+  const filteredPurchases = purchaseHistory.filter((entry) => {
+    const matchDate = !filterDate || new Date(entry.purchaseDate).toISOString().slice(0, 10) === filterDate;
+    const matchItem = !filterItem || entry.inventoryItemId?.name === filterItem;
     return matchDate && matchItem;
   });
 
-  const filteredPurchaseHistory = purchaseHistory.filter((item) => {
+  const title = t("inventory.usage_history");
+  const titleSplit = title.lastIndexOf(" ");
 
-    const matchDate = filterDate
-      ? new Date(item.purchaseDate)
-        .toISOString()
-        .split("T")[0] === filterDate
-      : true;
+  const renderRecord = (entry, isPurchase = false) => {
+    const itemId = String(entry.inventoryItemId?._id || entry.inventoryItemId || "");
+    const inventoryItem = inventoryById.get(itemId) || {};
+    const latestPurchase = purchaseByItem.get(itemId) || {};
+    const item = entry.inventoryItemId && typeof entry.inventoryItemId === "object" ? entry.inventoryItemId : {};
+    const recordDate = isPurchase ? entry.purchaseDate : entry.date;
+    const quantity = isPurchase ? entry.quantity : entry.usedQty;
+    const price = isPurchase ? entry.pricePerUnit : inventoryItem.pricePerUnit;
+    const supplier = isPurchase ? entry.supplierName : inventoryItem.supplierName;
+    const company = isPurchase ? entry.companyName : inventoryItem.companyName;
+    const purchasedBy = isPurchase ? entry.createdBy?.name : latestPurchase.createdBy?.name;
+    const purchaseDate = isPurchase ? entry.purchaseDate : latestPurchase.purchaseDate;
+    const userName = isPurchase ? entry.createdBy?.name : entry.usedBy?.name;
 
-    const matchItem = filterItem
-      ? item.inventoryItemId.name === filterItem
-      : true;
-
-    return matchDate && matchItem;
-  });
-
-  // ✅ Unique material list for dropdown
-  const materialOptions = [
-    ...new Set([
-      ...history.map(h => h.inventoryItemId.name),
-      ...purchaseHistory.map(p => p.inventoryItemId.name)
-    ])
-
-  ];
+    return (
+      <article className="inventory-history-row" key={entry._id}>
+        <div className="inventory-material-icon"><MaterialIcon name={item.name} /></div>
+        <div className="inventory-material-main">
+          <Typography component="h2">{item.name || t("inventory.material_name")}</Typography>
+          <p>Quantity : <span>{quantity} {item.unit || inventoryItem.unit || ""}</span></p>
+          {price != null && <p>Price Per Unit : ₹{price}</p>}
+          {supplier && <p>Supplier : {supplier}</p>}
+        </div>
+        <div className="inventory-material-purchase">
+          {company && <p>Company : {company}</p>}
+          {purchasedBy && <p>Purchased By : <span>{purchasedBy}</span></p>}
+          {purchaseDate && <p>Purchase Date : {formatDate(purchaseDate)}</p>}
+        </div>
+        <div className="inventory-material-used">
+          <p>{isPurchase ? "Purchased By" : "Used by"} : <span>{userName || "—"}</span></p>
+          <time>{formatDate(recordDate)}</time>
+        </div>
+        <IconButton className="inventory-date-icon" aria-label={`Record date ${formatDate(recordDate)}`} title={formatDate(recordDate)}>
+          <CalendarMonthOutlinedIcon />
+        </IconButton>
+      </article>
+    );
+  };
 
   return (
-    <>
+    <div className="inventory-history-page">
       <ContractorNavbar />
+      <main className="inventory-history-main">
+        <header className="inventory-history-heading">
+          <Typography component="h1" className="inventory-history-title">
+            {titleSplit > 0 ? <>{title.slice(0, titleSplit)} <span>{title.slice(titleSplit + 1)}</span></> : <span>{title}</span>}
+          </Typography>
+          <Typography component="p">{t("inventory.usage_history_desc")}</Typography>
+        </header>
 
-      <Box
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#f9fafb",
-          py: { xs: 3, md: 5 }
-        }}
-      >
-        <Box className="container">
-          {/* HEADER */}
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h1" gutterBottom>
-              {t("inventory.usage_history")}
-            </Typography>
-            <Typography variant="body1">
-              {t("inventory.usage_history_desc")}
-            </Typography>
-          </Box>
+        <Tabs className="inventory-history-tabs" value={tab} onChange={(_event, value) => setTab(value)}>
+          <Tab label="Usage History" />
+          <Tab label="Purchase History" />
+        </Tabs>
 
-          <Box sx={{ mb: 3 }}>
-            <Tabs
-              value={tab}
-              onChange={(e, newValue) => setTab(newValue)}
-            >
-              <Tab label="Usage History" />
-              <Tab label="Purchase History" />
-            </Tabs>
+        <Paper className="inventory-history-filters" elevation={0}>
+          <TextField type="date" label={t("inventory.filter_by_date")} value={filterDate} InputLabelProps={{ shrink: true }} onChange={(e) => setFilterDate(e.target.value)} />
+          <TextField select label={t("inventory.filter_by_material")} value={filterItem} onChange={(e) => setFilterItem(e.target.value)}>
+            <MenuItem value="">{t("inventory.all_materials")}</MenuItem>
+            {materialOptions.map((name) => <MenuItem key={name} value={name}>{name}</MenuItem>)}
+          </TextField>
+        </Paper>
 
-          </Box>
-
-          {/* FILTERS */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              mb: 4,
-              borderRadius: "14px",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-              display: "flex",
-              gap: 2,
-              flexWrap: "wrap"
-            }}
-          >
-            <TextField
-              type="date"
-              label={t("inventory.filter_by_date")}
-              value={filterDate}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => setFilterDate(e.target.value)}
-              sx={{ minWidth: 220 }}
-            />
-
-            <TextField
-              select
-              label={t("inventory.filter_by_material")}
-              value={filterItem}
-              onChange={(e) => setFilterItem(e.target.value)}
-              sx={{ minWidth: 220 }}
-            >
-              <MenuItem value="">{t("inventory.all_materials")}</MenuItem>
-              {materialOptions.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Paper>
-
-          {/* HISTORY LIST */}
-          {tab === 0 && (
-
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, md: 4 },
-                borderRadius: "16px",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)"
-              }}
-            >
-
-              {filteredHistory.length === 0 && (
-                <Typography>
-                  {t("inventory.no_usage_records")}
-                </Typography>
-              )}
-
-              {filteredHistory.map((h) => (
-
-                <Box
-                  key={h._id}
-                  sx={{
-                    display: "flex",
-                    flexDirection: {
-                      xs: "column",
-                      md: "row"
-                    },
-                    justifyContent: "space-between",
-                    gap: 2,
-                    py: 2,
-                    borderBottom: "1px solid #eee"
-                  }}
-                >
-
-                  <Box>
-
-                    <Typography fontWeight={600}>
-                      {h.inventoryItemId.name}
-                    </Typography>
-
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                    >
-                      {t("inventory.used_quantity")} :
-                      {" "}
-                      {h.usedQty}
-                      {" "}
-                      {h.inventoryItemId.unit}
-                    </Typography>
-
-                  </Box>
-
-                  <Box
-                    sx={{
-                      textAlign: {
-                        xs: "left",
-                        md: "right"
-                      }
-                    }}
-                  >
-
-                    <Typography>
-
-                      {t("inventory.used_by")} :
-
-                      <strong>
-                        {" "}
-                        {h.usedBy?.name || "Site Engineer"}
-                      </strong>
-
-                    </Typography>
-
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                    >
-                      {new Date(h.date).toLocaleDateString()}
-                    </Typography>
-
-                  </Box>
-
-                </Box>
-
-              ))}
-
-            </Paper>
-
+        <Paper className="inventory-history-list" elevation={0}>
+          {tab === 0 ? (
+            filteredHistory.length ? filteredHistory.map((entry) => renderRecord(entry)) : <Typography className="inventory-history-empty">{t("inventory.no_usage_records")}</Typography>
+          ) : (
+            filteredPurchases.length ? filteredPurchases.map((entry) => renderRecord(entry, true)) : <Typography className="inventory-history-empty">No purchase records found.</Typography>
           )}
-
-          {tab === 1 && (
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, md: 4 },
-                borderRadius: "16px",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.08)"
-              }}
-            >
-              {filteredPurchaseHistory.length === 0 && (
-
-                <Typography>
-                  No purchase records found.
-                </Typography>
-
-              )}
-              {filteredPurchaseHistory.map((purchase) => (
-
-                <Box
-                  key={purchase._id}
-                  sx={{
-                    py: 2,
-                    borderBottom: "1px solid #eee"
-                  }}
-                >
-
-                  <Typography
-                    variant="h6"
-                    fontWeight={600}
-                  >
-                    {purchase.inventoryItemId.name}
-                  </Typography>
-
-                  <Typography>
-                    Quantity :
-                    {" "}
-                    {purchase.quantity}
-                    {" "}
-                    {purchase.inventoryItemId.unit}
-                  </Typography>
-
-                  <Typography>
-                    Price Per Unit :
-                    {" "}
-                    ₹{purchase.pricePerUnit}
-                  </Typography>
-
-                  <Typography>
-                    Supplier :
-                    {" "}
-                    {purchase.supplierName}
-                  </Typography>
-
-                  <Typography>
-                    Company :
-                    {" "}
-                    {purchase.companyName}
-                  </Typography>
-
-                  <Typography>
-                    Purchased By :
-                    {" "}
-                    {purchase.createdBy?.name}
-                  </Typography>
-
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                  >
-                    Purchase Date :
-                    {" "}
-                    {new Date(
-                      purchase.purchaseDate
-                    ).toLocaleDateString()}
-                  </Typography>
-
-                </Box>
-
-              ))}
-
-            </Paper>
-
-          )}
-        </Box>
-      </Box>
-
-      <Footer />
-    </>
+        </Paper>
+      </main>
+    </div>
   );
 }

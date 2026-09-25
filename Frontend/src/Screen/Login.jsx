@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getFCMToken } from "../services/notificationService";
+import homeBg from "../assets/Home bg image.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -90,50 +91,24 @@ export default function Login() {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: "#FFFFFF",
-        display: "flex",
-      }}
-    >
-      {/* LEFT IMAGE */}
-      <Box
-        sx={{
-          flex: 1,
-          display: { xs: "none", md: "block" },
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1503387762-592deb58ef4e)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+    <Box className="auth-shell auth-login">
+      <Box className="auth-visual-panel">
+        <Box className="auth-wordmark"><span>ODRA</span><span>OPS</span></Box>
+        <Box className="auth-visual-copy">
+          <Typography component="h1">BUILDING<br /><span>SMARTER</span><br />TOMORROW</Typography>
+          <Typography><strong>ODRAOPS</strong> delivers reliable construction, infrastructure, and <em>resource management</em> solutions.</Typography>
+        </Box>
+      </Box>
 
-      {/* RIGHT FORM */}
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          px: 3,
-        }}
-      >
-        <Paper
-          elevation={6}
-          sx={{
-            width: "100%",
-            maxWidth: 420,
-            p: 4,
-            borderRadius: 3,
-          }}
-        >
+      <Box className="auth-form-panel" style={{ "--auth-bg": `url("${homeBg}")` }}>
+        <Box className="auth-dots" aria-hidden="true">{Array.from({ length: 25 }, (_, i) => <i key={i} />)}</Box>
+        <Paper elevation={0} className="auth-card">
           {/* Header */}
-          <Box sx={{ textAlign: "center", mb: 3 }}>
+          <Box className="auth-card-header">
             <Typography variant="h5" fontWeight={700}>
               {t("auth.welcome_back")}
             </Typography>
-            <Typography variant="body2" color="white">
+            <Typography variant="body2" color="text.secondary">
             {t("auth.sign_in_continue")}
             </Typography>
           </Box>
@@ -186,7 +161,7 @@ export default function Login() {
               <label className="form-label fw-semibold">{t("auth.password")}</label>
               <input
                 name="password"
-                type="text"
+                type="password"
                 className="form-control"
                 placeholder={t("auth.password_placeholder")}
                 value={formData.password}
@@ -203,9 +178,9 @@ export default function Login() {
             {/* Submit */}
             <button
               type="submit"
-              className="btn w-100 fw-semibold"
+              className="btn w-100 fw-semibold auth-submit"
               style={{
-                backgroundColor: "#1e1e1e",
+                backgroundColor: "#F97316",
                 color: "#fff",
               }}
             >
@@ -214,7 +189,7 @@ export default function Login() {
           </form>
 
           {/* Divider */}
-          <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
+          <Box className="auth-divider">
             <Divider sx={{ flex: 1 ,backgroundColor:"text.primary"}} />
             <Typography sx={{ px: 2, fontWeight:"bold" }} variant="body2" color="text.primary">
               OR
@@ -223,7 +198,7 @@ export default function Login() {
           </Box>
 
           {/* Google Login */}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box className="auth-google">
             <GoogleLoginButton />
           </Box>
         </Paper>
