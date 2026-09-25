@@ -82,8 +82,8 @@ export default function Navbar() {
   return (
     <>
       {/* TOP BAR */}
-      <AppBar position="static" sx={{ backgroundColor: "#000" }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: "#fff", color: "#17191c", borderBottom: "1px solid #f0f0f0" }}>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: { xs: 60, md: 66 }, px: { xs: 2, md: 4 } }}>
           {/* Mobile Menu Icon */}
           <IconButton
             edge="start"
@@ -108,7 +108,7 @@ export default function Navbar() {
                   component={Link}
                   to={item.path}
                   sx={{
-                    color: "white",
+                    color: "#282b2e",
                     textDecoration: "none",
                     fontWeight: 500,
                   }}
@@ -124,14 +124,13 @@ export default function Navbar() {
                 <Button
                   component={Link}
                   to="/Login"
-                  variant="outlined"
+                  variant="contained"
                   sx={{
                     color: "white",
-                    borderColor: "white",
+                    backgroundColor: "#ff6418",
                     fontWeight: 600,
                     "&:hover": {
-                      borderColor: "primary.main",
-                      color: "primary.main",
+                      backgroundColor: "#e9540c",
                     },
                   }}
                 >
@@ -143,8 +142,9 @@ export default function Navbar() {
                   to="/signup"
                   variant="contained"
                   sx={{
-                    backgroundColor: "primary.main",
-                    color: "#000",
+                    backgroundColor: "#fff",
+                    color: "#292929",
+                    border: "1px solid #ddd",
                     fontWeight: 600,
                     "&:hover": {
                       backgroundColor: "white",
