@@ -335,7 +335,7 @@ export default function ViewReport() {
               </Box>
             </Box>
           ) : (
-            <Typography color="success.main">
+            <Typography sx={{ color: "#F97316", fontWeight: 600 }}>
               {t("reports.reviewed_success")}
             </Typography>
           )}

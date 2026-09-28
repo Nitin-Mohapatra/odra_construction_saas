@@ -343,7 +343,6 @@ export default function ProjectDetails() {
               className="overview-action"
               startIcon={<Groups2OutlinedIcon />}
               variant="outlined"
-              color="info"
               onClick={() => {
                 if (!canAccess("workerWage")) {
                   toast.error("Upgrade to Business Plan to unlock Attendance.");
@@ -354,12 +353,14 @@ export default function ProjectDetails() {
               sx={{
                 position: "relative",
                 opacity: canAccess("workerWage") ? 1 : 0.6,
-                color: "primary.main",
-                borderColor: "primary.main",
+                color: "#F97316",
+                borderColor: "#F97316",
+                backgroundColor: "#fff",
                 fontWeight: 600,
                 "&:hover": {
-                  borderColor: "primary.main",
-                  color: "primary.main",
+                  borderColor: "#e9650e",
+                  backgroundColor: "#fff7f2",
+                  color: "#F97316",
                 },
               }}
             >

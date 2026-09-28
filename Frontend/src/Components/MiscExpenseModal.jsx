@@ -78,8 +78,49 @@ export default function MiscExpenseModal({
       maxWidth="md"
     >
 
-      <DialogTitle>
-        Miscellaneous Expenses
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          py: 2.5,
+          px: 3,
+          background: "#f9fafb",
+          borderBottom: "1px solid #f2d6c5",
+          fontWeight: 800,
+          lineHeight: 1.1,
+        }}
+      >
+        <Box
+          component="span"
+          sx={{
+            display: "inline-block",
+            width: 5,
+            height: "1.05em",
+            background: "#F97316",
+            borderRadius: "2px",
+          }}
+        />
+        <Box
+          component="span"
+          sx={{
+            fontSize: { xs: "1.4rem", sm: "1.8rem" },
+            letterSpacing: "-0.04em",
+            color: "#111827",
+            fontWeight: 800,
+            display: "inline-flex",
+            alignItems: "baseline",
+            gap: 0.7,
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Box component="span" sx={{ color: "#111827" }}>
+            Miscellaneous
+          </Box>
+          <Box component="span" sx={{ color: "#F97316" }}>
+            Expenses
+          </Box>
+        </Box>
       </DialogTitle>
 
       <DialogContent>
@@ -125,13 +166,25 @@ export default function MiscExpenseModal({
 
                   <Chip
                     label={item.status}
-                    color={
-                      item.status === "Approved"
-                        ? "dark"
-                        : item.status === "Rejected"
-                          ? "error"
-                          : "warning"
-                    }
+                    sx={{
+                      backgroundColor:
+                        item.status === "Approved"
+                          ? "#fff0e7"
+                          : item.status === "Rejected"
+                            ? "#fde2e2"
+                            : "#fff1d9",
+                      color:
+                        item.status === "Approved"
+                          ? "#F97316"
+                          : item.status === "Rejected"
+                            ? "#d64545"
+                            : "#c77a00",
+                      fontWeight: 700,
+                      borderRadius: "999px",
+                      px: 1,
+                      fontSize: "0.72rem",
+                      height: "28px",
+                    }}
                   />
 
                 </Box>
@@ -188,10 +241,13 @@ export default function MiscExpenseModal({
                     >
                       <Button
                         variant="contained"
-                        color="success"
                         onClick={() =>
                           updateStatus(item._id, "Approved")
                         }
+                        sx={{
+                          backgroundColor: "#F97316",
+                          "&:hover": { backgroundColor: "#E65E0C" },
+                        }}
                       >
                         Approve
                       </Button>
@@ -276,9 +332,22 @@ export default function MiscExpenseModal({
 
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions sx={{ p: 2, pt: 1 }}>
 
-        <Button onClick={onClose}>
+        <Button
+          onClick={onClose}
+          variant="contained"
+          sx={{
+            backgroundColor: "#F97316",
+            color: "#fff",
+            fontWeight: 600,
+            borderRadius: "8px",
+            px: 2.5,
+            "&:hover": {
+              backgroundColor: "#e9650e",
+            },
+          }}
+        >
           Close
         </Button>
 

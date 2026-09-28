@@ -1,5 +1,25 @@
 html,body{
   height: 100%;
   width: 100%;
-  /* background-color: black; */
+  background-color: #fff;
+  background-image: url("./assets/background%20image.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* Keep the shared construction backdrop visible on every routed page. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image: url("./assets/background%20image.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  mix-blend-mode: multiply;
 }

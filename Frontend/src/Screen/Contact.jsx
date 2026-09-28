@@ -54,7 +54,7 @@ export default function Contact() {
             <Typography component="p" className="contact-kicker">CONTACT US</Typography>
             <Typography component="h1" className="contact-title">GET IN TOUCH WITH US</Typography>
             <Typography className="contact-description">
-              Have questions about <strong>ODRAOPS</strong> or ready to transform your construction operations? Our team is here to help you streamline <strong>project management</strong>, workforce tracking, inventory control, and site operations.
+              Have questions about <strong>ODRAOPS</strong> or ready to transform <br></br>your construction operations? Our team is here to help<br></br> you streamline <strong>project management</strong>, workforce <br></br>tracking, inventory control, and site operations.
             </Typography>
 
             <Box className="contact-details">

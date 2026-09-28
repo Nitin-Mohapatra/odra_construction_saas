@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 import axiosInstance from "../utils/axiosInstance";
 import { useTheme } from "@emotion/react";
-import {Divider} from "@mui/material"
+import { Divider } from "@mui/material"
 import SocialBar from "./SocialBar"
 
 import {
@@ -72,7 +72,6 @@ export default function Navbar() {
 
   const menuItems = [
     { label: t("navbar.home"), path: "/home" },
-    { label: t("navbar.services"), path: "/services" },
     { label: t("navbar.contact"), path: "/Contact-Us" },
     { label: t("navbar.pricing"), path: "/pricing" },
     { label: t("navbar.waitlist"), path: "/waitlist" },
@@ -111,6 +110,9 @@ export default function Navbar() {
                     textDecoration: "none",
                     fontWeight: 500,
                     fontSize: 12,
+                    "&:hover": {
+                      color: "#F97316",
+                    }
                   }}
                 >
                   {item.label}
@@ -155,10 +157,24 @@ export default function Navbar() {
                 backgroundColor: "#fff",
                 borderRadius: 1,
                 height: 35,
-                border: "1px solid #F97316",
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "black" },
                 "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F97316" },
+              }}
+              MenuProps={{
+                sx: {
+                  "& .MuiMenuItem-root:hover": {
+                    color: "#F97316 !important",
+                    backgroundColor: "rgba(249, 115, 22, 0.08) !important",
+                  },
+                  "& .MuiMenuItem-root.Mui-selected": {
+                    color: "#F97316 !important",
+                    backgroundColor: "rgba(249, 115, 22, 0.12) !important",
+                  },
+                  "& .MuiMenuItem-root.Mui-selected:hover": {
+                    backgroundColor: "rgba(249, 115, 22, 0.16) !important",
+                  },
+                }
               }}
             >
               <MenuItem value="en">EN</MenuItem>
@@ -197,7 +213,7 @@ export default function Navbar() {
             </Box>
 
             {/* DIVIDER */}
-            <Divider sx={{ mb: 2 ,backgroundColor:"text.primary"}} />
+            <Divider sx={{ mb: 2, backgroundColor: "text.primary" }} />
 
             {/* MENU ITEMS */}
             <List>
@@ -211,13 +227,16 @@ export default function Navbar() {
                     borderRadius: 2,
                     mb: 1,
                     "&:hover": {
-                      backgroundColor: "action.hover",
+                      backgroundColor: "rgba(249, 115, 22, 0.08)",
+                      "& .MuiListItemText-root": {
+                        color: "#F97316"
+                      }
                     },
                   }}
                 >
                   <ListItemText
                     primary={item.label}
-                    sx={{color:"text.primary"}}
+                    sx={{ color: "text.primary" }}
                   />
                 </ListItem>
               ))}
@@ -230,12 +249,18 @@ export default function Navbar() {
             {!login && (
               <Box sx={{ display: "flex", flexDirection: "row", gap: 1, mb: 2 }}>
                 <Button
-                  
+
                   component={Link}
                   to="/Login"
                   variant="outlined"
                   sx={{
                     fontWeight: 600,
+                    borderColor: "#F97316",
+                    color: "#F97316",
+                    "&:hover": {
+                      borderColor: "#e9540c",
+                      backgroundColor: "rgba(249, 115, 22, 0.08)",
+                    }
                   }}
                 >
                   {t("navbar.login")}
@@ -245,7 +270,7 @@ export default function Navbar() {
             )}
 
             {/* SOCIAL BAR */}
-            <Divider sx={{ mb: 1 , backgroundColor:"text.primary"}} />
+            <Divider sx={{ mb: 1, backgroundColor: "text.primary" }} />
 
             <Box
               sx={{
@@ -254,7 +279,7 @@ export default function Navbar() {
                 gap: 2,
               }}
             >
-              <SocialBar colourStyle={{"color":"black"}}/>
+              <SocialBar colourStyle={{ "color": "black" }} />
             </Box>
           </Box>
         </Box>

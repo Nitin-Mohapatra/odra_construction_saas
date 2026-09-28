@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress, Typography, Button, Tabs, Tab, IconButton, Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { useTranslation } from "react-i18next";
 
 function ProjectBuildingIcon() {
@@ -23,15 +24,6 @@ function ProjectEditIcon() {
       <path d="M13.5 5H5.25A1.25 1.25 0 0 0 4 6.25v12.5A1.25 1.25 0 0 0 5.25 20h12.5A1.25 1.25 0 0 0 19 18.75V11.5" />
       <path d="m10 14 1-3.2L18.7 3a1.55 1.55 0 0 1 2.2 2.2l-7.8 7.7L10 14Z" />
       <path d="M7 17h7" />
-    </svg>
-  );
-}
-
-function ProjectDeleteIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M5 7h14M9 7V4h6v3m-8 0 1 13h8l1-13" />
-      <path d="M10 10v7M14 10v7" />
     </svg>
   );
 }
@@ -119,7 +111,7 @@ export default function Project() {
                     <IconButton aria-label="Open project" onClick={() => navigate(`/contractor/project/${project._id}`)}><ProjectEditIcon /></IconButton>
                   </Tooltip>
                   <Tooltip title="Delete Project">
-                    <IconButton aria-label="Delete project" className="project-delete-button" onClick={() => handleDelete(project._id)}><ProjectDeleteIcon /></IconButton>
+                    <IconButton aria-label="Delete project" className="project-delete-button" onClick={() => handleDelete(project._id)}><DeleteForeverRoundedIcon /></IconButton>
                   </Tooltip>
                 </div>
               </article>

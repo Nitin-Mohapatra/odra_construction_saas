@@ -169,7 +169,7 @@ export default function ContractorAttendance() {
                             fontWeight: 600,
                             color:
                               rec.status === "present"
-                                ? "success.main"
+                                ? "#F97316"
                                 : "error.main",
                           }}
                         >

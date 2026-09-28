@@ -284,14 +284,14 @@ export default function Waitlist() {
                     width: 68,
                     height: 68,
                     borderRadius: "50%",
-                    backgroundColor: "#ecfdf5",
-                    border: "2px solid #10b981",
+                    backgroundColor: "#fff4ed",
+                    border: "2px solid #F97316",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     margin: "0 auto 20px auto",
                   }}>
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </div>

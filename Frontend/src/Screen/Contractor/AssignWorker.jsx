@@ -184,8 +184,8 @@ export default function AssignWorkers() {
                         px: 1.5,
                         py: 0.5,
                         borderRadius: "10px",
-                        backgroundColor: "#e8f5e9",
-                        color: "success.main",
+                        backgroundColor: "#fff2e8",
+                        color: "#F97316",
                         fontWeight: 600,
                       }}
                     >
@@ -195,8 +195,14 @@ export default function AssignWorkers() {
   
                   <Button
                     variant="contained"
-                    color="success"
-                    sx={{ mt: 3, fontWeight: 600 }}
+                    sx={{
+                      mt: 3,
+                      fontWeight: 600,
+                      backgroundColor: "#F97316",
+                      "&:hover": {
+                        backgroundColor: "#E65E0C",
+                      },
+                    }}
                     onClick={() => assignWorker(worker._id)}
                   >
                     {t("workers.assign_worker_btn")}

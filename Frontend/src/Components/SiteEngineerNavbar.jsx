@@ -1,9 +1,8 @@
 import React from "react";
-import logo from "../assets/Logo/lg-1.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
-import {Divider} from "@mui/material";
+import Divider from "@mui/material/Divider";
 import SocialBar from "./SocialBar";
 
 import {
@@ -19,17 +18,16 @@ import {
   ListItemText,
   Avatar,
   Select,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-import { deepOrange } from "@mui/material/colors";
 
 export default function SiteEngineerNavbar() {
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const { t } = useTranslation();
-  // ❗ LOGIC UNCHANGED
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("IsLogin");
@@ -41,7 +39,6 @@ export default function SiteEngineerNavbar() {
     navigate("/home");
   };
 
-  // 🔹 Site Engineer specific menu
   const menuItems = [
     { label: t("navbar.home"), path: "/engineer/home" },
     { label: t("navbar.all_projects"), path: "/site-engineer/projects" },
@@ -49,10 +46,12 @@ export default function SiteEngineerNavbar() {
 
   return (
     <>
-      {/* TOP BAR */}
-      <AppBar position="static" sx={{ backgroundColor: "#1e1e1e" }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {/* Mobile Menu */}
+      <AppBar
+        position="static"
+        className="contractor-appbar"
+        sx={{ backgroundColor: "#fff", color: "#202326" }}
+      >
+        <Toolbar className="contractor-toolbar" sx={{ justifyContent: "space-between" }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -62,24 +61,28 @@ export default function SiteEngineerNavbar() {
             <MenuIcon />
           </IconButton>
 
-          {/* Logo */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}>
-            <img src={logo} alt="logo" style={{ width: "10em", cursor: "pointer" }} onClick={() => navigate("/engineer/home")} />
+          <Box
+            className="contractor-wordmark"
+            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", flexGrow: 1 }}
+            onClick={() => navigate("/engineer/home")}
+          >
+            ODRA<span>OPS</span>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
-            {/* Desktop Menu */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
+            <Box className="contractor-desktop-menu" sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
               {menuItems.map((item) => (
                 <Typography
                   key={item.label}
                   component={Link}
                   to={item.path}
                   sx={{
-                    color: "white",
+                    color: "#26323d",
                     textDecoration: "none",
                     fontWeight: 500,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   {item.label}
@@ -87,31 +90,29 @@ export default function SiteEngineerNavbar() {
               ))}
             </Box>
 
-            {/* Avatar */}
             <Avatar
               sx={{
-                bgcolor: deepOrange[500],
-                ml: 3,
-                mr: 2,
-                width: 36,
-                height: 36,
-                fontSize: 16,
+                bgcolor: "#F97316",
+                ml: 2.5,
+                mr: 1.5,
+                width: 28,
+                height: 28,
+                fontSize: 13,
               }}
             >
               {localStorage.getItem("name")?.charAt(0)}
             </Avatar>
 
-            {/* Logout */}
             <Button
               variant="contained"
               onClick={logout}
               sx={{
-                backgroundColor: "primary.main",
-                    color: "#000",
-                    fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
+                backgroundColor: "#F97316",
+                color: "#fff",
+                fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: "#e9650e",
+                },
               }}
             >
               {t("navbar.logout")}
@@ -121,29 +122,31 @@ export default function SiteEngineerNavbar() {
               size="small"
               value={i18n.language}
               onChange={(e) => i18n.changeLanguage(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    "& .MuiMenuItem-root:hover": { backgroundColor: "rgba(249, 115, 22, .12)" },
+                    "& .MuiMenuItem-root.Mui-selected": { backgroundColor: "rgba(249, 115, 22, .16)", color: "#F97316" },
+                    "& .MuiMenuItem-root.Mui-selected:hover": { backgroundColor: "rgba(249, 115, 22, .2)" },
+                  },
+                },
+              }}
               sx={{
-                ml: 2,
+                ml: 1.5,
                 backgroundColor: "#fff",
                 borderRadius: 1,
-                height: 35
+                height: 32,
               }}
             >
               <MenuItem value="en">EN</MenuItem>
               <MenuItem value="hi">हिं</MenuItem>
               <MenuItem value="or">ଓଡ଼ିଆ</MenuItem>
             </Select>
-
           </Box>
-
         </Toolbar>
       </AppBar>
 
-      {/* MOBILE DRAWER */}
-      <Drawer
-        anchor="left"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-      >
+      <Drawer anchor="left" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <Box
           sx={{
             width: 260,
@@ -154,25 +157,21 @@ export default function SiteEngineerNavbar() {
             p: 2,
           }}
         >
-          {/* TOP SECTION */}
           <Box>
-            {/* LOGO */}
             <Box sx={{ textAlign: "start", mb: 2 }}>
-              <img
-                src={logo}
-                alt="logo"
-                style={{ width: 70, cursor: "pointer" }}
+              <div
+                className="contractor-wordmark drawer-wordmark"
                 onClick={() => {
-                  navigate("/engineer/home"); // change if needed
+                  navigate("/engineer/home");
                   setOpenDrawer(false);
                 }}
-              />
+              >
+                ODRA<span>OPS</span>
+              </div>
             </Box>
 
-            {/* DIVIDER */}
             <Divider sx={{ mb: 2, bgcolor: "divider" }} />
 
-            {/* MENU ITEMS */}
             <List>
               {menuItems.map((item) => (
                 <ListItem
@@ -185,7 +184,7 @@ export default function SiteEngineerNavbar() {
                     mb: 1,
                     cursor: "pointer",
                     "&:hover": {
-                      backgroundColor: "action.hover",
+                      backgroundColor: "rgba(249, 115, 22, 0.08)",
                     },
                   }}
                 >
@@ -201,18 +200,9 @@ export default function SiteEngineerNavbar() {
             </List>
           </Box>
 
-          {/* BOTTOM SECTION */}
           <Box>
-            {/* USER + LOGOUT */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                mb: 2,
-              }}
-            >
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+              <Avatar sx={{ bgcolor: "#F97316" }}>
                 {localStorage.getItem("name")?.charAt(0)}
               </Avatar>
 
@@ -222,23 +212,19 @@ export default function SiteEngineerNavbar() {
                 sx={{
                   flex: 1,
                   fontWeight: 600,
+                  backgroundColor: "#F97316",
+                  "&:hover": {
+                    backgroundColor: "#e9650e",
+                  },
                 }}
               >
                 {t("navbar.logout")}
               </Button>
             </Box>
 
-            {/* DIVIDER */}
             <Divider sx={{ mb: 1, bgcolor: "divider" }} />
 
-            {/* SOCIAL BAR */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-start",
-                gap: 2,
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "flex-start", gap: 2 }}>
               <SocialBar colourStyle={{ color: "#000" }} />
             </Box>
           </Box>

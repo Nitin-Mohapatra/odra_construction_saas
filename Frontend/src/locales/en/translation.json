@@ -146,7 +146,7 @@
   "attendance": {
     "attendance": "Attendance",
     "attendance_overview": "Attendance Overview",
-    "attendance_desc": "Mark and manage worker attendance for the selected date.",
+    "attendance_desc": "Track and manage worker attendance for the selected date.",
     "attendance_overview_desc": "View daily attendance marked for this project",
     "select_date": "Select Date",
     "worker_attendance": "Worker Attendance",

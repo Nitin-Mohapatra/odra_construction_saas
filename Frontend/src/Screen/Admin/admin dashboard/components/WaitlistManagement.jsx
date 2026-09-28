@@ -277,7 +277,7 @@ export default function WaitlistManagement() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#10b981',
+                color: '#F97316',
                 flexShrink: 0,
               }}
             >

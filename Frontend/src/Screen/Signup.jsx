@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Divider, Paper, Typography, IconButton } from "@mui/material";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import homeBg from "../assets/Home bg image.png";
 
 export default function Signup() {
@@ -18,6 +20,7 @@ export default function Signup() {
     password: ""
   });
   const [validated, setValidated] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -144,17 +147,27 @@ export default function Signup() {
             {/* Password */}
             <Box mb={2}>
               <label className="form-label fw-semibold">{t("auth.password")}</label>
-              <input
-                name="password"
-                type="password"
-                className="form-control"
-                placeholder={t("auth.min_password_placeholder")}
-                value={formData.password}
-                onChange={handleChange}
-                required
-                minLength={5}
-              />
-            
+              <Box sx={{ position: "relative" }}>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
+                  placeholder={t("auth.min_password_placeholder")}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  minLength={5}
+                  style={{ paddingRight: 40 }}
+                />
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  sx={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", color: "#6d7378", p: 0.5 }}
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <VisibilityOffOutlinedIcon sx={{ fontSize: 18 }} /> : <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />}
+                </IconButton>
+              </Box>
               <div className="invalid-feedback">
                 Password must be at least 5 characters.
               </div>

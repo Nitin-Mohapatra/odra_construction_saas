@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { canAccess } from "../utils/subscription";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ProjectChat({ projectId, onMessageSent }) {
     const [messages, setMessages] = useState([]);
@@ -150,20 +151,36 @@ export default function ProjectChat({ projectId, onMessageSent }) {
 
 
     return (
-        <Box sx={{ mt: 3 }}>
-            <Typography variant="h4" gutterBottom>
-                Project Chat
+        <Box sx={{ mt: 3, width: "100%" }}>
+            <Typography
+                variant="h4"
+                sx={{
+                    fontWeight: 700,
+                    mb: 3,
+                    color: "#111827",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                }}
+            >
+                <Box component="span" sx={{ color: "#111827" }}>
+                    Project
+                </Box>
+                <Box component="span" sx={{ color: "#F97316" }}>
+                    Chat
+                </Box>
             </Typography>
 
             <Box
                 sx={{
-                    border: "1px solid #ddd",
+                    border: "1px solid rgba(15, 23, 42, 0.10)",
                     p: 2,
-                    height: 300,
+                    height: 360,
                     overflowY: "auto",
                     mb: 2,
-                    backgroundColor: "#ece5dd",
-                    borderRadius:"2em"
+                    backgroundColor: "#f8f1ee",
+                    borderRadius: "22px",
+                    boxShadow: "inset 0 0 0 1px rgba(249,115,22,0.04)",
                 }}
                 onScroll={(e) => {
                     const container = e.target;
@@ -177,9 +194,79 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                 }}
             >
                 {!loading && messages.length === 0 && (
-                    <Typography color="text.primary">
-                        No messages yet.
-                    </Typography>
+                    <Box
+                        sx={{
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            textAlign: "center",
+                            color: "#4b5563",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: 78,
+                                height: 58,
+                                borderRadius: "18px",
+                                backgroundColor: "rgba(249, 115, 22, 0.12)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                mb: 2,
+                                position: "relative",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    width: 7,
+                                    height: 7,
+                                    borderRadius: "50%",
+                                    backgroundColor: "#F97316",
+                                    bottom: 18,
+                                    left: 24,
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    width: 7,
+                                    height: 7,
+                                    borderRadius: "50%",
+                                    backgroundColor: "#F97316",
+                                    bottom: 18,
+                                    left: 35,
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    width: 7,
+                                    height: 7,
+                                    borderRadius: "50%",
+                                    backgroundColor: "#F97316",
+                                    bottom: 18,
+                                    left: 46,
+                                }}
+                            />
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                fontSize: "1.05rem",
+                                fontWeight: 600,
+                                color: "#111827",
+                                mb: 0.5,
+                            }}
+                        >
+                            No messages yet.
+                        </Typography>
+                        <Typography sx={{ fontSize: "0.95rem", color: "#4b5563" }}>
+                            Start the conversation by typing a message.
+                        </Typography>
+                    </Box>
                 )}
 
                 {loading && (
@@ -209,17 +296,17 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                                 sx={{
                                     maxWidth: "70%",
                                     px: 2,
-                                    py: 1,
+                                    py: 1.1,
                                     borderRadius: isMine
-                                        ? "16px 16px 4px 16px"   // right bubble
-                                        : "16px 16px 16px 4px",  // left bubble
-                                    backgroundColor: isMine ? "#dcf8c6" : "#ffffff",
-                                    color: "#111",
-                                    boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                                        ? "18px 18px 5px 18px"
+                                        : "18px 18px 18px 5px",
+                                    backgroundColor: isMine ? "#F97316" : "#ffffff",
+                                    color: isMine ? "#fff" : "#111827",
+                                    boxShadow: "0 2px 6px rgba(15,23,42,0.08)",
                                     wordBreak: "break-word",
                                 }}
                             >
-                                <Typography sx={{ fontSize: 14, lineHeight: 1.4 }}>
+                                <Typography sx={{ fontSize: 14, lineHeight: 1.5 }}>
                                     {msg.message}
                                 </Typography>
                             </Box>
@@ -227,11 +314,19 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     );
                 })}
 
-
                 <div ref={messagesEndRef}></div>
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 1,
+                    border: "1px solid rgba(15, 23, 42, 0.15)",
+                    borderRadius: "16px",
+                    backgroundColor: "#fff",
+                    overflow: "hidden",
+                }}
+            >
                 <TextField
                     fullWidth
                     size="small"
@@ -239,8 +334,38 @@ export default function ProjectChat({ projectId, onMessageSent }) {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                    variant="outlined"
+                    sx={{
+                        "& .MuiOutlinedInput-root": {
+                            borderRadius: 0,
+                            backgroundColor: "#fff",
+                            "& fieldset": {
+                                border: "none",
+                            },
+                        },
+                        "& .MuiInputBase-input": {
+                            fontSize: "0.96rem",
+                            color: "#111827",
+                            padding: "14px 16px",
+                        },
+                    }}
                 />
-                <Button variant="contained" onClick={sendMessage}>
+                <Button
+                    variant="contained"
+                    onClick={sendMessage}
+                    sx={{
+                        minWidth: 120,
+                        borderRadius: "0 14px 14px 0",
+                        backgroundColor: "#F97316",
+                        color: "#fff",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.02em",
+                        "&:hover": {
+                            backgroundColor: "#E65E0C",
+                        },
+                    }}
+                >
                     Send
                 </Button>
             </Box>
