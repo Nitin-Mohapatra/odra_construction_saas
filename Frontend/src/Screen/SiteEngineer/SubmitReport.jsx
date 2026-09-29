@@ -178,26 +178,21 @@ export default function SubmitReport() {
           elevation={0}
           sx={{
             width: "100%",
-            maxWidth: 600,
-            p: { xs: 3, md: 4 },
+            maxWidth: 760,
+            p: { xs: 4, md: 6 },
             borderRadius: "16px",
-            border: "1px solid #e5e7eb",
+            border: "1px solid #f0eaea",
             backgroundColor: "#ffffff",
+            boxShadow: (theme) => theme.palette.baseShadow,
           }}
         >
           {/* HEADER */}
           <Box sx={{ mb: 3 }}>
-            <Typography
-              variant="h1"
-              sx={{ mb: 0.5 }}
-            >
-              {t("project.submit_report")}
+            <Typography variant="h1" sx={{ mb: 0.5 }}>
+              Submit <Box component="span" sx={{ color: "primary.main" }}>Daily Report</Box>
             </Typography>
 
-            <Typography
-              variant="body2"
-
-            >
+            <Typography variant="body2">
               {t("project.report_date_label", {
                 date: new Date().toLocaleDateString()
               })}
@@ -206,71 +201,114 @@ export default function SubmitReport() {
 
           {/* FORM */}
           <form onSubmit={handleSubmit}>
-            <TextField
-              label={isRecording ? "Recording..." : t("project.work_done")}
-              name="workDone"
-              value={data.workDone}
-              fullWidth
-              multiline
-              rows={4}
-              margin="normal"
-              onChange={handleChange}
-              disabled={isRecording}
-            />
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box sx={{ width: 4, height: 20, backgroundColor: 'primary.main', borderRadius: 1 }} />
+                <Typography sx={{ fontWeight: 600 }}> {t('project.work_done')} </Typography>
+              </Box>
 
-            
-            <TextField
-              label={isRecording ? "Recording..." : t("project.issues")}
-              name="issuesFound"
-              value={data.issuesFound}
-              fullWidth
-              multiline
-              rows={3}
-              margin="normal"
-              onChange={handleChange}
-              disabled={isRecording}
-            />
+              <TextField
+                name="workDone"
+                value={data.workDone}
+                fullWidth
+                multiline
+                rows={2}
+                margin="none"
+                onChange={handleChange}
+                disabled={isRecording}
+                placeholder={isRecording ? 'Recording...' : 'Describe the work you have done...'}
+                variant="outlined"
+                sx={{
+                  mt: 0,
+                  '& .MuiOutlinedInput-root': {
+                      borderRadius: 1,
+                      minHeight: 110,
+                    },
+                  '& .MuiOutlinedInput-input': {
+                    padding: '14px 16px',
+                  },
+                }}
+              />
+            </Box>
 
-            <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box sx={{ width: 4, height: 20, backgroundColor: 'primary.main', borderRadius: 1 }} />
+                <Typography sx={{ fontWeight: 600 }}> {t('project.issues')} </Typography>
+              </Box>
+
+              <TextField
+                name="issuesFound"
+                value={data.issuesFound}
+                fullWidth
+                multiline
+                rows={2}
+                margin="none"
+                onChange={handleChange}
+                disabled={isRecording}
+                placeholder={isRecording ? 'Recording...' : 'Mention any issues or blockers...'}
+                variant="outlined"
+                sx={{
+                  mt: 0,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 1,
+                    minHeight: 90,
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    padding: '12px 16px',
+                  },
+                }}
+              />
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2 }}>
               {!isRecording ? (
                 <Button
                   variant="outlined"
                   onClick={startRecording}
+                  sx={{
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    backgroundColor: 'transparent',
+                    textTransform: 'uppercase',
+                    fontWeight: 600,
+                    px: 2.5,
+                    py: 0.8,
+                    borderRadius: 2,
+                  }}
                 >
-                  🎤 Start Recording
+                  🎤 START RECORDING
                 </Button>
               ) : (
                 <Button
                   color="error"
                   variant="contained"
                   onClick={stopRecording}
+                  sx={{ textTransform: 'uppercase', fontWeight: 600 }}
                 >
-                  ⏹ Stop Recording
+                  ⏹ STOP RECORDING
                 </Button>
               )}
-            </Box>
 
+              <Box sx={{ flex: 1 }} />
 
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                mt: 3,
-              }}
-            >
               <Button
                 type="submit"
                 variant="contained"
                 sx={{
-                  backgroundColor: "primary.main",
-                  color: "#000",
-                  fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
+                  backgroundColor: 'primary.main',
+                  color: '#fff',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  px: 3,
+                  py: 1,
+                  borderRadius: 2,
+                  '&:hover': { backgroundColor: 'primary.dark' },
                 }}
               >
-                {t("project.submit")}
+                {t('project.submit')}
               </Button>
             </Box>
           </form>

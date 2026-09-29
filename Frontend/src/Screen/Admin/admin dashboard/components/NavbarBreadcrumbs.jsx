@@ -14,7 +14,13 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   },
 }));
 
-export default function NavbarBreadcrumbs() {
+export default function NavbarBreadcrumbs({ selectedTab = 'home' }) {
+  const tabLabel = {
+    home: 'Home',
+    waitlist: 'Waitlist',
+    admins: 'Add Admins',
+  }[selectedTab] || 'Home';
+
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
@@ -22,7 +28,7 @@ export default function NavbarBreadcrumbs() {
     >
       <Typography variant="body1">Dashboard</Typography>
       <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-        Home
+        {tabLabel}
       </Typography>
     </StyledBreadcrumbs>
   );

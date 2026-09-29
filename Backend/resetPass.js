@@ -14,8 +14,6 @@ const resetPassword = async () => {
     { email },
     { password: hashed }
   );
-
-  
   console.log("Password reset done");
 };
 

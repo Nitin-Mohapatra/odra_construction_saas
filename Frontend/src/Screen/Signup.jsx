@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Divider, Paper, Typography, IconButton } from "@mui/material";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import homeBg from "../assets/Home bg image.png";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ export default function Signup() {
     password: ""
   });
   const [validated, setValidated] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -78,46 +82,20 @@ export default function Signup() {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: "#FFFFFF",
-        display: "flex",
-      }}
-    >
-      {/* LEFT IMAGE */}
-      <Box
-        sx={{
-          flex: 1,
-          display: { xs: "none", md: "block" },
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1503387762-592deb58ef4e)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+    <Box className="auth-shell auth-signup">
+      <Box className="auth-visual-panel">
+        <Box className="auth-wordmark"><span>ODRA</span><span>OPS</span></Box>
+        <Box className="auth-visual-copy">
+          <Typography component="h1">BUILDING<br /><span>SMARTER</span><br />TOMORROW</Typography>
+          <Typography><strong>ODRAOPS</strong> delivers reliable construction, infrastructure, and <em>resource management</em> solutions.</Typography>
+        </Box>
+      </Box>
 
-      {/* RIGHT FORM */}
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          px: 3,
-        }}
-      >
-        <Paper
-          elevation={6}
-          sx={{
-            width: "100%",
-            maxWidth: 440,
-            p: 4,
-            borderRadius: 3,
-          }}
-        >
+      <Box className="auth-form-panel" style={{ "--auth-bg": `url("${homeBg}")` }}>
+        <Box className="auth-dots" aria-hidden="true">{Array.from({ length: 25 }, (_, i) => <i key={i} />)}</Box>
+        <Paper elevation={0} className="auth-card">
           {/* Header */}
-          <Box sx={{ textAlign: "center", mb: 3 }}>
+          <Box className="auth-card-header">
             <Typography variant="h5" fontWeight={700}>
               {t("auth.create_account")}
             </Typography>
@@ -144,7 +122,7 @@ export default function Signup() {
                 required
                 minLength={2}
               />
-              <div class="invalid-feedback">
+              <div className="invalid-feedback">
                 Please provide a valid name.
               </div>
             </Box>
@@ -161,7 +139,7 @@ export default function Signup() {
                 onChange={handleChange}
                 required
               />
-              <div class="invalid-feedback">
+              <div className="invalid-feedback">
                 Please provide a valid email.
               </div>
             </Box>
@@ -169,18 +147,28 @@ export default function Signup() {
             {/* Password */}
             <Box mb={2}>
               <label className="form-label fw-semibold">{t("auth.password")}</label>
-              <input
-                name="password"
-                type="text"
-                className="form-control"
-                placeholder={t("auth.min_password_placeholder")}
-                value={formData.password}
-                onChange={handleChange}
-                required
-                minLength={5}
-              />
-            
-              <div class="invalid-feedback">
+              <Box sx={{ position: "relative" }}>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
+                  placeholder={t("auth.min_password_placeholder")}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  minLength={5}
+                  style={{ paddingRight: 40 }}
+                />
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  sx={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", color: "#6d7378", p: 0.5 }}
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <VisibilityOffOutlinedIcon sx={{ fontSize: 18 }} /> : <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />}
+                </IconButton>
+              </Box>
+              <div className="invalid-feedback">
                 Password must be at least 5 characters.
               </div>
             </Box>
@@ -188,9 +176,9 @@ export default function Signup() {
             {/* Submit */}
             <button
               type="submit"
-              className="btn w-100 fw-semibold"
+              className="btn w-100 fw-semibold auth-submit"
               style={{
-                backgroundColor: "#1e1e1e",
+                backgroundColor: "#F97316",
                 color: "#fff",
               }}
             >
@@ -198,19 +186,18 @@ export default function Signup() {
             </button>
           </form>
 
-          {/* Divider */}
-          {/* <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
+          <Box className="auth-divider">
             <Divider sx={{ flex: 1 }} />
             <Typography sx={{ px: 2 }} variant="body2" color="text.secondary">
               OR
             </Typography>
             <Divider sx={{ flex: 1 }} />
-          </Box> */}
+          </Box>
 
-          {/* Google Signup */}
-          {/* <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box className="auth-google">
             <GoogleLoginButton />
-          </Box> */}
+          </Box>
+          <Typography className="auth-switch">Already have an account? <Link to="/Login">Sign in</Link></Typography>
         </Paper>
       </Box>
     </Box>

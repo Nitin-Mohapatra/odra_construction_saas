@@ -258,7 +258,7 @@ doc.text(
             }}
             disabled={items.length === 0}
             sx={{
-              borderColor: !canAccess("pdf") ? "#ccc" : "#5FA32D",
+              borderColor: !canAccess("pdf") ? "#ccc" : "#F97316",
               color: !canAccess("pdf") ? "#999" : "#000",
               fontWeight: 600,
               opacity: !canAccess("pdf") ? 0.6 : 1,

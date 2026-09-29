@@ -13,6 +13,30 @@ import LockIcon from "@mui/icons-material/Lock";
 import { canAccess } from "../../utils/subscription";
 import MiscExpenseModal from "../../Components/MiscExpenseModal";
 import EditIcon from "@mui/icons-material/Edit";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import Groups2OutlinedIcon from "@mui/icons-material/Groups2Outlined";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+
+function OverviewBuildingIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V3.5c0-.55.45-1 1-1h9c.55 0 1 .45 1 1V21M15 9h4c.55 0 1 .45 1 1v11M2.5 21h19" /><path d="M7 6h1M11 6h1M7 9h1M11 9h1M7 12h1M11 12h1M7 15h1M11 15h1M17 12h1M17 15h1M17 18h1M9.5 21v-3h2v3" /></svg>;
+}
+
+function OverviewFlagIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18" /><path d="M6 4c4-3 8 3 13 0v9c-5 3-9-3-13 0V4Z" fill="currentColor" stroke="currentColor" strokeLinejoin="round" /></svg>;
+}
+
+function SiteEngineerIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21c.4-3.3 3-5.5 8-5.5s7.6 2.2 8 5.5" /><path d="M7 10a5 5 0 0 1 10 0v2H7v-2Z" /><path d="M5.5 10h13M12 4V2.5M8.5 5.5l-1-1M15.5 5.5l1-1" /><path d="M9 12v1.2a3 3 0 0 0 6 0V12" /></svg>;
+}
+
+function InventoryCubeIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 9 4.7v9.6l-9 4.7-9-4.7V7.2l9-4.7Z" fill="currentColor" /><path d="m3.5 7.4 8.5 4.5 8.5-4.5M12 12v9" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" /></svg>;
+}
 // import { toast } from 'react-toastify';
 import {
   Dialog,
@@ -28,12 +52,14 @@ export default function ProjectDetails() {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openWageModal, setOpenWageModal] = useState(false);
-  const [openEditModal , setOpenEditModal] = useState(false);
-  const [newTitle , setNewTitle] = useState("");
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
   const { id } = useParams();
   const socketRef = useRef(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const overviewTitle = t("project.project_overview");
+  const overviewTitleSplit = overviewTitle.lastIndexOf(" ");
 
   const handleCompleteProject = async () => {
     const confirm = window.confirm(
@@ -71,26 +97,26 @@ export default function ProjectDetails() {
   };
 
   // handle open edit modal function
-  const handleOpenEdit = ()=>{
+  const handleOpenEdit = () => {
     setNewTitle(project?.title || "");
     setOpenEditModal(true);
   }
 
   // update title function
-  const updateProjectTitle = async ()=>{
-    try{
+  const updateProjectTitle = async () => {
+    try {
       const response = await axiosInstance.patch(
         `/projects/${id}/title`,
         {
           title: newTitle
         }
       );
-      setProject((prev)=>({
+      setProject((prev) => ({
         ...prev,
-        title:newTitle
+        title: newTitle
       }))
-        setOpenEditModal(false);
-    }catch(e){
+      setOpenEditModal(false);
+    } catch (e) {
       console.error(e);
       toast.error("Unable to edit the title.");
     }
@@ -136,7 +162,13 @@ export default function ProjectDetails() {
         };
 
       });
-      toast.info(`New report received: ${data.projectTitle}`);
+      toast.info(`New report received: ${data.projectTitle}`, {
+        onClick: () => {
+          if (data.newReport?._id) {
+            navigate(`/contractor/view-report/${data.newReport._id}`);
+          }
+        }
+      });
     });
 
     socketRef.current.on("misc:new", (data) => {
@@ -156,7 +188,7 @@ export default function ProjectDetails() {
   }, [id]);
 
   console.log(project)
-  
+
   if (loading) return <FullScreenLoader />;
 
   // Safe checks for when project is not loaded due to error
@@ -176,6 +208,7 @@ export default function ProjectDetails() {
 
   return (
     <Box
+      className="project-overview-page"
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -185,19 +218,20 @@ export default function ProjectDetails() {
     >
       <ContractorNavbar />
 
-      <Box className="container py-5">
+      <Box className="project-overview-main">
         {/* HEADER */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h1" >
-            {t("project.project_overview")}
+        <Box className="project-overview-heading" sx={{ mb: 3 }}>
+          <Typography variant="h1" className="project-overview-title">
+            {overviewTitleSplit > 0 ? <>{overviewTitle.slice(0, overviewTitleSplit)} <span>{overviewTitle.slice(overviewTitleSplit + 1)}</span></> : <span>{overviewTitle}</span>}
           </Typography>
-          <Typography variant="body1" sx={{mt:2}}>
+          <Typography variant="body1" className="project-overview-subtitle">
             {t("project.project_overview_desc")}
           </Typography>
         </Box>
 
         {/* PROJECT INFO CARD */}
         <Box
+          className="project-overview-grid"
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
@@ -207,6 +241,7 @@ export default function ProjectDetails() {
         >
           {/* LEFT: DETAILS */}
           <Box
+            className="project-details-card"
             sx={{
               backgroundColor: "#fff",
               borderRadius: "16px",
@@ -214,13 +249,13 @@ export default function ProjectDetails() {
               boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
             }}
           >
-            <Box display="flex" alignItems="center" gap={1}>
-
-              <Typography variant="h4">
-                {project.title}
-              </Typography>
-
-              <EditIcon
+            <Box className="project-details-title-row" display="flex" alignItems="center" gap={1}>
+              <Box className="project-details-building"><OverviewBuildingIcon /></Box>
+              <Box className="project-details-title-copy">
+                <div className="project-name-line">
+                  <Typography variant="h4" className="project-details-title">{project.title}</Typography>
+                  <EditIcon
+                className="project-title-edit"
                 sx={{
                   cursor: "pointer",
                   fontSize: 22,
@@ -228,16 +263,12 @@ export default function ProjectDetails() {
                 }}
                 onClick={handleOpenEdit}
               />
-
+                </div>
+                <Typography variant="body2" className="project-details-description">{project.description}</Typography>
+              </Box>
             </Box>
-
-            <Typography variant="body2" sx={{ mb: 3,mt:1 }}>
-              {project.description}
-            </Typography>
-
-            <Box sx={{ display: "grid", rowGap: 1 }}>
-              <Typography variant="body2">
-                <strong>{t("project.status")}:</strong>{" "}
+            <Box className="project-metadata-list">
+              <div className="project-metadata-row"><OverviewFlagIcon /><strong>{t("project.status")}:</strong>
                 <span
                   className={`badge ${project.status === "Completed"
                     ? "bg-success"
@@ -246,32 +277,17 @@ export default function ProjectDetails() {
                 >
                   {project.status}
                 </span>
-              </Typography>
-
-              <Typography variant="body2">
-                <strong>{t("project.start_date")}:</strong>{" "}
-                {new Date(project.startDate).toLocaleDateString()}
-              </Typography>
-
-              <Typography variant="body2">
-                <strong>{t("project.end_date")}:</strong>{" "}
-                {new Date(project.endDate).toLocaleDateString()}
-              </Typography>
-
-              <Typography variant="body2">
-                <strong>{t("project.contractor")}:</strong>{" "}
-                {project.contractor?.name || "N/A"}
-              </Typography>
-
-              <Typography variant="body2">
-                <strong>{t("project.site_engineer")}:</strong>{" "}
-                {project.siteEngineer?.name || "N/A"}
-              </Typography>
+              </div>
+              <div className="project-metadata-row"><CalendarMonthOutlinedIcon /><strong>{t("project.start_date")}:</strong><span>{project.startDate ? new Date(project.startDate).toLocaleDateString("en-GB") : "—"}</span></div>
+              <div className="project-metadata-row"><EventAvailableOutlinedIcon /><strong>{t("project.end_date")}:</strong><span>{project.endDate ? new Date(project.endDate).toLocaleDateString("en-GB") : "—"}</span></div>
+              <div className="project-metadata-row"><PersonOutlineIcon /><strong>{t("project.contractor")}:</strong><span>{project.contractor?.name || "N/A"}</span></div>
+              <div className="project-metadata-row"><SiteEngineerIcon /><strong>{t("project.site_engineer")}:</strong><span>{project.siteEngineer?.name || "N/A"}</span></div>
             </Box>
           </Box>
 
           {/* RIGHT: ACTIONS */}
           <Box
+            className="project-actions-card"
             sx={{
               backgroundColor: "#fff",
               borderRadius: "16px",
@@ -283,11 +299,13 @@ export default function ProjectDetails() {
               height: "fit-content",
             }}
           >
-            <Typography variant="h4" >
+            <Typography variant="h4" className="project-actions-title">
               {t("project.actions")}
             </Typography>
 
             <Button
+              className="overview-action primary-action"
+              startIcon={<VisibilityOutlinedIcon />}
               variant="contained"
               onClick={() => {
                 if (!canAccess("attendance")) {
@@ -322,8 +340,9 @@ export default function ProjectDetails() {
             </Button>
 
             <Button
+              className="overview-action"
+              startIcon={<Groups2OutlinedIcon />}
               variant="outlined"
-              color="info"
               onClick={() => {
                 if (!canAccess("workerWage")) {
                   toast.error("Upgrade to Business Plan to unlock Attendance.");
@@ -334,12 +353,14 @@ export default function ProjectDetails() {
               sx={{
                 position: "relative",
                 opacity: canAccess("workerWage") ? 1 : 0.6,
-                color: "primary.main",
-                borderColor: "primary.main",
+                color: "#F97316",
+                borderColor: "#F97316",
+                backgroundColor: "#fff",
                 fontWeight: 600,
                 "&:hover": {
-                  borderColor: "primary.main",
-                  color: "primary.main",
+                  borderColor: "#e9650e",
+                  backgroundColor: "#fff7f2",
+                  color: "#F97316",
                 },
               }}
             >
@@ -359,6 +380,8 @@ export default function ProjectDetails() {
             {project.status === "Ongoing" && (
               <>
                 <Button
+                  className="overview-action"
+                  startIcon={<Groups2OutlinedIcon />}
                   variant="contained"
                   color="secondary"
                   onClick={() => {
@@ -377,7 +400,7 @@ export default function ProjectDetails() {
                     "&:hover": {
                       backgroundColor: "white",
                     },
-                    
+
                   }}
                 >
                   {t("project.assign_workers")}
@@ -395,6 +418,7 @@ export default function ProjectDetails() {
                 </Button>
 
                 <Button
+                  className="overview-action"
                   variant="contained"
                   color="error"
                   onClick={handleCompleteProject}
@@ -405,6 +429,8 @@ export default function ProjectDetails() {
             )}
 
             <Button
+              className="overview-action"
+              startIcon={<InventoryCubeIcon />}
               variant="outlined"
               onClick={() =>
                 navigate(`/contractor/projects/${id}/inventory`)
@@ -414,6 +440,8 @@ export default function ProjectDetails() {
             </Button>
 
             <Button
+              className="overview-action misc-action"
+              startIcon={<MonetizationOnOutlinedIcon />}
               variant="contained"
               color="warning"
               onClick={() => {
@@ -449,7 +477,7 @@ export default function ProjectDetails() {
             </Button>
 
             {project.status === "Completed" && (
-              <Typography color="error" variant="body2">
+              <Typography className="project-locked-note" color="error" variant="body2">
                 {t("project.project_locked")}
               </Typography>
             )}
@@ -457,6 +485,7 @@ export default function ProjectDetails() {
             <Box sx={{ position: "relative" }}>
               {!canAccess("chat") ? (
                 <Button
+                  className="overview-chat-button"
                   variant="outlined"
                   sx={{
                     opacity: 0.6,
@@ -477,7 +506,7 @@ export default function ProjectDetails() {
                   />
                 </Button>
               ) : (
-                <ChatModal projectId={id} />
+                <span className="overview-chat-button"><ChatModal projectId={id} showIcon /></span>
               )}
             </Box>
           </Box>
@@ -488,6 +517,7 @@ export default function ProjectDetails() {
         {!canAccess("reports") ? (
 
           <Box
+            className="project-reports-locked"
             sx={{
               mt: 4,
               p: 4,
@@ -503,14 +533,14 @@ export default function ProjectDetails() {
 
             <Typography
               variant="body2"
-              sx={{ mt: 1}}
+              sx={{ mt: 1 }}
             >
               Upgrade to Business Plan to unlock Reports feature.
             </Typography>
 
           </Box>
 
-        ) : <Box>
+        ) : <Box className="project-reports-section">
           <Typography variant="h5" fontWeight={600} gutterBottom>
             {t("project.reports")}
           </Typography>
@@ -526,6 +556,7 @@ export default function ProjectDetails() {
               project.reports.map((report) => (
                 <Box
                   key={report._id}
+                  className="project-report-card"
                   sx={{
                     backgroundColor: "#fff",
                     borderRadius: "14px",
@@ -533,12 +564,13 @@ export default function ProjectDetails() {
                     boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
                   }}
                 >
+                  <div className="project-report-icon"><DescriptionOutlinedIcon /></div>
                   <Typography variant='body1' fontWeight="bold">
                     {t("project.report_by", { name: report.siteEngineerId?.name || "Unknown" })}
                   </Typography>
 
                   <Typography variant="body2" sx={{ mt: 1 }}>
-                    <strong>{t("project.work_done")}:</strong> {report.workDone.slice(0,20) + "...."}
+                    <strong>{t("project.work_done")}:</strong> {report.workDone.slice(0, 20) + "...."}
                   </Typography>
 
                   <Typography variant="body2" sx={{ mt: 1 }}>
@@ -547,15 +579,17 @@ export default function ProjectDetails() {
 
                   {report.contractorStatus && (
                     <Box sx={{ mt: 1 }}>
-                      <span className="badge bg-warning">
+                      <span className={`badge ${report.contractorStatus.toLowerCase() === "approved" ? "is-approved" : "is-pending"}`}>
                         {report.contractorStatus}
                       </span>
                     </Box>
                   )}
 
                   <Button
+                    className="view-report-button"
                     variant="outlined"
                     size="small"
+                    endIcon={<OpenInNewIcon />}
                     sx={{
                       mt: 2,
                       opacity: canAccess("reports") ? 1 : 0.6,
@@ -611,6 +645,7 @@ export default function ProjectDetails() {
       />
 
       <Dialog
+        className="project-title-dialog"
         open={openEditModal}
         onClose={() => setOpenEditModal(false)}
       >

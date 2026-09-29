@@ -1,9 +1,43 @@
 import React from "react";
-import { Box, Typography, Button, Card, CardContent } from "@mui/material";
+import { Box, Typography as MuiTypography, Button, Card, CardContent } from "@mui/material";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import KeyboardVoiceOutlinedIcon from "@mui/icons-material/KeyboardVoiceOutlined";
 import { useNavigate } from "react-router-dom";
 import { getSubscription } from "../utils/subscription";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+import homeBg from "../assets/Home bg image.png";
+
+function Typography({ children, className = "", ...props }) {
+  if (typeof children === "string") {
+    const featureMatch = children.trim().match(/^(✅|❌|🤖|🎤|🎙️?)\s+(.+)$/u);
+    if (featureMatch) {
+      const [, marker, label] = featureMatch;
+      const specialIcon = marker === "🤖"
+        ? <AutoAwesomeOutlinedIcon />
+        : marker === "🎤" || marker.startsWith("🎙")
+          ? <KeyboardVoiceOutlinedIcon />
+          : null;
+      return (
+        <MuiTypography {...props} className={`pricing-feature ${className}`}>
+          {specialIcon ? (
+            <span className="pricing-special-feature-icon">{specialIcon}</span>
+          ) : (
+            <span className={`pricing-feature-mark ${marker === "✅" ? "is-included" : "is-excluded"}`}>
+              {marker === "✅" ? <CheckRoundedIcon /> : <CloseRoundedIcon />}
+            </span>
+          )}
+          <span>{label}</span>
+        </MuiTypography>
+      );
+    }
+  }
+  return <MuiTypography {...props} className={className}>{children}</MuiTypography>;
+}
 
 export default function Pricing() {
   const navigate = useNavigate();
@@ -59,7 +93,7 @@ export default function Pricing() {
           navigate("/contractor/home");
         },
         theme: {
-          color: "#1976d2"
+          color: "#F97316"
         }
       };
 
@@ -73,36 +107,23 @@ export default function Pricing() {
   };
   
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg, #f8fafc 0%, #eef5ff 100%)",
-        py: 8,
-        px: { xs: 2, md: 6 },
-      }}
-    >
-      <Typography
-        variant="h3"
-        align="center"
-        fontWeight={800}
-        sx={{ mb: 1 }}
-      >
-        Choose Your Plan
+    <div className="pricing-page">
+      <Navbar />
+      <Box component="main" className="pricing-main" style={{ "--pricing-art": `url("${homeBg}")` }}>
+      <Box className="pricing-content">
+      <Typography component="h1" variant="h3" align="center" fontWeight={800} className="pricing-title">
+        CHOOSE THE <span>RIGHT PLAN</span>
       </Typography>
 
-      <Typography
-        align="center"
-        color="text.secondary"
-        sx={{ mb: 7, fontSize: "1.05rem" }}
-      >
-        Choose the perfect plan for your construction business.
+      <Typography align="center" color="text.secondary" className="pricing-subtitle">
+        Simple, flexible pricing for every stage of your construction business.
       </Typography>
 
       <div className="container">
         <div className="row g-4 justify-content-center">
 
           {/* FREE PLAN */}
-          <div className="col-12 col-md-6 col-xl-4 d-flex">
+          <div className="col-12 col-md-4 d-flex">
             <Card
               elevation={3}
               sx={{
@@ -115,7 +136,7 @@ export default function Pricing() {
                 },
               }}
             >
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: 3 }}>
                 <Typography
                   variant="h5"
                   fontWeight={700}
@@ -133,7 +154,7 @@ export default function Pricing() {
                   ₹0
                 </Typography>
 
-                <Box sx={{ mb: 4 }}>
+                <Box className="pricing-features" sx={{ mb: 4 }}>
                   <Typography sx={{ mb: 1 }}>✅ 1 Active Project</Typography>
                   <Typography sx={{ mb: 1 }}>✅ Inventory Management</Typography>
                   <Typography sx={{ mb: 1, color: "text.secondary" }}>
@@ -169,7 +190,7 @@ export default function Pricing() {
                     disabled
                     sx={{ py: 1.3 }}
                   >
-                    Current Plan
+                    CURRENT PLAN
                   </Button>
                 ) : (
                   <Button
@@ -177,7 +198,7 @@ export default function Pricing() {
                     variant="outlined"
                     sx={{ py: 1.3 }}
                   >
-                    Continue Free
+                    CONTINUE FREE
                   </Button>
                 )}
               </CardContent>
@@ -185,13 +206,13 @@ export default function Pricing() {
           </div>
 
         {/* BUSINESS 6 MONTH */}
-          <div className="col-12 col-md-6 col-xl-4 d-flex">
+          <div className="col-12 col-md-4 d-flex">
             <Card
               elevation={8}
               sx={{
                 width: "100%",
                 borderRadius: 4,
-                border: "2px solid #1976d2",
+                border: "2px solid #F97316",
                 position: "relative",
                 transition: "0.35s",
                 "&:hover": {
@@ -201,11 +222,12 @@ export default function Pricing() {
               }}
             >
               <Box
+                className="pricing-popular"
                 sx={{
                   position: "absolute",
                   top: 16,
                   right: 16,
-                  bgcolor: "primary.main",
+                  bgcolor: "#F97316",
                   color: "#fff",
                   px: 2,
                   py: 0.5,
@@ -217,7 +239,7 @@ export default function Pricing() {
                 MOST POPULAR
               </Box>
 
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: 3 }}>
                 <Typography
                   variant="h5"
                   fontWeight={700}
@@ -242,7 +264,7 @@ export default function Pricing() {
                   ₹15,000
                 </Typography>
 
-                <Box sx={{ mb: 4 }}>
+                <Box className="pricing-features" sx={{ mb: 4 }}>
                   <Typography sx={{ mb: 1 }}>
                     ✅ Unlimited Projects
                   </Typography>
@@ -293,7 +315,7 @@ export default function Pricing() {
                     disabled
                     sx={{ py: 1.4 }}
                   >
-                    Active Plan
+                    ACTIVE PLAN
                   </Button>
                 ) : (
                   <Button
@@ -302,7 +324,7 @@ export default function Pricing() {
                     sx={{ py: 1.4 }}
                     onClick={() => handlePayment(6)}
                   >
-                    Upgrade Now
+                    ACTIVE PLAN
                   </Button>
                 )}
               </CardContent>
@@ -310,7 +332,7 @@ export default function Pricing() {
           </div>
 
         {/* BUSINESS 1 YEAR */}
-          <div className="col-12 col-md-6 col-xl-4 d-flex">
+          <div className="col-12 col-md-4 d-flex">
             <Card
               elevation={3}
               sx={{
@@ -323,7 +345,7 @@ export default function Pricing() {
                 },
               }}
             >
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: 3 }}>
                 <Typography
                   variant="h5"
                   fontWeight={700}
@@ -348,7 +370,7 @@ export default function Pricing() {
                   ₹34,000
                 </Typography>
 
-                <Box sx={{ mb: 4 }}>
+                <Box className="pricing-features" sx={{ mb: 4 }}>
                   <Typography sx={{ mb: 1 }}>
                     ✅ Unlimited Projects
                   </Typography>
@@ -400,7 +422,7 @@ export default function Pricing() {
                     disabled
                     sx={{ py: 1.4 }}
                   >
-                    Active Plan
+                    ACTIVE PLAN
                   </Button>
                 ) : (
                   <Button
@@ -409,7 +431,7 @@ export default function Pricing() {
                     sx={{ py: 1.4 }}
                     onClick={() => handlePayment(12)}
                   >
-                    Upgrade Now
+                    UPGRADE NOW
                   </Button>
                 )}
               </CardContent>
@@ -417,6 +439,9 @@ export default function Pricing() {
           </div>
       </div>
       </div>
-    </Box>
+      </Box>
+      </Box>
+      <Footer />
+    </div>
   );
 }

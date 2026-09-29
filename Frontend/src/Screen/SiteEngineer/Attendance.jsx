@@ -9,8 +9,11 @@ import {
   Button,
   Switch,
   CircularProgress,
-  TextField
+  TextField,
+  InputAdornment
 } from "@mui/material";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
 import { useTranslation } from "react-i18next";
@@ -19,6 +22,7 @@ import { io } from "socket.io-client";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FullScreenLoader from "../../Components/FullScreenLoader";
+import pageBackground from "../../assets/background image.png";
 
 export default function Attendance() {
   const navigate = useNavigate();
@@ -152,137 +156,254 @@ export default function Attendance() {
   
       <Box
         sx={{
+          position: "relative",
           minHeight: "100vh",
-          backgroundColor: "#f9fafb",
+          backgroundColor: "#fff",
+          backgroundImage: `url(${pageBackground})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center top",
+          backgroundSize: "cover",
+          backgroundAttachment: "fixed",
           px: { xs: 2, md: 6 },
           py: { xs: 3, md: 5 },
+          overflow: "hidden",
         }}
       >
-        {/* HEADER */}
-        <Box sx={{ maxWidth: 900, mx: "auto", mb: 4 }}>
-          <Typography
-            variant="h1"
-            sx={{ mb: 1}}
-          >
-            {t("attendance.attendance")}
-          </Typography>
-  
-          <Typography variant="body1">
-            {t("attendance.attendance_desc")}     
-          </Typography>
-        </Box>
-  
-        {/* DATE PICKER */}
-        <Box
-          sx={{
-            maxWidth: 900,
-            mx: "auto",
-            mb: 3,
-            display: "flex",
-            justifyContent: "flex-start",
-          }}
-        >
-          <TextField
-            type="date"
-            value={date}
-            inputProps={{
-              min: project?.startDate?.split("T")[0],
-              max:
-                project?.status === "Completed"
-                  ? project?.endDate?.split("T")[0]
-                  : new Date().toISOString().split("T")[0],
-            }}
-            disabled={project?.status === "Completed"}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </Box>
-  
-        {/* ATTENDANCE LIST */}
-        <Paper
-          elevation={0}
-          sx={{
-            maxWidth: 900,
-            mx: "auto",
-            p: { xs: 2, md: 3 },
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-            backgroundColor: "#ffffff",
-          }}
-        >
-          {workers.length === 0 && (
-            <Typography color="text.secondary">
-              {t("attendance.attendance_desc")}
-            </Typography>
-          )}
-  
-          {workers.map((worker) => (
-            <Box
-              key={worker._id}
+        <Box sx={{ position: "relative", maxWidth: 980, mx: "auto" }}>
+          {/* HEADER */}
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="h1"
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                py: 1.5,
-                borderBottom: "1px solid #f1f1f1",
+                mb: 1,
+                fontSize: { xs: "1.8rem", sm: "2.1rem", md: "2.5rem" },
+                fontWeight: 800,
+                letterSpacing: "-0.06em",
+                lineHeight: 1.1,
+                color: "#111827",
               }}
             >
-              <Typography sx={{ fontWeight: 500 }}>
-                {worker.name}
+              {t("attendance.attendance")}
+              <Box component="span" sx={{ color: "#F97316" }}>.</Box>
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#4b5563",
+                fontSize: "0.92rem",
+                fontWeight: 400,
+                opacity: 0.95,
+              }}
+            >
+              {t("attendance.attendance_desc")}
+            </Typography>
+          </Box>
+
+          {/* DATE PICKER */}
+          <Box
+            sx={{
+              mb: 3,
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <TextField
+              type="date"
+              value={date}
+              inputProps={{
+                min: project?.startDate?.split("T")[0],
+                max:
+                  project?.status === "Completed"
+                    ? project?.endDate?.split("T")[0]
+                    : new Date().toISOString().split("T")[0],
+              }}
+              disabled={project?.status === "Completed"}
+              onChange={(e) => setDate(e.target.value)}
+              sx={{
+                width: 260,
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#fbfbfb",
+                  borderRadius: "10px",
+                  height: "52px",
+                  border: "1px solid #d6d6d6",
+                  boxShadow: "0 1px 0 rgba(15,23,42,0.02)",
+                  color: "#111827",
+                  fontWeight: 600,
+                  fontSize: "1.05rem",
+                  paddingRight: 0,
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                "& .MuiInputAdornment-root": {
+                  marginRight: 1,
+                },
+              }}
+            //   InputProps={{
+            //     endAdornment: (
+            //       <InputAdornment position="end">
+            //         <Box
+            //           sx={{
+            //             display: "flex",
+            //             alignItems: "center",
+            //             justifyContent: "center",
+            //             width: 30,
+            //             height: 30,
+            //             mr: 1,
+            //             color: "#F97316",
+            //           }}
+            //         >
+            //           <CalendarTodayOutlinedIcon fontSize="small" />
+            //         </Box>
+            //       </InputAdornment>
+            //     ),
+            //   }}
+            />
+          </Box>
+
+          { <Paper
+            elevation={0}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              width: "100%",
+              minHeight: 76,
+              p: 2,
+              borderRadius: "14px",
+              border: "1px solid #e6e4e3",
+              backgroundColor: "#f7f7f7",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                borderRadius: "10px",
+                backgroundColor: "#F97316",
+                color: "#fff",
+                flexShrink: 0,
+              }}
+            >
+              <AssignmentTurnedInOutlinedIcon sx={{ fontSize: 18 }} />
+            </Box>
+
+            <Typography
+              sx={{
+                fontSize: "0.92rem",
+                color: "#404852",
+                fontWeight: 500,
+                lineHeight: 1.4,
+              }}
+            >
+              {t("attendance.attendance_desc")}
+            </Typography>
+          </Paper> }
+
+          {/* ATTENDANCE LIST */}
+          <Paper
+            elevation={0}
+            sx={{
+              maxWidth: 900,
+              mx: "auto",
+              mt: 4,
+              p: { xs: 2, md: 3 },
+              borderRadius: "16px",
+              border: "1px solid #e5e7eb",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            {workers.length === 0 && (
+              <Typography color="text.secondary">
+                {t("attendance.attendance_desc")}
               </Typography>
-  
+            )}
+
+            {workers.map((worker) => (
               <Box
+                key={worker._id}
                 sx={{
                   display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  gap: 2,
+                  py: 1.5,
+                  borderBottom: "1px solid #f1f1f1",
                 }}
               >
-                <Typography
-                  variant="body2"
-                  color={
-                    attendance[worker._id] === "present"
-                      ? "success.main"
-                      : "text.secondary"
-                  }
-                >
-                  {attendance[worker._id] === "present"
-                    ? t("attendance.present")
-                    : t("attendance.absent")}
+                <Typography sx={{ fontWeight: 500 }}>
+                  {worker.name}
                 </Typography>
-  
-                <Switch
-                  checked={attendance[worker._id] === "present"}
-                  onChange={() => toggleAttendance(worker._id)}
-                  color="success"
-                  disabled={project.status === "Completed"}
-                />
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color={
+                      attendance[worker._id] === "present"
+                        ? "success.main"
+                        : "text.secondary"
+                    }
+                  >
+                    {attendance[worker._id] === "present"
+                      ? t("attendance.present")
+                      : t("attendance.absent")}
+                  </Typography>
+
+                  <Switch
+                    checked={attendance[worker._id] === "present"}
+                    onChange={() => toggleAttendance(worker._id)}
+                    sx={{
+                      "& .MuiSwitch-switchBase.Mui-checked": {
+                        color: "#F97316",
+                      },
+                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                        backgroundColor: "#F97316",
+                      },
+                    }}
+                    disabled={project.status === "Completed"}
+                  />
+                </Box>
               </Box>
-            </Box>
-          ))}
-  
-          {/* SAVE BUTTON / STATUS */}
-          {project.status !== "Completed" && workers.length > 0 && (
-            <Button
-              variant="contained"
-              color="success"
-              fullWidth
-              sx={{ mt: 3 }}
-              onClick={submitAttendance}
-            >
-              {t("attendance.save_attendance")}
-            </Button>
-          )}
-  
-          {project.status === "Completed" && (
-            <Typography color="error" sx={{ mt: 3 }}>
-              {t("attendance.attendance_read_only")}
-            </Typography>
-          )}
-        </Paper>
+            ))}
+
+            {project.status !== "Completed" && workers.length > 0 && (
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  mt: 3,
+                  backgroundColor: "#F97316",
+                  "&:hover": {
+                    backgroundColor: "#E65E0C",
+                  },
+                }}
+                onClick={submitAttendance}
+              >
+                {t("attendance.save_attendance")}
+              </Button>
+            )}
+
+            {project.status === "Completed" && (
+              <Typography color="error" sx={{ mt: 3 }}>
+                {t("attendance.attendance_read_only")}
+              </Typography>
+            )}
+          </Paper>
+        </Box>
       </Box>
-  
+
       <Footer />
     </>
   );
-  
 }
+

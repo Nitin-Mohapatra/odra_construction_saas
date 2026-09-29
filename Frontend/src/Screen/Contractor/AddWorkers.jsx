@@ -1,218 +1,86 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ContractorNavbar from '../../Components/ContractorNavbar';
-import Footer from '../../Components/Footer';
-import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mui/material';
-import { toast } from 'react-toastify';
-import axiosInstance from '../../utils/axiosInstance';
-import workerImage from '../../assets/pic.png';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ContractorNavbar from "../../Components/ContractorNavbar";
+import { Box, TextField, Button, Typography, Paper, CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
+import axiosInstance from "../../utils/axiosInstance";
+import addWorkerArtwork from "../../assets/Add Worker.png";
 import { useTranslation } from "react-i18next";
 import { canAccess } from "../../utils/subscription";
-import { useEffect } from 'react';
 
 export default function AddWorkers() {
-    const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [dailyWage, setDailyWage] = useState('');
-    const [payoutType, setPayoutType] = useState('daily');
-    const [loading, setLoading] = useState(false);
-    const { t } = useTranslation();
-    
-    useEffect(() => {
-      if (!canAccess("addWorker")) {
-        toast.error("Upgrade to Business Plan to unlock Worker Management.");
-        navigate("/contractor/home");
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dailyWage, setDailyWage] = useState("");
+  const [payoutType, setPayoutType] = useState("daily");
+  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!canAccess("addWorker")) {
+      toast.error("Upgrade to Business Plan to unlock Worker Management.");
+      navigate("/contractor/home");
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!name.trim()) {
+      toast.error("Please enter a worker name");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axiosInstance.post("/workers", {
+        name: name.trim(),
+        phone: phone.trim() || undefined,
+        dailyWage,
+        payoutType,
+      });
+      if (res.status === 201) {
+        toast.success("Worker added successfully!");
+        setName("");
+        setPhone("");
+        setDailyWage("");
       }
-    }, []);
-    
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        if (!name.trim()) {
-            toast.error('Please enter a worker name');
-            return;
-        }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.error || "Failed to add worker");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setLoading(true);
-        try {
-            const res = await axiosInstance.post(
-                '/workers',
-                {
-                    name: name.trim(),
-                    phone: phone.trim() || undefined,
-                    dailyWage,
-                    payoutType
-                }
-            );
+  const title = t("workers.add_worker");
+  const splitAt = title.lastIndexOf(" ");
 
-            if (res.status === 201) {
-                toast.success('Worker added successfully!');
-                setName('');
-                setPhone('');
-                // Optionally navigate back or refresh
-                // navigate(-1);
-            }
-        } catch (error) {
-            console.error(error);
-            const errorMessage = error.response?.data?.error || 'Failed to add worker';
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <>
-          <ContractorNavbar />
-      
-          <Box
-            sx={{
-              minHeight: "100vh",
-              display: "flex",
-              backgroundColor: "#f9fafb",
-            }}
-          >
-            {/* LEFT IMAGE – DESKTOP ONLY */}
-            <Box
-              sx={{
-                display: { xs: "none", md: "block" },
-                width: "45%",
-                minHeight: "100vh",
-              }}
-            >
-              <img
-                src={workerImage}
-                alt={workerImage}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-            </Box>
-      
-            {/* RIGHT FORM */}
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                p: { xs: 2, md: 5 },
-              }}
-            >
-              <Paper
-                elevation={0}
-                sx={{
-                  width: "100%",
-                  maxWidth: 520,
-                  p: { xs: 3, md: 4 },
-                  borderRadius: "20px",
-                  boxShadow: "0 15px 40px rgba(0,0,0,0.1)",
-                }}
-              >
-                <Typography
-                  variant="h4"
-                  fontWeight={700}
-                  gutterBottom
-                  sx={{ color: "#1e1e1e" }}
-                >
-                  {t("workers.add_worker")}
-                </Typography>
-      
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  {t("workers.add_worker_desc")}
-                </Typography>
-      
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    fullWidth
-                    label={t("workers.worker_name")}
-                    variant="outlined"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    margin="normal"
-                    required
-                    disabled={loading}
-                  />
-      
-                  <TextField
-                    fullWidth
-                    label={t("workers.phone_optional")}
-                    variant="outlined"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    margin="normal"
-                    disabled={loading}
-                  />
-
-                <TextField
-                  fullWidth
-                  label="Daily Wage"
-                  type="number"
-                  value={dailyWage}
-                  onChange={(e) => setDailyWage(e.target.value)}
-                  margin="normal"
-                  required
-                />
-
-                <TextField
-                  select
-                  fullWidth
-                  label="Payout Type"
-                  value={payoutType}
-                  onChange={(e) => setPayoutType(e.target.value)}
-                  margin="normal"
-                  SelectProps={{ native: true }}
-                >
-                  <option value="daily">Daily</option>
-                  <option value="monthly">Monthly</option>
-                </TextField>
-      
-                  <Box sx={{ display: "flex", gap: 2, mt: 4 }}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={loading}
-                      fullWidth
-                      sx={{
-                        backgroundColor: "#f5a623",
-                        color: "#000",
-                        fontWeight: 600,
-                        "&:hover": {
-                          backgroundColor: "#e0941d",
-                        },
-                      }}
-                    >
-                      {loading ? <CircularProgress size={24} /> : t("workers.add_worker_btn")}
-                    </Button>
-      
-                    <Button
-                      variant="outlined"
-                      onClick={() => navigate(-1)}
-                      disabled={loading}
-                      sx={{
-                        borderColor: "#f5a623",
-                        color: "#000",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {t("workers.cancel")}
-                    </Button>
-                  </Box>
-                </form>
-              </Paper>
-            </Box>
-          </Box>
-      
-          <Footer />
-        </>
-      );
-      
+  return (
+    <div className="add-worker-page" style={{ "--add-worker-art": `url("${addWorkerArtwork}")` }}>
+      <ContractorNavbar />
+      <main className="add-worker-main">
+        <Paper className="add-worker-card" elevation={0}>
+          <Typography component="h1" className="add-worker-title">
+            {splitAt > 0 ? <>{title.slice(0, splitAt)} <span>{title.slice(splitAt + 1)}</span></> : <span>{title}</span>}
+          </Typography>
+          <Typography component="p" className="add-worker-subtitle">{t("workers.add_worker_desc")}</Typography>
+          <form className="add-worker-form" onSubmit={handleSubmit}>
+            <TextField className="add-worker-field" fullWidth placeholder={`${t("workers.worker_name")} *`} value={name} onChange={(e) => setName(e.target.value)} required disabled={loading} />
+            <TextField className="add-worker-field" fullWidth placeholder={t("workers.phone_optional")} value={phone} onChange={(e) => setPhone(e.target.value)} disabled={loading} />
+            <TextField className="add-worker-field" fullWidth placeholder="Daily Wage *" type="number" value={dailyWage} onChange={(e) => setDailyWage(e.target.value)} required disabled={loading} />
+            <TextField className="add-worker-field add-worker-payout" select fullWidth label="Payout Type" value={payoutType} onChange={(e) => setPayoutType(e.target.value)} disabled={loading} SelectProps={{ native: true }}>
+              <option value="daily">Daily</option>
+              <option value="monthly">Monthly</option>
+            </TextField>
+            <div className="add-worker-actions">
+              <Button className="add-worker-submit" type="submit" variant="contained" disabled={loading}>
+                {loading ? <CircularProgress size={20} sx={{ color: "#fff" }} /> : t("workers.add_worker_btn")}
+              </Button>
+              <Button className="add-worker-cancel" type="button" variant="outlined" onClick={() => navigate(-1)} disabled={loading}>{t("workers.cancel")}</Button>
+            </div>
+          </form>
+        </Paper>
+      </main>
+    </div>
+  );
 }
-

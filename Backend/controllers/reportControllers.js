@@ -78,7 +78,8 @@ exports.createReport = async (req, res) => {
             data: {
                 type: "dpr",
                 projectId: projectDetails._id,
-                reportId: newReport._id
+                reportId: newReport._id,
+                url: `/contractor/view-report/${newReport._id}`
             }
         });
 

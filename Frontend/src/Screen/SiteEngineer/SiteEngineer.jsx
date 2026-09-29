@@ -20,7 +20,7 @@ export default function SiteEngineer() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
- 
+
   useEffect(() => {
     // decode token to get REAL MongoDB user id
     const token = localStorage.getItem("token");
@@ -47,7 +47,15 @@ export default function SiteEngineer() {
 
     socket.on("project:assigned", (data) => {
       console.log("Project assigned event received:", data);
-      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`);
+      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`, {
+        onClick: () => {
+          if (data.newProject?._id) {
+            navigate(`/site-engineer/projects/${data.newProject._id}`);
+          } else {
+            navigate("/site-engineer/projects");
+          }
+        }
+      });
     });
 
     return () => {
@@ -70,7 +78,7 @@ export default function SiteEngineer() {
           minHeight: "100vh",
         }}
       >
-        <Caroucell customStyles = {{"border-bottom":"1px dashed black"}}/>
+        <Caroucell customStyles={{ "border-bottom": "1px dashed black" }} />
 
         {/* FEATURES SECTION */}
         <div className="container py-5">
@@ -94,7 +102,7 @@ export default function SiteEngineer() {
                 }}
               >
                 <div className="card-body p-4">
-                  <Typography  variant="h6" className="fw-semibold mb-3">
+                  <Typography variant="h6" className="fw-semibold mb-3">
                     {t("dashboard.engineer.real_time_title")}
                   </Typography>
                   <Typography className="text-muted small">
@@ -121,7 +129,7 @@ export default function SiteEngineer() {
                     <li className="mb-2">{t("dashboard.engineer.pm_3")}</li>
                   </ul>
                 </div>
-                
+
               </div>
             </div>
 

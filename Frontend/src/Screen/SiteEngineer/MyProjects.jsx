@@ -5,15 +5,11 @@ import SiteEngineerNavbar from '../../Components/SiteEngineerNavbar';
 import axiosInstance from '../../utils/axiosInstance';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { jwtDecode } from "jwt-decode";
 import { io } from "socket.io-client";
 import { useRef } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from 'react-toastify';
-import { Button } from '@mui/material';
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useTranslation } from "react-i18next";
@@ -21,6 +17,26 @@ import Tooltip from "@mui/material/Tooltip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import IconButton from "@mui/material/IconButton";
 import FullScreenLoader from "../../Components/FullScreenLoader";
+
+function ProjectBuildingIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 21V3.5c0-.55.45-1 1-1h9c.55 0 1 .45 1 1V21M15 9h4c.55 0 1 .45 1 1v11M2.5 21h19" />
+      <path d="M7 6h1M11 6h1M7 9h1M11 9h1M7 12h1M11 12h1M7 15h1M11 15h1M17 12h1M17 15h1M17 18h1" />
+      <path d="M9.5 21v-3h2v3" />
+    </svg>
+  );
+}
+
+function ProjectEditIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M13.5 5H5.25A1.25 1.25 0 0 0 4 6.25v12.5A1.25 1.25 0 0 0 5.25 20h12.5A1.25 1.25 0 0 0 19 18.75V11.5" />
+      <path d="m10 14 1-3.2L18.7 3a1.55 1.55 0 0 1 2.2 2.2l-7.8 7.7L10 14Z" />
+      <path d="M7 17h7" />
+    </svg>
+  );
+}
 
 export default function MyProjects() {
   const [projects, setProjects] = useState([]);
@@ -62,7 +78,13 @@ export default function MyProjects() {
 
     socketRef.current.on("project:assigned", (data) => {
       setProjects((prev) => [...prev, data.newProject])
-      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`);
+      toast.info(`New project assigned: ${data.newProject.title} by ${data.contractorName}`, {
+        onClick: () => {
+          if (data.newProject?._id) {
+            navigate(`/site-engineer/projects/${data.newProject._id}`);
+          }
+        }
+      });
     })
 
     socketRef.current.on("project:deleted", (data) => {
@@ -99,154 +121,95 @@ export default function MyProjects() {
 
 
 
+  const formattedDate = (project) => {
+    const date = project.createdAt || project.created_at || project.createdOn;
+    if (!date) return "";
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime())
+      ? ""
+      : `Created on ${parsed.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })}`;
+  };
+
   if (loading) return <FullScreenLoader />;
 
   return (
-    <>
+    <div className="projects-page">
       <SiteEngineerNavbar />
+      <main className="projects-main">
+        <header className="projects-header">
+          <div>
+            <Typography component="h1" className="projects-title">
+              {t("project.my_projects")}
+            </Typography>
+            <Typography component="p" className="projects-subtitle">
+              {t("project.track_projects")}
+            </Typography>
+          </div>
+        </header>
 
-      <Box
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#f9fafb",
-          px: { xs: 2, md: 6 },
-          py: { xs: 4, md: 6 },
-        }}
-      >
-        {/* HEADER */}
-        <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
-          <Typography
-            variant="h1"
-            sx={{ mb: 1 }}
-          >
-            {t("project.my_projects")}
-          </Typography>
-          <Typography variant="body1" >
-            {t("project.track_projects")}
-          </Typography>
-          {/* <Divider sx={{ mt: 3 }} /> */}
-        </Box>
+        <Tabs
+          className="projects-tabs"
+          value={tab}
+          onChange={(_event, newValue) => setTab(newValue)}
+          aria-label="Project status filters"
+        >
+          <Tab label={t("project.all_projects")} />
+          <Tab label={t("project.ongoing")} />
+          <Tab label={t("project.completed")} />
+        </Tabs>
 
-        {/* TABS */}
-        <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
-          <Tabs
-            value={tab}
-            onChange={(e, newValue) => setTab(newValue)}
-          >
-            <Tab label={t("project.all_projects")} />
-            <Tab label={t("project.ongoing")} />
-            <Tab label={t("project.completed")} />
-          </Tabs>
-        </Box>
-
-        {/* ERROR */}
         {error && (
           <Typography color="error" sx={{ mb: 3 }}>
             {error}
           </Typography>
         )}
 
-        {/* PROJECT GRID */}
-        <Box
-          sx={{
-            maxWidth: 1200,
-            mx: "auto",
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              lg: "repeat(3, 1fr)",
-            },
-            gap: 3,
-          }}
-        >
-          {projects
-            .filter((project) => {
-              if (tab === 1) return project.status === "Ongoing";
-              if (tab === 2) return project.status === "Completed";
-              return true; // All
-            })
-            .map((project) => (
-              <Card
-                key={project._id}
-                sx={{
-                  borderRadius: "16px",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  "&:hover": {
-                    transform: "translateY(-6px)",
-                    boxShadow: "0 18px 40px rgba(0,0,0,0.12)",
-                  },
-                }}
-              >
-
-                {/* TOP RIGHT ACTIONS */}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    display: "flex",
-                    gap: 1,
-                  }}
-                >
-                  <Tooltip title={t("project.open_project")}>
-                    <IconButton
-                      size="small"
-                      onClick={() =>
-                        navigate(
-                          `/site-engineer/projects/${project._id}`
-                        )
-                      }
-                      sx={{
-                        backgroundColor: "primary.main",
-                        color: "text.primary",
-                        width: 34,
-                        height: 34,
-                        "&:hover": {
-                          backgroundColor: "secondary.main",
-                          color: "text.secondary"
-                        },
-                      }}
-                    >
-                      <OpenInNewIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-
-                </Box>
-
-                <CardContent sx={{ p: 3 }}>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, mb: 1 }}
-                  >
-                    {project.title || t("project.untitled_project")}
-                  </Typography>
-
-                  <Typography
-                    variant="body2"
-                    sx={{ mb: 2 }}
-                  >
-                    {project.contractor?.name
-                      ? t("project.contractor_with_name", { name: project.contractor.name })
-                      : t("project.contractor_with_name", { name: t("project.na") })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
-
-          {projects.length === 0 && (
-            <Typography variant="body1" color="text.secondary">
-              {t("project.no_assigned_projects")}
-            </Typography>
-          )}
-        </Box>
-      </Box>
+        {projects.filter((project) => {
+          if (tab === 1) return project.status === "Ongoing";
+          if (tab === 2) return project.status === "Completed";
+          return true;
+        }).length ? (
+          <section className="projects-grid">
+            {projects
+              .filter((project) => {
+                if (tab === 1) return project.status === "Ongoing";
+                if (tab === 2) return project.status === "Completed";
+                return true;
+              })
+              .map((project) => (
+                <article className="project-card" key={project._id} onClick={() => navigate(`/site-engineer/projects/${project._id}`)}>
+                  <div className="project-card-icon"><ProjectBuildingIcon /></div>
+                  <div className="project-card-copy">
+                    <Typography component="h2" title={project.title || t("project.untitled_project")}>
+                      {project.title || t("project.untitled_project")}
+                    </Typography>
+                    <span className="project-card-date">{formattedDate(project)}</span>
+                    <span className={`project-status ${project.status?.toLowerCase() === "completed" ? "is-completed" : ""}`}>
+                      {project.status || t("project.ongoing")}
+                    </span>
+                  </div>
+                  <div className="project-card-actions" onClick={(event) => event.stopPropagation()}>
+                    <Tooltip title={t("project.open_project")}>
+                      <IconButton aria-label="Open project" onClick={() => navigate(`/site-engineer/projects/${project._id}`)}>
+                          <ProjectEditIcon />
+                        </IconButton>
+                    </Tooltip>
+                  </div>
+                </article>
+              ))}
+          </section>
+        ) : (
+          <Typography className="projects-empty" sx={{ mt: 2 }}>
+            {t("project.no_assigned_projects")}
+          </Typography>
+        )}
+      </main>
 
       <Footer />
-    </>
+    </div>
   );
-
-
 }

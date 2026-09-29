@@ -9,7 +9,7 @@ router.get("/test", async (req, res) => {
     try {
 
         const user = await User.findOne({
-            email: "nitinmohapatra26@gmail.com"
+            email: req.query.email || "nitinmohapatra26@gmail.com"
         });
 
         if (!user || !user.fcmToken) {
@@ -27,7 +27,8 @@ router.get("/test", async (req, res) => {
             body: "Congratulations 🎉 Your first notification works!",
 
             data: {
-                type: "test"
+                type: "test",
+                url: "/contractor/home"
             }
 
         });

@@ -7,6 +7,7 @@ import Badge from '@mui/material/Badge';
 import axiosInstance from "../utils/axiosInstance";
 import { io } from 'socket.io-client';
 import ProjectChat from './ProjectChat';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { canAccess } from "../utils/subscription";
 import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
@@ -24,7 +25,7 @@ const style = {
   p: 4,
 };
 
-export default function ChatModal({projectId}) {
+export default function ChatModal({projectId, showIcon = false}) {
   const [open, setOpen] = React.useState(false);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const socketRef = React.useRef(null);
@@ -142,7 +143,7 @@ export default function ChatModal({projectId}) {
   return (
     <div>
       <Badge badgeContent={unreadCount} color="error">
-        <Button onClick={handleOpen} variant="contained" color="primary" size="small" sx={{ borderRadius: 10 , padding: 1 ,margin: 1}}>Chat</Button>
+        <Button onClick={handleOpen} variant="contained" color="primary" size="small" startIcon={showIcon ? <ChatBubbleOutlineIcon /> : undefined} sx={{ borderRadius: 10 , padding: 1 ,margin: 1}}>Chat</Button>
       </Badge>
       <Modal    
         open={open}

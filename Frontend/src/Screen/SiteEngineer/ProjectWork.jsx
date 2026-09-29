@@ -202,20 +202,44 @@ export default function ProjectWork() {
         }}
       >
         {/* PROJECT HEADER */}
-        <Box sx={{ maxWidth: 1200, mx: "auto", mb: 4 }}>
+        <Box
+          sx={{
+            maxWidth: 1200,
+            mx: "auto",
+            mb: 4,
+            px: { xs: 0, md: 0 },
+            pt: { xs: 1, md: 2 },
+          }}
+        >
           <Typography
             variant="h1"
-            sx={{ mb: 1 }}
+            sx={{
+              mb: 1,
+              color: "#171c26",
+              fontSize: { xs: "1.75rem", sm: "2rem" },
+              fontWeight: 700,
+              lineHeight: 1.2,
+              letterSpacing: "-.025em",
+            }}
           >
-            {project.title}
+            {project.title}<Box component="span" sx={{ color: "#f97316" }}>.</Box>
           </Typography>
 
-          <Typography
-            variant="body1"
-            sx={{ mb: 2 }}
-          >
-            {project.description}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1, color: "#68717c", fontSize: ".82rem" }}>
+            <Link to="/site-engineer/projects" style={{ color: "inherit", textDecoration: "none" }}>
+              {t("project.all_projects")}
+            </Link>
+            <Box component="span" aria-hidden="true" sx={{ color: "#8a929b", fontSize: "1.1rem" }}>›</Box>
+            <Typography component="span" sx={{ color: "#f05a24", fontSize: "inherit" }}>
+              {project.title}
+            </Typography>
+          </Box>
+
+          {project.description && (
+            <Typography variant="body1" sx={{ mt: 1.25, color: "#555e68", fontSize: ".92rem" }}>
+              {project.description}
+            </Typography>
+          )}
 
         </Box>
 
@@ -426,12 +450,8 @@ export default function ProjectWork() {
                     to={`/site-engineer/projects/${id}/inventory`}
                     sx={{
                       color: "black",
-                      borderColor: "text.primary",
-                      fontWeight: 600,
-                      "&:hover": {
-                        borderColor: "primary.main",
-                        color: "primary.main",
-                      },
+                      borderColor: "primary.main",
+                      fontWeight: 600
                     }}
                   >
                     {t("project.log_inventory")}
@@ -443,12 +463,8 @@ export default function ProjectWork() {
                     onClick={() => setOpenInventoryModal(true)}
                     sx={{
                       color: "black",
-                      borderColor: "text.primary",
-                      fontWeight: 600,
-                      "&:hover": {
-                        borderColor: "primary.main",
-                        color: "primary.main",
-                      },
+                      borderColor: "primary.main",
+                      fontWeight: 600 
                     }}
                   >
                     ADD INVENTORY
@@ -473,10 +489,6 @@ export default function ProjectWork() {
                       color: "black",
                       borderColor: "white",
                       fontWeight: 600,
-                      "&:hover": {
-                        borderColor: "primary.main",
-                        color: "primary.main",
-                      },
                     }}
                   >
                     Add Misc Expense
